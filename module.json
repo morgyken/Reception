@@ -1,0 +1,22 @@
+{
+    "name": "Reception",
+    "alias": "reception",
+    "description": "The reception module. Add patient, checkin and make appointments",
+    "keywords": [],
+    "active": 1,
+    "order": 2,
+    "providers": [
+        "Ignite\\Reception\\Providers\\ReceptionServiceProvider",
+        "MaddHatter\\LaravelFullcalendar\\ServiceProvider"
+    ],
+    "aliases": {
+        "Calendar": "MaddHatter\\LaravelFullcalendar\\Facades\\Calendar"
+    },
+    "files": [
+        "start.php"
+    ],
+    "core": 1,
+    "version": "v1.0",
+    "author": "Samuel Okoth",
+    "email": "sodhiambo@collabmed.com"
+}

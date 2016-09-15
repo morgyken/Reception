@@ -1,0 +1,23 @@
+url: https://github.com/AsgardCms/Notification
+versions:
+    "1.4.0":
+        changed:
+            - Use <code>$router</code> variable in routes file
+    "1.3.0":
+        changed:
+            - Setting the View All text as translatable key
+            - Reading the users table from the <code>auth.table</code> file
+    "1.2.0":
+        changed:
+            - Use the new datatables way of marking column not sortable
+            - Use the single removal modal setup
+    "1.1.0":
+        added:
+            - Link in dropdown to mark notification as read
+            - Mark notifications as read from the drop down
+            - An index view with all the notifications for current user
+            - Link to mark all notifications as read for current user
+            - Link to delete all notifications for current user
+    "1.0.0":
+        added:
+            - Initial release

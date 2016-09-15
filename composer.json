@@ -1,0 +1,19 @@
+{
+    "name": "samueldervis/reception",
+    "description": "The reception module. Add patient, checkin and make appointments",
+    "authors": [
+        {
+            "name": "Samuel Dervis",
+            "email": "samueldervis@gmail.com"
+        }
+    ],
+    "require": {
+        "google/apiclient": "1.*",
+        "maddhatter/laravel-fullcalendar": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ignite\\Reception\\": ""
+        }
+    }
+}
