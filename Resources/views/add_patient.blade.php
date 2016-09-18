@@ -148,7 +148,7 @@
         {!! Form::close() !!}
     </div>
 </div>
-@include('layouts.partials.webcam')
+@include('reception::partials.webcam')
 <script type="text/javascript">
     var SCHEMES_URL = "{{route('ajax.get_schemes')}}";
 </script>

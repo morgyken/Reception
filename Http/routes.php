@@ -1,7 +1,7 @@
 <?php
 
 $group = [
-    'middleware' => ['auth.admin', 'setup'],
+    'middleware' => mconfig('core.core.middleware.backend'),
     'prefix' => 'reception',
     'as' => 'reception.',
     'namespace' => 'Ignite\Reception\Http\Controllers'];

@@ -30,12 +30,14 @@ if (!function_exists('get_appointments')) {
                     $query->orWhere('status', 2);
                 });
         if ($request->has('clinic')) {
-            if (!empty($request->clinic))
+            if (!empty($request->clinic)) {
                 $builder->where('clinic', $request->clinic);
+            }
         }
         if ($request->has('category')) {
-            if (!empty($request->category))
+            if (!empty($request->category)) {
                 $builder->where('category', $request->category);
+            }
         }
         if ($request->has('start')) {
             $builder->where('time', '>=', $request->start);
