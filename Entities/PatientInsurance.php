@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Ignite\Reception\Entities\Patients $patients
- * @property-read \Ignite\Setup\Entities\Schemes $schemes
+ * @property-read \Ignite\Settings\Entities\Schemes $schemes
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\PatientInsurance whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\PatientInsurance wherePatient($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\PatientInsurance whereScheme($value)

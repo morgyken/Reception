@@ -59,7 +59,7 @@
                 <div class="form-group {{ $errors->has('principal_relationship') ? ' has-error' : '' }}">
                     {!! Form::label('principal_relationship', 'Relationship',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::select('principal_relationship1',mconfig('settings.system.relationship'), null, ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}
+                        {!! Form::select('principal_relationship1',mconfig('reception.options.relationship'), null, ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}
                     </div>
                 </div>
             </div>

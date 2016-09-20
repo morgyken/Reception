@@ -34,7 +34,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                 });
                 $item->item('Manage Patients', function (Item $item) {
                     $item->icon('fa fa-h-square');
-                    $item->route('reception.manage_patients');
+                    $item->route('reception.show_patients');
                 });
                 $item->item('Appointment Scheduler', function (Item $item) {
                     $item->icon('fa fa-calendar-o');

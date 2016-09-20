@@ -9,7 +9,7 @@
     <div class="modal-dialog modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
-            {!! Form::open(['route'=>'reception.patient_schedule']) !!}
+            {!! Form::open(['route'=>'reception.appointments.new']) !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Appointment</h4>
@@ -18,7 +18,6 @@
 
                 <div class="row">
                     <div class="form-horizontal">
-
                         <div class="col-md-6">
                             <div class="form-group {{ $errors->has('patient') ? ' has-error' : '' }}">
                                 {!! Form::label('patient', 'Patient',['class'=>'control-label col-md-4']) !!}
@@ -85,15 +84,12 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#patient").autocomplete({source: patients});
+        // $("#patient").autocomplete({source: patients});
     });
 </script>
+
+@section('styles')
 <style>
-    .ui-autocomplete {
-        z-index: 5000;
-    }
+
 </style>
-<?php
-echo "<script type='text/javascript'>";
-echo "var patients = " . json_encode(auto_complete_patient_names()) . ";";
-echo "</script>";
+@endsection

@@ -28,15 +28,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property mixed $image
- * @property-read \Ignite\Reception\Entities\NextOfKin $nok
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\PatientInsurance[] $schemes
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\Appointments[] $appointments
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\PatientDocuments[] $documents
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Evaluation\Entities\PatientVisits[] $visits
  * @property-read mixed $full_name
  * @property-read mixed $name
  * @property-read mixed $checked_in_status
  * @property-read mixed $is_insured
+ * @property-read \Ignite\Reception\Entities\NextOfKin $nok
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\PatientInsurance[] $schemes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\Appointments[] $appointments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\PatientDocuments[] $documents
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients whereFirstName($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients whereMiddleName($value)
@@ -74,26 +73,6 @@ use SoftDeletes;
     protected $shouldEncrypt = ['first_name', 'middle_name', 'last_name', 'mobile', 'email', 'id_no', 'telephone', 'alt_number'];
     protected $hidden = ['image'];
 
-    public function nok() {
-        return $this->hasOne(NextOfKin::class, 'patient');
-    }
-
-    public function schemes() {
-        return $this->hasMany(PatientInsurance::class, 'patient', 'id');
-    }
-
-    public function appointments() {
-        return $this->hasMany(Appointments::class, 'patient', 'patient_id');
-    }
-
-    public function documents() {
-        return $this->hasMany(PatientDocuments::class, 'patient');
-    }
-
-    public function visits() {
-        return $this->hasMany(PatientVisits::class, 'patient', 'id');
-    }
-
     public function getSexAttribute($value) {
         return ucfirst($value);
     }
@@ -114,4 +93,25 @@ use SoftDeletes;
         return $this->schemes->count() > 0;
     }
 
+    public function nok() {
+        return $this->hasOne(NextOfKin::class, 'patient');
+    }
+
+    public function schemes() {
+        return $this->hasMany(PatientInsurance::class, 'patient', 'id');
+    }
+
+    public function appointments() {
+        return $this->hasMany(Appointments::class, 'patient', 'patient_id');
+    }
+
+    public function documents() {
+        return $this->hasMany(PatientDocuments::class, 'patient');
+    }
+
+    /*
+      public function visits() {
+      return $this->hasMany(PatientVisits::class, 'patient', 'id');
+      }
+     */
 }

@@ -11,10 +11,10 @@
  */
 
 use Ignite\Core\Entities\User;
+use Ignite\Reception\Entities\AppointmentCategory;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Entities\PatientInsurance;
 use Ignite\Reception\Entities\Patients;
-use Ignite\Setup\Entities\AppointmentCategory;
 use Illuminate\Http\Request;
 
 if (!function_exists('get_appointments')) {

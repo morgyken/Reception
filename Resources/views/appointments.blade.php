@@ -34,7 +34,7 @@
                         <i class="fa fa-map-marker"></i> Check in patients</a>
                 </li>
                 <li class="pull-right">
-                    <a href="{{route('reception.patient_schedule')}}" id="new" class="btn btn-primary">
+                    <a href="{{route('reception.appointments.new')}}" id="new" class="btn btn-primary">
                         <i class="fa fa-plus"></i> New Appointment</a>
                 </li>
             </ul>
@@ -52,7 +52,7 @@
             </ul>
         </div>
         <div id="appointments">
-
+            @include('reception::partials.view_appointments')
         </div>
     </div>
 </div>
@@ -78,9 +78,9 @@
 </div>
 @include('reception::partials.add_appointment')
 <script type="text/javascript">
-    var CANCEL_URL = "{{route('ajax.cancel_appointment')}}";
-    var GET_SCHEDULE = "{{route('ajax.get_schedule')}}";
-    var RESCHEDULE_URL = "{{route('ajax.reschedule')}}";
+    var CANCEL_URL = "{{route('api.reception.cancel_appointment')}}";
+    var GET_SCHEDULE = "{{route('api.reception.get_schedule')}}";
+    var RESCHEDULE_URL = "{{route('api.reception.reschedule')}}";
     $(document).ready(function () {
         $("#date1").datepicker({dateFormat: 'yy-mm-dd', onSelect: function (date) {
                 $("#date2").datepicker('option', 'minDate', date);
@@ -103,5 +103,5 @@
     });
 </script>
 @endif
-<script src="{{asset('/js/appointments.min.js')}}"></script>
+<script src="{{Module::asset('reception:js/appointments.min.js')}}"></script>
 @endsection

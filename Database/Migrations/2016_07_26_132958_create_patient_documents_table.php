@@ -18,11 +18,17 @@ class CreatePatientDocumentsTable extends Migration {
             $column->string('filename');
             $column->string('mime');
             $column->longText('description');
+            $column->integer('user')->unsigned();
             $column->timestamps();
 
             $column->foreign('patient')
                     ->references('id')
                     ->on('reception_patients')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+            $column->foreign('user')
+                    ->references('id')
+                    ->on('users')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });

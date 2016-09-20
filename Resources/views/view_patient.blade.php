@@ -34,7 +34,7 @@ $docs = $data['docs'];
                 <h5>Next of Kin</h5>
                 <dl class="dl-horizontal">
                     <dt>Name:</dt><dd>{{$patient->nok->full_name}}</dd>
-                    <dt>Relationship:</dt><dd>{{config('system.relationship.'.$patient->nok->relationship)}}</dd>
+                    <dt>Relationship:</dt><dd>{{mconfig('reception.options.relationship.'.$patient->nok->relationship)}}</dd>
                     <dt>Mobile:</dt><dd>{{$patient->nok->mobile}}</dd>
                 </dl>
             </div>
@@ -42,7 +42,7 @@ $docs = $data['docs'];
                 @if(!empty($patient->image))
                 <img src="{{$patient->image}}"  alt="Patient Image" height="300px"/>
                 @else
-                <img src="{{asset('img/ph.png')}}" alt="Patient Image" height="300px"/>
+                <img src="{{Module::asset('reception:img/ph.png')}}" alt="Patient Image" height="300px"/>
                 <!--TODO enable image to be captured here-->
                 @endif
             </div>

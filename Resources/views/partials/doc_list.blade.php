@@ -15,7 +15,7 @@
                 {!! Form::label('document_type', 'Document Type',['class'=>'control-label col-md-4']) !!}
                 <div class="col-md-8">
                     <div id="tags">
-                        {!! Form::select('document_type',config('system.document_types'), old('document_type'), ['class' => 'form-control']) !!}
+                        {!! Form::select('document_type',mconfig('reception.options.document_types'), old('document_type'), ['class' => 'form-control']) !!}
                         {!! $errors->first('document_type', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
@@ -50,9 +50,11 @@
                         <td><a href="{{route('reception.view_document',$doc->id)}}" target="_blank">
                                 {{$doc->filename}}</a>
                         </td>
-                        <td>{{config('system.document_types.'.$doc->document_type)}}</td>
+                        <td>{{mconfig('reception.options.document_types.'.$doc->document_type)}}</td>
                         <td>{{number_format($doc->description/1024,2)}} KiB</td>
                         <td>{{$doc->mime}}</td>
+                        <td>{{$doc->users->profile->full_name}}</td>
+                        <td>{{smart_date_time($doc->created_at)}}</td>
                         <td><a href="{{route('reception.view_document',$doc->id)}}" target="_blank">
                                 <i class="fa fa-eye"></i> View
                             </a>
@@ -67,6 +69,8 @@
                         <th>Document Type</th>
                         <th>Size</th>
                         <th>File type</th>
+                        <th>Uploaded by</th>
+                        <th>Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -96,7 +100,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    var DELTE_FILE_URL = "{{route('ajax.delete_doc')}}";
+    var DELTE_FILE_URL = "{{route('api.reception.delete_doc')}}";
     $(document).ready(function () {
         var discard = null;
         $('.trash').click(function () {
@@ -122,7 +126,6 @@
         try {
             $('#documents-tbl').DataTable();
         } catch (e) {
-            console.log(e);
         }
     });
 </script>

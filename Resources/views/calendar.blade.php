@@ -18,15 +18,14 @@ $calendar = $data['calendar'];
         {!! $calendar->script() !!}
     </div>
 </div>
-@include('layouts.partials.calendar_scripts')
 <script type="text/javascript">
-    // $(document).ready(function () {
+// $(document).ready(function () {
     function changeView(view, date) {
         if (view.name !== 'month')
             return;
         $('#calendar-sam').fullCalendar('changeView', 'agendaDay');
         $('#calendar-sam').fullCalendar('gotoDate', date);
     }
-    //});
+//});
 </script>
 @endsection

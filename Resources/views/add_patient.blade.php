@@ -16,7 +16,7 @@
         <div class="box-header">
             <h3 class="box-title">Patient Information</h3>
         </div>
-        {!! Form::open(['files'=>true]) !!}
+        {!! Form::open(['files'=>true,'route'=>'reception.save_patient']) !!}
         <div class="box-body">
             <div class="col-md-6">
                 <div class="form-group req {{ $errors->has('first_name') ? ' has-error' : '' }}">
@@ -150,7 +150,7 @@
 </div>
 @include('reception::partials.webcam')
 <script type="text/javascript">
-    var SCHEMES_URL = "{{route('ajax.get_schemes')}}";
+    var SCHEMES_URL = "{{route('api.settings.get_schemes')}}";
 </script>
-<script src="/js/addpatient.min.js"></script>
+<script src="{{Module::asset('reception:js/addpatient.min.js')}}"></script>
 @endsection

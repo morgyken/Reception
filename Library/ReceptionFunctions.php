@@ -126,20 +126,20 @@ class ReceptionFunctions {
             $nok->mobile = $request->mobile_nok;
             $nok->relationship = $request->nok_relationship;
             $nok->save();
-            /* if ($patient->insured == 1) {
-              foreach ($request->scheme as $key => $scheme) {
-              $schemes = new Patient_Insurance;
-              $schemes->patient_id = $patient->patient_id;
-              $schemes->scheme_id = strtoupper($request->scheme[$key]);
-              $schemes->policy_number = $request->policy_number[$key];
-              $schemes->principal = ucwords($request->principal[$key]);
-              $schemes->dob = $request->principal_dob[$key];
-              $schemes->relationship = $request->principal_relationship[$key];
-              $schemes->save();
-              }
-              } */
+            if ($patient->insured == 1) {
+                foreach ($request->scheme as $key => $scheme) {
+                    $schemes = new Patient_Insurance;
+                    $schemes->patient_id = $patient->patient_id;
+                    $schemes->scheme_id = strtoupper($request->scheme[$key]);
+                    $schemes->policy_number = $request->policy_number[$key];
+                    $schemes->principal = ucwords($request->principal[$key]);
+                    $schemes->dob = $request->principal_dob[$key];
+                    $schemes->relationship = $request->principal_relationship[$key];
+                    $schemes->save();
+                }
+            }
             $addon = "Click <a href='" . route('reception.checkin', $patient->patient_id) . "'>here</a> to checkin";
-            $request->session()->flash('success', $patient->full_name . " details saved. $addon");
+            flash()->success($patient->full_name . " details saved. $addon");
         });
         return true;
     }
@@ -221,21 +221,22 @@ class ReceptionFunctions {
     public static function upload_document(Request $request, $patient) {
         $file = $request->file('doc');
         if (empty($file) || !$file->isValid()) {
-            $request->session()->flash('warning', "Invalid file. Upload aborted");
+            flash()->warning("Invalid file. Upload aborted");
             return false;
         }
-        $document = new PatientDocuments();
+        $document = new PatientDocuments;
         $document->patient = $patient;
         $document->document = base64_encode(file_get_contents($file->getRealPath()));
         $document->filename = $file->getClientOriginalName();
         $document->mime = $file->getClientMimeType();
         $document->document_type = $request->document_type;
         $document->description = $file->getSize();
+        $document->user = $request->user()->id;
         if ($document->save()) {
-            $request->session()->flash('success', "Patient Document saved");
+            flash()->success("Patient Document saved");
             return true;
         }
-        $request->session()->flash('error', "An error occurred");
+        flash()->error("An error occurred");
         return false;
     }
 

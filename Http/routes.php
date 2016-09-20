@@ -6,13 +6,14 @@ $group = [
     'as' => 'reception.',
     'namespace' => 'Ignite\Reception\Http\Controllers'];
 Route::group($group, function() {
-    Route::get('/', ['uses' => 'ReceptionController@index', 'as' => 'index']);
-    Route::match(['get', 'post'], 'patients/add/{id?}', ['uses' => 'ReceptionController@add_patient', 'as' => 'add_patient']);
-    Route::get('patients/list/', ['as' => 'manage_patients', 'uses' => 'ReceptionController@manage_patients']);
+    Route::get('patients/add/{id?}', ['uses' => 'ReceptionController@add_patient', 'as' => 'add_patient']);
+    Route::post('patients/save/{id?}', ['uses' => 'ReceptionController@save_patient', 'as' => 'save_patient']);
+    Route::get('patients/show', ['as' => 'show_patients', 'uses' => 'ReceptionController@show_patients']);
     // Route::match(['post', 'get'], 'patients/edit/{id?}', ['uses' => 'ReceptionController@edit_patient', 'as' => 'edit_patient']);
     Route::get('patients/view/{id}', ['uses' => 'ReceptionController@view_patient', 'as' => 'view_patient']);
-    Route::match(['post', 'get'], 'patient/schedule/{id?}', ['uses' => 'ReceptionController@patient_schedule', 'as' => 'patient_schedule']);
-    Route::get('patients/appointments', ['uses' => 'ReceptionController@appointments', 'as' => 'appointments']);
+    Route::get('patient/schedule/show/{id?}', ['uses' => 'ReceptionController@appointments', 'as' => 'appointments']);
+    Route::post('patient/schedule/save/{id?}', ['uses' => 'ReceptionController@appointments_save', 'as' => 'appointments.save']);
+    Route::get('patients/appointments/new', ['uses' => 'ReceptionController@new_appointment', 'as' => 'appointments.new']);
     Route::get('patients/calendar', ['uses' => 'ReceptionController@calendar', 'as' => 'calendar']);
     Route::get('patients/google/calendar', ['uses' => 'ReceptionController@google_calendar', 'as' => 'google_calendar']);
     Route::get('patients/documents', ['uses' => 'ReceptionController@documents', 'as' => 'patient_documents']);

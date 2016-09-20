@@ -12,6 +12,7 @@ class ReceptionDatabaseSeeder extends Seeder {
      * @return void
      */
     public function run() {
+        $this->call(ScheduleCategoriesTableSeeder::class);
         $this->call(PatientsTableSeeder::class);
 
         // $this->call("OthersTableSeeder");

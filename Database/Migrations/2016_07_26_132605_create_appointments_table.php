@@ -34,7 +34,7 @@ class CreateAppointmentsTable extends Migration {
             $column->foreign('clinic')->references('id')->on('settings_clinics')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-            $column->foreign('category')->references('id')->on('settings_appointment_categories')
+            $column->foreign('category')->references('id')->on('reception_appointment_categories')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });

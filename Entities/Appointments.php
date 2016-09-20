@@ -2,7 +2,6 @@
 
 namespace Ignite\Reception\Entities;
 
-use Ignite\Settings\Entities\AppointmentCategory;
 use Ignite\Settings\Entities\Clinics;
 use Ignite\Users\Entities\UserProfile;
 use Illuminate\Database\Eloquent\Model;
@@ -27,7 +26,7 @@ use MaddHatter\LaravelFullcalendar\Event;
  * @property \Carbon\Carbon $updated_at
  * @property-read \Ignite\Reception\Entities\Patients $patients
  * @property-read \Ignite\Users\Entities\UserProfile $doctors
- * @property-read \Ignite\Settings\Entities\AppointmentCategory $categories
+ * @property-read \Ignite\Reception\Entities\AppointmentCategory $categories
  * @property-read \Ignite\Settings\Entities\Clinics $clinics
  * @property-read mixed $is_guest
  * @property-read mixed $is_future
