@@ -1,5 +1,5 @@
 {
-    "name": "samueldervis/reception",
+    "name": "collabmed/reception",
     "description": "The reception module. Add patient, checkin and make appointments",
     "license": "proprietary",
     "type": "dervis-module",
