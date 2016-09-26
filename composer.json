@@ -21,5 +21,8 @@
         "psr-4": {
             "Ignite\\Reception\\": ""
         }
+    },
+    "extra": {
+        "installer-name": "Reception"
     }
 }
