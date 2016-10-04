@@ -12,12 +12,12 @@
 
 namespace Ignite\Reception\Library;
 
+use Ignite\Evaluation\Entities\Visits;
+use Ignite\Reception\Entities\PatientInsurance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Ignite\Evaluation\Entities\PatientVisits;
 use Ignite\Reception\Entities\Patients;
 use Ignite\Reception\Entities\NextOfKin;
-use Ignite\Reception\Entities\PatientInsurance;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Entities\PatientDocuments;
 
@@ -36,12 +36,13 @@ class ReceptionFunctions {
      */
     public static function checkin_patient(Request $request) {
         //this patient must already be here
-        $today = PatientVisits::where('created_at', '>=', new \Jenssegers\Date\Date('today'))
+        $today = Visits::where('created_at', '>=', new \Jenssegers\Date\Date('today'))
                         ->where('patient', $request->patient)->get()->first();
-        if ($today)
-            $visit = PatientVisits::find($today->visit_id);
-        else
-            $visit = new PatientVisits;
+        if ($today) {
+            $visit = Visits::find($today->visit_id);
+        } else {
+            $visit = new Visits;
+        }
         $visit->patient = $request->patient;
         $visit->clinic = \Session::get('clinic');
         $visit->purpose = $request->purpose;
@@ -70,7 +71,7 @@ class ReceptionFunctions {
                     $visit->radiology = true;
                     break;
                 default :
-                    $request->session()->flash('error', "Unknown checkin destination");
+                    flash("Unknown checkin destination", 'danger');
                     return false;
             }
         }
@@ -83,10 +84,10 @@ class ReceptionFunctions {
             $visit->scheme = $request->scheme;
         }
         if ($visit->save()) {
-            $request->session()->flash('success', "Patient has been checked in");
+            flash("Patient has been checked in", 'success');
             return true;
         }
-        $request->session()->flash('error', "An error occurred");
+        flash("An error occurred", 'danger');
         return false;
     }
 
@@ -128,7 +129,7 @@ class ReceptionFunctions {
             $nok->save();
             if ($patient->insured == 1) {
                 foreach ($request->scheme as $key => $scheme) {
-                    $schemes = new Patient_Insurance;
+                    $schemes = new PatientInsurance;
                     $schemes->patient_id = $patient->patient_id;
                     $schemes->scheme_id = strtoupper($request->scheme[$key]);
                     $schemes->policy_number = $request->policy_number[$key];

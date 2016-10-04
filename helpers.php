@@ -10,7 +10,6 @@
  * =============================================================================
  */
 
-use Ignite\Core\Entities\User;
 use Ignite\Reception\Entities\AppointmentCategory;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Entities\PatientInsurance;
@@ -100,10 +99,14 @@ if (!function_exists('get_checkin_destinations')) {
      * @return array The check-in destinations
      */
     function get_checkin_destinations() {
-        $first = config('system.destinations');
-        $next = User::with(['profile', 'role'])
-                        ->whereIn('group_id', [5, 12])->get()->pluck('profile.full_name', 'id')->toArray();
-        // dd($next);
+        $first = [];
+        $roles = Setting::get('reception::checkin_destinations');
+        $places = Setting::get('reception::checkin_places');
+        $intrests = json_decode($places);
+        foreach ($intrests as $one) {
+            $first[$one] = mconfig('reception.options.destinations.' . $one);
+        }
+        $next = users_in(json_decode($roles))->pluck('profile.full_name', 'id')->toArray();
         return array_replace($first, $next);
     }
 

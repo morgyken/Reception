@@ -86,8 +86,8 @@ $count = 0;
 <script type="text/javascript">
     $(document).ready(function () {
         var to_delete = null;
-        var CANCEL_URL = "{{route('ajax.cancel_checkin')}}";
-        var CHANGE_DEST_URL = "{{route('ajax.change_destination')}}";
+        var CANCEL_URL = "{{route('api.reception.cancel_checkin')}}";
+        var CHANGE_DEST_URL = "{{route('api.reception.change_destination')}}";
         $('.delete').click(function () {
             to_delete = $(this).val();
             $('#myModal').modal('show');

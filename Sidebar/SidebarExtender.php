@@ -57,6 +57,13 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->route('reception.patient_documents');
                 });
             });
+            $group->item('Setup', function(Item $item) {
+                $item->item('Appointment Categories', function (Item $item) {
+                    $item->icon('fa fa-sign-in');
+                    $item->route('reception.checkin');
+                    $item->weight(4);
+                });
+            });
         });
         return $menu;
     }

@@ -75,7 +75,7 @@ $patient = $data['patient'];
         <div class="col-md-6">
             <h4>Checkin details</h4>
             <div class="form-horizontal">
-                {!! Form::open()!!}
+                {!! Form::open(['route'=>['reception.do_check',$patient->id]])!!}
                 <input type="hidden" name="patient" value="{{$patient->id}}"/>
                 <div class="form-group req {{ $errors->has('destination') ? ' has-error' : '' }}">
                     {!! Form::label('destination', 'Destination',['class'=>'control-label col-md-4']) !!}
@@ -104,7 +104,7 @@ $patient = $data['patient'];
                 <div class="form-group req {{ $errors->has('purpose') ? ' has-error' : '' }}">
                     {!! Form::label('purpose', 'Purpose of visit',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::select('purpose',config('system.checkin_purposes'), old('purpose'), ['class' => 'form-control','placeholder'=>'Select Purpose...']) !!}
+                        {!! Form::select('purpose',mconfig('reception.options.checkin_purposes'), old('purpose'), ['class' => 'form-control','placeholder'=>'Select Purpose...']) !!}
                         {!! $errors->first('purpose', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>

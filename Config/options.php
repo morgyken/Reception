@@ -45,4 +45,18 @@ return [
         4 => 'Theatre',
         5 => 'Diagnostics',
     ],
+    'destinations' => [
+        'laboratory' => 'Laboratory',
+        'theatre' => 'Theatre',
+        'diagnostics' => 'Diagnostics',
+        'radiology' => 'Radiology',
+        'pharmacy' => 'Pharmacy',
+        'optical' => 'Optical',
+    ],
+    'checkin_purposes' => [
+        1 => 'First time consultation',
+        2 => 'Review after surgery',
+        3 => 'Follow up review',
+        4 => 'General Consultation',
+    ],
 ];

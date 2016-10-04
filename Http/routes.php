@@ -18,7 +18,8 @@ Route::group($group, function() {
     Route::get('patients/google/calendar', ['uses' => 'ReceptionController@google_calendar', 'as' => 'google_calendar']);
     Route::get('patients/documents', ['uses' => 'ReceptionController@documents', 'as' => 'patient_documents']);
     Route::match(['post', 'get'], 'patients/upload/docs/{id}', ['uses' => 'ReceptionController@upload_doc', 'as' => 'upload_doc']);
-    Route::match(['get', 'post'], 'checkin/{id?}/{visit?}', ['uses' => 'ReceptionController@checkin', 'as' => 'checkin']);
+    Route::get( 'checkin/{id?}/{visit?}', ['uses' => 'ReceptionController@checkin', 'as' => 'checkin']);
+    Route::post( 'do_check/{id?}/{visit?}', ['uses' => 'ReceptionController@do_check', 'as' => 'do_check']);
     Route::get('patients/queue', ['as' => 'patients_queue', 'uses' => 'ReceptionController@patients_queue']);
     Route::get('patients/manage/queued/{visit_id}', ['as' => 'manage_checkin', 'uses' => 'ReceptionController@manage_checkin']);
     Route::match(['get', 'post'], 'patients/visit/new/{visit_id}', ['as' => 'new_visit', 'uses' => 'ReceptionController@new_visit']);

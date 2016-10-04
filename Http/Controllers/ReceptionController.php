@@ -1,9 +1,12 @@
 <?php
 
 namespace Ignite\Reception\Http\Controllers;
+
 use Ignite\Core\Http\Controllers\AdminBaseController;
+use Ignite\Evaluation\Entities\Visits;
 use Ignite\Reception\Entities\AppointmentCategory;
 use Ignite\Reception\Entities\Appointments;
+use Ignite\Reception\Http\Requests\CheckinPatientRequest;
 use Ignite\Reception\Http\Requests\CreateAppointmentRequest;
 use Ignite\Reception\Http\Requests\CreatePatientRequest;
 use Ignite\Reception\Library\ReceptionPipeline;
@@ -131,16 +134,15 @@ class ReceptionController extends AdminBaseController {
         return view('reception::upload_doc')->with('data', $this->data);
     }
 
-    public function checkin(Request $request, $patient_id = null, $visit_id = null) {
+    public function do_check(CheckinPatientRequest $request,$patient_id = null, $visit_id = null) {
+        if (ReceptionFunctions::checkin_patient($request, $visit_id)) {
+            return redirect()->route('reception.patients_queue');
+        }
+    }
+
+    public function checkin( $patient_id = null, $visit_id = null) {
         if (!empty($patient_id)) {
-            if ($request->isMethod('post')) {
-                $this->validate($request, Validation::validate_checkin());
-                if (ReceptionFunctions::checkin_patient($request, $visit_id)) {
-                    return redirect()->route('reception.patients_queue');
-                }
-            }
-            $this->data['visits'] = \Ignite\Evaluation\Entities\PatientVisits::wherePatient($patient_id)->get();
-// \Dervis\Model\Reception\Appointments::wherePatient($patient_id)->get();
+            $this->data['visits'] = Visits::wherePatient($patient_id)->get();
             $this->data['patient'] = Patients::find($patient_id);
             return view('reception::checkin_patient')->with('data', $this->data);
         }
@@ -149,7 +151,7 @@ class ReceptionController extends AdminBaseController {
     }
 
     public function patients_queue() {
-        $this->data['visits'] = \Ignite\Evaluation\Entities\PatientVisits::all();
+        $this->data['visits'] = Visits::all();
         return view('reception::patients_queue')->with('data', $this->data);
     }
 
