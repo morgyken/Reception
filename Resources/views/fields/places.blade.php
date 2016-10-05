@@ -7,6 +7,9 @@
     </option>
     @endforeach
 </select>
+@if (!empty($moduleInfo['hint']))
+<p class="help-block">{{$moduleInfo['hint']}}</p>
+@endif
 </div>
 <script>
     $(document).ready(function () {
