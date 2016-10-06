@@ -10,9 +10,9 @@
  * =============================================================================
  */
 
-namespace Ignite\Reception\Library;
+namespace Ignite\Reception\Repositories;
 
-use Ignite\Evaluation\Entities\Visits;
+use Ignite\Evaluation\Entities\Visit;
 use Ignite\Reception\Entities\PatientInsurance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,33 +20,56 @@ use Ignite\Reception\Entities\Patients;
 use Ignite\Reception\Entities\NextOfKin;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Entities\PatientDocuments;
+use Jenssegers\Date\Date;
 
 /**
  * Description of ReceptionFunctions
  *
  * @author Samuel Dervis <samueldervis@gmail.com>
  */
-class ReceptionFunctions {
+class ReceptionFunctions implements ReceptionRepository {
+
+    public function __construct() {
+
+    }
 
     /**
      * Performs a fast forward checkin. Just dive in to checkin without prior appointments
      * @param Request $request
-     * @param int $visit_id
      * @return bool
      */
-    public static function checkin_patient(Request $request) {
+    public function checkin_patient(Request $request) {
         //this patient must already be here
-        $today = Visits::where('created_at', '>=', new \Jenssegers\Date\Date('today'))
+        $today = Visit::where('created_at', '>=', new Date('today'))
                         ->where('patient', $request->patient)->get()->first();
         if ($today) {
-            $visit = Visits::find($today->visit_id);
+            $visit = Visit::find($today->visit_id);
         } else {
-            $visit = new Visits;
+            $visit = new Visit;
         }
         $visit->patient = $request->patient;
         $visit->clinic = \Session::get('clinic');
         $visit->purpose = $request->purpose;
         $visit->payment_mode = $request->payment_mode;
+
+        if ($request->has('to_nurse')) {
+            $visit->nurse = true;
+        }
+        $this->coallesce($visit, $request);
+
+        $visit->user = $request->user()->id;
+        if ($request->has('scheme')) {
+            $visit->scheme = $request->scheme;
+        }
+        if ($visit->save()) {
+            flash("Patient has been checked in", 'success');
+            return true;
+        }
+        flash("An error occurred", 'danger');
+        return false;
+    }
+
+    private function coallesce(&$visit, $request) {
         if (intval($request->destination) > 0) {
             $visit->destination = $request->destination;
             $visit->evaluation = true;
@@ -75,20 +98,6 @@ class ReceptionFunctions {
                     return false;
             }
         }
-        if ($request->has('to_nurse')) {
-            $visit->nurse = true;
-        }
-
-        $visit->user = $request->user()->id;
-        if ($request->has('scheme')) {
-            $visit->scheme = $request->scheme;
-        }
-        if ($visit->save()) {
-            flash("Patient has been checked in", 'success');
-            return true;
-        }
-        flash("An error occurred", 'danger');
-        return false;
     }
 
     /**
@@ -97,8 +106,8 @@ class ReceptionFunctions {
      * @param null $id
      * @return bool
      */
-    public static function add_patient(Request $request, $id = null) {
-        DB::transaction(function() use ($request, $id) {
+    public function add_patient(Request $request, $id = null) {
+        DB::transaction(function () use ($request, $id) {
 //patient first
             $patient = Patients::findOrNew($id);
             $patient->first_name = ucfirst($request->first_name);
@@ -151,7 +160,7 @@ class ReceptionFunctions {
      * @param $id
      * @return bool
      */
-    public static function reschedule_appointment(Request $request, $id) {
+    public function reschedule_appointment(Request $request, $id) {
         $appointment = Appointments::find($id);
         $appointment->time = new \Date($request->date . ' ' . $request->time);
         //$appointment->procedure = $request->procedure;
@@ -174,7 +183,7 @@ class ReceptionFunctions {
      * @author Samuel Okoth <sodhiambo@collabmed.com>
      * @param string $name
      */
-    public static function guess_patient_id(string $name) {
+    public function guess_patient_id(string $name) {
         $they = Patients::all();
         foreach ($they as $patient) {
             if ($patient->full_name == $name) {
@@ -189,7 +198,7 @@ class ReceptionFunctions {
      * @param Request $request
      * @return bool
      */
-    public static function add_appointment(Request $request) {
+    public function add_appointment(Request $request) {
         $patient = self::guess_patient_id($request->patient);
         $appointment = new Appointments;
         if (is_int($patient))
@@ -219,7 +228,7 @@ class ReceptionFunctions {
      * @param int $patient
      * @return bool
      */
-    public static function upload_document(Request $request, $patient) {
+    public function upload_document(Request $request, $patient) {
         $file = $request->file('doc');
         if (empty($file) || !$file->isValid()) {
             flash()->warning("Invalid file. Upload aborted");

@@ -3,22 +3,36 @@
 namespace Ignite\Reception\Http\Controllers;
 
 use Ignite\Core\Http\Controllers\AdminBaseController;
-use Ignite\Evaluation\Entities\Visits;
+use Ignite\Evaluation\Entities\Visit;
 use Ignite\Reception\Entities\AppointmentCategory;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Http\Requests\CheckinPatientRequest;
 use Ignite\Reception\Http\Requests\CreateAppointmentRequest;
 use Ignite\Reception\Http\Requests\CreatePatientRequest;
 use Ignite\Reception\Library\ReceptionPipeline;
+use Ignite\Reception\Repositories\ReceptionRepository;
 use Ignite\Settings\Entities\Clinics;
 use Illuminate\Http\Request;
 use Ignite\Reception\Entities\Patients;
-use Ignite\Reception\Library\ReceptionFunctions;
 use Ignite\Core\Library\Validation;
 use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Ignite\Reception\Entities\PatientDocuments;
 
 class ReceptionController extends AdminBaseController {
+
+    /**
+     * @var ReceptionRepository
+     */
+    protected $receptionRepository;
+
+    /**
+     * ReceptionController constructor.
+     * @param ReceptionRepository $receptionRepository
+     */
+    public function __construct(ReceptionRepository $receptionRepository) {
+        parent::__construct();
+        $this->receptionRepository = $receptionRepository;
+    }
 
     /**
      * Show form for creating patient
@@ -40,7 +54,7 @@ class ReceptionController extends AdminBaseController {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function save_patient(CreatePatientRequest $request, $id = null) {
-        if (ReceptionFunctions::add_patient($request, $id)) {
+        if ($this->receptionRepository->add_patient($request, $id)) {
             flash("Patient Information saved");
         }
         return redirect()->route('reception.add_patient');
@@ -88,11 +102,11 @@ class ReceptionController extends AdminBaseController {
      */
     public function save_appointment(CreateAppointmentRequest $request, $id = null) {
         if (!empty($id)) {
-            ReceptionFunctions::reschedule_appointment($request, $id);
+            $this->receptionRepository->reschedule_appointment($request, $id);
             return redirect()->route('reception.appointments');
         }
         $this->validate($request, Validation::validate_patient_schedule());
-        if (ReceptionFunctions::add_appointment($request)) {
+        if ($this->receptionRepository->add_appointment($request)) {
             return redirect()->route('reception.appointments');
         }
     }
@@ -124,7 +138,7 @@ class ReceptionController extends AdminBaseController {
     public function upload_doc(Request $request, $id) {
         if ($request->isMethod('post')) {
             // $this->validate($request, validate_patient_documents());
-            if (ReceptionFunctions::upload_document($request, $id)) {
+            if ($this->receptionRepository->upload_document($request, $id)) {
                 $route = \Illuminate\Support\Facades\URL::previous(); // could be uploaded from anywhere, find where
                 return redirect($route); // return redirect()->route('reception.upload_doc', $id);
             }
@@ -134,15 +148,15 @@ class ReceptionController extends AdminBaseController {
         return view('reception::upload_doc')->with('data', $this->data);
     }
 
-    public function do_check(CheckinPatientRequest $request,$patient_id = null, $visit_id = null) {
-        if (ReceptionFunctions::checkin_patient($request, $visit_id)) {
+    public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null) {
+        if ($this->receptionRepository->checkin_patient($request, $visit_id)) {
             return redirect()->route('reception.patients_queue');
         }
     }
 
-    public function checkin( $patient_id = null, $visit_id = null) {
+    public function checkin($patient_id = null, $visit_id = null) {
         if (!empty($patient_id)) {
-            $this->data['visits'] = Visits::wherePatient($patient_id)->get();
+            $this->data['visits'] = Visit::wherePatient($patient_id)->get();
             $this->data['patient'] = Patients::find($patient_id);
             return view('reception::checkin_patient')->with('data', $this->data);
         }
@@ -151,7 +165,7 @@ class ReceptionController extends AdminBaseController {
     }
 
     public function patients_queue() {
-        $this->data['visits'] = Visits::all();
+        $this->data['visits'] = Visit::all();
         return view('reception::patients_queue')->with('data', $this->data);
     }
 

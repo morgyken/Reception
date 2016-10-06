@@ -2,6 +2,8 @@
 
 namespace Ignite\Reception\Providers;
 
+use Ignite\Reception\Repositories\ReceptionFunctions;
+use Ignite\Reception\Repositories\ReceptionRepository;
 use Illuminate\Support\ServiceProvider;
 
 class ReceptionServiceProvider extends ServiceProvider {
@@ -30,7 +32,7 @@ class ReceptionServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        //
+        $this->registerBindings();
     }
 
     /**
@@ -88,6 +90,11 @@ class ReceptionServiceProvider extends ServiceProvider {
      */
     public function provides() {
         return array();
+    }
+
+    private function registerBindings()
+    {
+        $this->app->bind(ReceptionRepository::class,ReceptionFunctions::class);
     }
 
 }

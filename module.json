@@ -7,13 +7,14 @@
     "order": 2,
     "providers": [
         "Ignite\\Reception\\Providers\\ReceptionServiceProvider",
-        "MaddHatter\\LaravelFullcalendar\\ServiceProvider"
+        "MaddHatter\\LaravelFullcalendar\\ServiceProvider",
+        "Ignite\\Reception\\Providers\\RouteServiceProvider"
     ],
     "aliases": {
         "Calendar": "MaddHatter\\LaravelFullcalendar\\Facades\\Calendar"
     },
     "files": [
-        "start.php"
+        "helpers.php"
     ],
     "core": 1,
     "version": "v1.0.0",
