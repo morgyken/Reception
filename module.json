@@ -13,6 +13,9 @@
     "aliases": {
         "Calendar": "MaddHatter\\LaravelFullcalendar\\Facades\\Calendar"
     },
+    "widgets": [
+        "Ignite\\Reception\\Widgets\\PatientQueueWidget"
+    ],
     "files": [
         "helpers.php"
     ],

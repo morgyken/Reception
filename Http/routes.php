@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Routing\Router;
+
 $router->get('patients/add/{id?}', ['uses' => 'ReceptionController@add_patient', 'as' => 'add_patient']);
 $router->post('patients/save/{id?}', ['uses' => 'ReceptionController@save_patient', 'as' => 'save_patient']);
 $router->get('patients/show', ['as' => 'show_patients', 'uses' => 'ReceptionController@show_patients']);
@@ -18,3 +20,9 @@ $router->get('patients/queue', ['as' => 'patients_queue', 'uses' => 'ReceptionCo
 $router->get('patients/manage/queued/{visit_id}', ['as' => 'manage_checkin', 'uses' => 'ReceptionController@manage_checkin']);
 $router->match(['get', 'post'], 'patients/visit/new/{visit_id}', ['as' => 'new_visit', 'uses' => 'ReceptionController@new_visit']);
 $router->get('patients/view/document/{document}', ['as' => 'view_document', 'uses' => 'ReceptionController@document_viewer']);
+
+//settings
+$router->group(['prefix' => 'setup', 'as' => 'setup.'], function (Router $router) {
+    $router->get('appointment/cat/show/{category?}', ['as' => 'app_category', 'uses' => 'SetupController@app_category']);
+    $router->post('appointment/cat/save', ['as' => 'app_category.save', 'uses' => 'SetupController@save_app_category']);
+});

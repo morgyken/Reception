@@ -60,7 +60,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
             $group->item('Setup', function(Item $item) {
                 $item->item('Appointment Categories', function (Item $item) {
                     $item->icon('fa fa-sign-in');
-                    $item->route('reception.checkin');
+                    $item->route('reception.setup.app_category');
                     $item->weight(3);
                 });
             });

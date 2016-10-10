@@ -3,6 +3,7 @@
 namespace Ignite\Reception\Entities;
 
 use Ignite\Core\Foundation\ShouldEncrypt;
+use Ignite\Evaluation\Entities\Visit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -36,6 +37,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\PatientInsurance[] $schemes
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\Appointments[] $appointments
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\PatientDocuments[] $documents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Evaluation\Entities\Visit[] $visits
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients whereFirstName($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients whereMiddleName($value)
@@ -109,9 +111,8 @@ use SoftDeletes;
         return $this->hasMany(PatientDocuments::class, 'patient');
     }
 
-    /*
-      public function visits() {
-      return $this->hasMany(PatientVisits::class, 'patient', 'id');
-      }
-     */
+    public function visits() {
+        return $this->hasMany(Visit::class, 'patient');
+    }
+
 }
