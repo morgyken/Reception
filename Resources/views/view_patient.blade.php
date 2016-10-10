@@ -42,7 +42,7 @@ $docs = $data['docs'];
                 @if(!empty($patient->image))
                 <img src="{{$patient->image}}"  alt="Patient Image" height="300px"/>
                 @else
-                <img src="{{Module::asset('reception:img/ph.png')}}" alt="Patient Image" height="300px"/>
+                <img src="{{m_asset('reception:img/ph.png')}}" alt="Patient Image" height="300px"/>
                 <!--TODO enable image to be captured here-->
                 @endif
             </div>

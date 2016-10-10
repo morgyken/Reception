@@ -152,5 +152,5 @@
 <script type="text/javascript">
     var SCHEMES_URL = "{{route('api.settings.get_schemes')}}";
 </script>
-<script src="{{Module::asset('reception:js/addpatient.min.js')}}"></script>
+<script src="{{m_asset('reception:js/addpatient.min.js')}}"></script>
 @endsection

@@ -103,5 +103,5 @@
     });
 </script>
 @endif
-<script src="{{Module::asset('reception:js/appointments.min.js')}}"></script>
+<script src="{{m_asset('reception:js/appointments.min.js')}}"></script>
 @endsection
