@@ -42,7 +42,7 @@ class ReceptionController extends AdminBaseController {
     public function add_patient($id = null) {
         $this->data['patient'] = Patients::findOrNew($id);
         if (!empty($id)) {
-            return view('reception::edit_patient')->with('data', $this->data);
+            return view('reception::edit_patient', ['data' => $this->data]);
         }
         return view('reception::add_patient', ['data' => $this->data]);
     }
@@ -132,7 +132,7 @@ class ReceptionController extends AdminBaseController {
 
     public function documents() {
         $this->data['patients'] = Patients::all();
-        return view('reception::patient_documents')->with('data', $this->data);
+        return view('reception::patient_documents', ['data' => $this->data]);
     }
 
     public function upload_doc(Request $request, $id) {
@@ -145,7 +145,7 @@ class ReceptionController extends AdminBaseController {
         }
         $this->data['patient'] = Patients::find($id);
         $this->data['docs'] = PatientDocuments::wherePatient($id)->get();
-        return view('reception::upload_doc')->with('data', $this->data);
+        return view('reception::upload_doc', ['data' => $this->data]);
     }
 
     public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null) {
@@ -158,15 +158,15 @@ class ReceptionController extends AdminBaseController {
         if (!empty($patient_id)) {
             $this->data['visits'] = Visit::wherePatient($patient_id)->get();
             $this->data['patient'] = Patients::find($patient_id);
-            return view('reception::checkin_patient')->with('data', $this->data);
+            return view('reception::checkin_patient', ['data' => $this->data]);
         }
         $this->data['patients'] = Patients::all();
-        return view('reception::checkin')->with('data', $this->data);
+        return view('reception::checkin', ['data' => $this->data]);
     }
 
     public function patients_queue() {
         $this->data['visits'] = Visit::all();
-        return view('reception::patients_queue')->with('data', $this->data);
+        return view('reception::patients_queue', ['data' => $this->data]);
     }
 
     public function document_viewer($id) {
