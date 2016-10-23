@@ -39,7 +39,7 @@ class PatientInsurance extends Model {
     }
 
     public function schemes() {
-        return $this->belongsTo(Schemes::class, 'scheme', 'id');
+        return $this->belongsTo(Schemes::class, 'scheme');
     }
 
 }

@@ -14,7 +14,7 @@ class CheckinPatientRequest extends FormRequest {
     public function rules() {
         return [
             "destination" => "required",
-            "purpose" => "required",
+            //  "purpose" => "required",
             "payment_mode" => 'required',
         ];
     }
