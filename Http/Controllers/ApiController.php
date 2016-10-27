@@ -24,4 +24,22 @@ class ApiController extends Controller {
         return Response::json($meta->save());
     }
 
+    public function get_patients(Request $request) {
+        // $found = collect();
+        $ret = [];
+        $term = $request->q;
+        if (!empty($term)) {
+            //$found = \Ignite\Reception\Entities\Patients::where('concat(first_name)', 'like', "%$term%")->get();
+        }
+        $found = \Ignite\Reception\Entities\Patients::all();
+        $build = [];
+        foreach ($found as $patient) {
+            $build[] = [
+                'text' => $patient->full_name,
+                'id' => $patient->id];
+        }
+        $ret['results'] = $build;
+        return json_encode($ret);
+    }
+
 }

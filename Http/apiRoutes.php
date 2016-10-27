@@ -16,3 +16,4 @@ $router->get('appointment/change/destination', ['uses' => 'ApiController@change_
 $router->delete('documents/delete', ['uses' => 'ApiController@delete_doc', 'as' => 'delete_doc']);
 $router->get('appointment/appointments', ['uses' => 'ApiController@reschedule', 'as' => 'reschedule']);
 $router->delete('appointment/cancel', ['uses' => 'ApiController@cancel_appointment', 'as' => 'cancel_appointment']);
+$router->get('patients', ['uses' => 'ApiController@get_patients', 'as' => 'suggest_patients']);
