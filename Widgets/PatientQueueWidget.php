@@ -25,13 +25,13 @@ class PatientQueueWidget extends BaseDashboardWidgets {
     /**
      * @var \Illuminate\Database\Eloquent\Collection|static[]
      */
-    protected $data;
+    protected $info;
 
     /**
      * PatientQueueWidget constructor.
      */
     public function __construct() {
-        $this->data['patients'] = Patients::all()->take(10);
+        $this->info['patients'] = Patients::all()->take(10);
     }
 
     /**
@@ -69,7 +69,7 @@ class PatientQueueWidget extends BaseDashboardWidgets {
      * @return array
      */
     protected function data() {
-        return ['data' => $this->data];
+        return ['data' => $this->info];
     }
 
 }
