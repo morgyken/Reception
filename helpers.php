@@ -100,8 +100,8 @@ if (!function_exists('get_checkin_destinations')) {
      */
     function get_checkin_destinations() {
         $first = [];
-        $roles = Setting::get('reception::checkin_destinations');
-        $places = Setting::get('reception::checkin_places');
+        $roles = m_setting('reception.checkin_destinations');
+        $places = m_setting('reception.checkin_places');
         $intrests = json_decode($places);
         foreach ($intrests as $one) {
             $first[$one] = mconfig('reception.options.destinations.' . $one);
