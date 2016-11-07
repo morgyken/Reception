@@ -10,10 +10,11 @@
  * =============================================================================
  */
 
-namespace Ignite\Reception\Repositories;
+namespace Ignite\Reception\Library;
 
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Reception\Entities\PatientInsurance;
+use Ignite\Reception\Repositories\ReceptionRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ignite\Reception\Entities\Patients;
@@ -59,22 +60,20 @@ class ReceptionFunctions implements ReceptionRepository {
         $today = Visit::where('created_at', '>=', new Date('today'))
                         ->where('patient', $this->request->patient)->get()->first();
         if ($today) {
-            $visit = Visit::find($today->visit_id);
+            $visit = Visit::find($today->id);
         } else {
             $visit = new Visit;
         }
         $visit->patient = $this->request->patient;
-        $visit->clinic = \Session::get('clinic');
+        $visit->clinic = session('clinic', 1);
         if ($this->request->has('purpose')) {
             $visit->purpose = $this->request->purpose;
         }
         $visit->payment_mode = $this->request->payment_mode;
-
         if ($this->request->has('to_nurse')) {
             $visit->nurse = true;
         }
         $this->coallesce($visit, $this->request);
-
         $visit->user = $this->request->user()->id;
         if ($this->request->has('scheme')) {
             $visit->scheme = $this->request->scheme;

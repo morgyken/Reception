@@ -2,7 +2,7 @@
 
 namespace Ignite\Reception\Providers;
 
-use Ignite\Reception\Repositories\ReceptionFunctions;
+use Ignite\Reception\Library\ReceptionFunctions;
 use Ignite\Reception\Repositories\ReceptionRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -92,8 +92,7 @@ class ReceptionServiceProvider extends ServiceProvider {
         return array();
     }
 
-    private function registerBindings()
-    {
+    private function registerBindings()    {
         $this->app->bind(ReceptionRepository::class,ReceptionFunctions::class);
     }
 
