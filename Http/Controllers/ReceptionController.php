@@ -137,10 +137,8 @@ class ReceptionController extends AdminBaseController {
 
     public function upload_doc(Request $request, $id) {
         if ($request->isMethod('post')) {
-            // $this->validate($request, validate_patient_documents());
-            if ($this->receptionRepository->upload_document($request, $id)) {
-                $route = \Illuminate\Support\Facades\URL::previous(); // could be uploaded from anywhere, find where
-                return redirect($route); // return redirect()->route('reception.upload_doc', $id);
+            if ($this->receptionRepository->upload_document($id)) {
+                return back();
             }
         }
         $this->data['patient'] = Patients::find($id);

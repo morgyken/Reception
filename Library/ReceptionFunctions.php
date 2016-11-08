@@ -218,10 +218,11 @@ class ReceptionFunctions implements ReceptionRepository {
     public function add_appointment() {
         $patient = self::guess_patient_id($this->request->patient);
         $appointment = new Appointments;
-        if (is_int($patient))
+        if (is_int($patient)) {
             $appointment->patient = $patient;
-        else
+        } else {
             $appointment->guest = $patient;
+        }
         $appointment->time = new \Date($this->request->date . ' ' . $this->request->time);
 //$appointment->procedure = $this->request->procedure;
         $appointment->doctor = $this->request->doctor;
