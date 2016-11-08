@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Model;
 class PatientDocuments extends Model {
 
     public $table = 'reception_patient_documents';
+    protected $guarded = [];
 
     public function patients() {
         return $this->belongsTo(Patients::class, 'patient_id', 'patient_id');
