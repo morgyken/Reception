@@ -38,7 +38,8 @@ return [
         5 => 'Radiology Tests',
         6 => 'X-RAY Records',
         7 => 'Other Reports',
-    ], 'schedule_categories' => [
+    ],
+    'schedule_categories' => [
         1 => 'Consultation',
         2 => 'Lab',
         3 => 'Surgery',
@@ -58,5 +59,14 @@ return [
         2 => 'Review after surgery',
         3 => 'Follow up review',
         4 => 'General Consultation',
+    ],
+    'visit_status' => [
+        1 => 'Scheduled',
+        2 => 'Checked In',
+        3 => 'Checked Out',
+        3 => 'Cancelled',
+        4 => 'Rescheduled',
+        5 => 'Proposed',
+        6 => 'No show',
     ],
 ];

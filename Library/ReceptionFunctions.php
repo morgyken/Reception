@@ -125,7 +125,7 @@ class ReceptionFunctions implements ReceptionRepository {
      */
     public function add_patient() {
         DB::transaction(function () {
-//patient first
+            //patient first
             $patient = Patients::findOrNew($this->id);
             $patient->first_name = ucfirst($this->request->first_name);
             $patient->middle_name = ucfirst($this->request->middle_name);
@@ -144,7 +144,7 @@ class ReceptionFunctions implements ReceptionRepository {
                 $patient->image = $this->request->imagesrc;
             }
             $patient->save();
-//next of kins
+            //next of kins
             $nok = NextOfKin::findOrNew($this->id);
             $nok->patient = $patient->id;
             $nok->first_name = ucfirst($this->request->first_name_nok);
@@ -200,15 +200,6 @@ class ReceptionFunctions implements ReceptionRepository {
      * @author Samuel Okoth <sodhiambo@collabmed.com>
      * @param string $name
      */
-    public function guess_patient_id($name) {
-        $they = Patients::all();
-        foreach ($they as $patient) {
-            if ($patient->full_name == $name) {
-                return $patient->patient_id;
-            }
-        }
-        return ucwords($name); //$name;
-    }
 
     /**
      * Add an appointment for patient
@@ -216,12 +207,11 @@ class ReceptionFunctions implements ReceptionRepository {
      * @return bool
      */
     public function add_appointment() {
-        $patient = self::guess_patient_id($this->request->patient);
         $appointment = new Appointments;
-        if (is_int($patient)) {
-            $appointment->patient = $patient;
+        if (is_numeric($this->request->patient)) {
+            $appointment->patient = $this->request->patient;
         } else {
-            $appointment->guest = $patient;
+            $appointment->guest = $this->request->patient;
         }
         $appointment->time = new \Date($this->request->date . ' ' . $this->request->time);
 //$appointment->procedure = $this->request->procedure;
@@ -229,14 +219,13 @@ class ReceptionFunctions implements ReceptionRepository {
         $appointment->instructions = $this->request->instructions;
         $appointment->clinic = $this->request->clinic;
         $appointment->category = $this->request->category;
-
         if ($appointment->save()) {
 //dispatch(new \Dervis\Jobs\SendNotificationSMS($appointment->schedule_id), 'reminders');
 //  sendAppointmentNotification($appointment);
-            $this->request->session()->flash('success', "Appointment has been saved");
+            flash("Appointment has been saved", 'success');
             return true;
         }
-        $this->request->session()->flash('error', "An error occurred");
+        flash("An error occurred", 'danger');
         return false;
     }
 

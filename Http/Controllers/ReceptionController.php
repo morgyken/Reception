@@ -14,7 +14,6 @@ use Ignite\Reception\Repositories\ReceptionRepository;
 use Ignite\Settings\Entities\Clinics;
 use Illuminate\Http\Request;
 use Ignite\Reception\Entities\Patients;
-use Ignite\Core\Library\Validation;
 use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Ignite\Reception\Entities\PatientDocuments;
 
@@ -55,7 +54,7 @@ class ReceptionController extends AdminBaseController {
      */
     public function save_patient(CreatePatientRequest $request, $id = null) {
         if ($this->receptionRepository->add_patient($request, $id)) {
-            flash("Patient Information saved");
+            flash("Patient Information saved", 'success');
         }
         return redirect()->route('reception.add_patient');
     }
@@ -100,12 +99,11 @@ class ReceptionController extends AdminBaseController {
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function save_appointment(CreateAppointmentRequest $request, $id = null) {
+    public function appointments_save(CreateAppointmentRequest $request, $id = null) {
         if (!empty($id)) {
             $this->receptionRepository->reschedule_appointment($request, $id);
             return redirect()->route('reception.appointments');
         }
-        $this->validate($request, Validation::validate_patient_schedule());
         if ($this->receptionRepository->add_appointment($request)) {
             return redirect()->route('reception.appointments');
         }

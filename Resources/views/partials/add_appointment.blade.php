@@ -9,7 +9,7 @@
     <div class="modal-dialog modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
-            {!! Form::open(['route'=>'reception.appointments.new']) !!}
+            {!! Form::open(['route'=>'reception.appointments.save']) !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Appointment</h4>
@@ -81,49 +81,3 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#patient_select").select2({
-            tags: true,
-            theme: "classic",
-            ajax: {
-                url: "{{route('api.reception.suggest_patients')}}",
-                dataType: 'json',
-                cache: true,
-                data: function (term, page) {
-                    return {
-                        term: term
-                    };
-                },
-                results: function (data, page) {
-                    return {results: data};
-                }
-                , cache: true
-            },
-            formatNoMatches: function () {
-                return "No matches found";
-            },
-            formatInputTooShort: function (input, min) {
-                return "Please enter " + (min - input.length) + " more characters";
-            },
-            formatInputTooLong: function (input, max) {
-                return "Please enter " + (input.length - max) + " less characters";
-            },
-            formatSelectionTooBig: function (limit) {
-                return "You can only select " + limit + " items";
-            },
-            formatLoadMore: function (pageNumber) {
-                return "Loading more results...";
-            },
-            formatSearching: function () {
-                return "Searching...";
-            },
-            minimumInputLength: 2
-        });
-    });
-</script>
-@section('styles')
-<style>
-
-</style>
-@endsection
