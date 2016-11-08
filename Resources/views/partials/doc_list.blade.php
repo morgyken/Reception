@@ -50,7 +50,7 @@
                         <td><a href="{{route('reception.view_document',$doc->id)}}" target="_blank">
                                 {{$doc->filename}}</a>
                         </td>
-                        <td>{{mconfig('reception.options.document_types.'.$doc->document_type)}}</td>
+                        <td>{{mconfig('reception.options.document_types.'.$doc->document_type,'Uploaded Document')}}</td>
                         <td>{{number_format($doc->description/1024,2)}} KiB</td>
                         <td>{{$doc->mime}}</td>
                         <td>{{$doc->users->profile->full_name}}</td>
