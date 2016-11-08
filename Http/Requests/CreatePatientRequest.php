@@ -11,31 +11,30 @@ class CreatePatientRequest extends FormRequest {
      *
      * @return array
      */
+    protected $rules = [];
+
     public function rules() {
-        return [
+        $this->rules = [
             //basics
             "first_name" => "required",
-            "midle_name" => "",
             "last_name" => "required",
-            "dob" => "required",
-            "id_no" => "numeric",
+            "dob" => "required|date",
+            "id_number" => "numeric|digits_between:7,8",
             "sex" => "required",
             //contacts
-            "telephone" => "",
             "mobile" => "required",
             "email" => "email",
-            "alt_number" => "",
-            "address" => "",
             "post_code" => "numeric",
             "town" => "required_with:address",
-            /* "first_name_nok" => "required_with_all:last_name_nok,mobile_nok,nok_relationship",
-              "middle_name_nok" => "",
-              "last_name_nok" => "",
-              "mobile_nok" => "",
-              "nok_relationship" => "", */
             "insured" => "required",
             "image" => "image"
         ];
+        if ($this->has('first_name_nok')) {
+            $this->rules["first_name_nok"] = "required";
+            $this->rules["last_name_nok"] = "required";
+            $this->rules["nok_relationship"] = "required";
+        }
+        return $this->rules;
     }
 
     /**

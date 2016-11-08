@@ -55,7 +55,7 @@ class ReceptionController extends AdminBaseController {
      */
     public function save_patient(CreatePatientRequest $request, $id = null) {
         if ($this->receptionRepository->add_patient($request, $id)) {
-            flash("Patient Information saved");
+            flash("Patient Information saved", 'success');
         }
         return redirect()->route('reception.add_patient');
     }

@@ -125,7 +125,7 @@ class ReceptionFunctions implements ReceptionRepository {
      */
     public function add_patient() {
         DB::transaction(function () {
-//patient first
+            //patient first
             $patient = Patients::findOrNew($this->id);
             $patient->first_name = ucfirst($this->request->first_name);
             $patient->middle_name = ucfirst($this->request->middle_name);
@@ -144,7 +144,7 @@ class ReceptionFunctions implements ReceptionRepository {
                 $patient->image = $this->request->imagesrc;
             }
             $patient->save();
-//next of kins
+            //next of kins
             $nok = NextOfKin::findOrNew($this->id);
             $nok->patient = $patient->id;
             $nok->first_name = ucfirst($this->request->first_name_nok);
