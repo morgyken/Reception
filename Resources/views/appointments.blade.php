@@ -25,7 +25,7 @@
                 @foreach($data['clinics'] as $clinic)
                 <li>
                     <a class="prefetch"
-                       sam-ajax="{{$clinic->clinic_id}}" data-toggle="tab">{{$clinic->name}}
+                       sam-ajax="{{$clinic->id}}" data-toggle="tab">{{$clinic->name}}
                     </a>
                 </li>
                 @endforeach
@@ -34,7 +34,7 @@
                         <i class="fa fa-map-marker"></i> Check in patients</a>
                 </li>
                 <li class="pull-right">
-                    <a href="{{route('reception.appointments.new')}}" id="new" class="btn btn-primary">
+                    <a id="new" class="btn btn-primary">
                         <i class="fa fa-plus"></i> New Appointment</a>
                 </li>
             </ul>
@@ -45,18 +45,18 @@
                 <li class="active"><a data-toggle="tab" sam-ajax2="0" id="all_cat" class="categories">All</a></li>
                 @foreach($data['categories'] as $category)
                 <li>
-                    <a data-toggle="tab" sam-ajax2="{{$category->category_id}}"  class="categories">{{$category->name}}</a>
+                    <a data-toggle="tab" sam-ajax2="{{$category->id}}"
+                       class="categories">{{$category->name}}</a>
                 </li>
                 @endforeach
-
             </ul>
         </div>
         <div id="appointments">
-            @include('reception::partials.view_appointments')
+            <!--include('reception::partials.view_appointments')-->
         </div>
     </div>
 </div>
-<div class="modal fade"  id="myModal" role="dialog">
+<div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <!-- Modal content-->
@@ -69,7 +69,7 @@
                     <p>Do you want to cancel. </p>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" id="delete" >Yes, I am sure</button>
+                    <button class="btn btn-danger" id="delete">Yes, I am sure</button>
                     <button class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -81,20 +81,7 @@
     var CANCEL_URL = "{{route('api.reception.cancel_appointment')}}";
     var GET_SCHEDULE = "{{route('api.reception.get_schedule')}}";
     var RESCHEDULE_URL = "{{route('api.reception.reschedule')}}";
-    $(document).ready(function () {
-        $("#date1").datepicker({dateFormat: 'yy-mm-dd', onSelect: function (date) {
-                $("#date2").datepicker('option', 'minDate', date);
-                fetch_table();
-            }});
-        $("#date2").datepicker({dateFormat: 'yy-mm-dd', onSelect: function (date) {
-                fetch_table();
-            }});
-        $('#clearBtn').click(function () {
-            $("#date1").val('');
-            $("#date2").val('');
-            fetch_table();
-        });
-    });
+    var PATIENTS_URL = "{{route('api.reception.suggest_patients')}}";
 </script>
 @if(!$errors->isEmpty())
 <script type="text/javascript">

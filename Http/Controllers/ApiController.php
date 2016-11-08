@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Response;
 class ApiController extends Controller {
 
     public function get_schedule(Request $request) {
-        //$this->data['appointments'] = get_appointments($request);
-        return Response::json(get_appointments($request));
-        //return view('system.ajax.clinic_appointments')->with('data', $this->data);
+        $this->data['appointments'] = get_appointments($request);
+        //return Response::json(get_appointments($request));
+        return view('reception::partials.view_appointments', ['data' => $this->data]);
     }
 
     public function cancel_checkin(Request $request) {

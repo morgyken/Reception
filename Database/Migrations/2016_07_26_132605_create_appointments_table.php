@@ -18,7 +18,7 @@ class CreateAppointmentsTable extends Migration {
             $column->string('phone')->nullable();
             $column->dateTime('time');
             $column->integer('category')->unsigned();
-            $column->integer('doctor')->unsigned()->nullable();
+            $column->integer('doctor')->unsigned(); //->nullable();
             $column->longText('instructions')->nullable();
             $column->smallInteger('status')->default(1);
             $column->integer('clinic')->unsigned()->nullable();
@@ -35,6 +35,11 @@ class CreateAppointmentsTable extends Migration {
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
             $column->foreign('category')->references('id')->on('reception_appointment_categories')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+            $column->foreign('doctor')
+                    ->references('id')
+                    ->on('users')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });
