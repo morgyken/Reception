@@ -189,10 +189,10 @@ class ReceptionFunctions implements ReceptionRepository {
         $appointment->category = $this->request->category;
         if ($appointment->save()) {
 //  self::sendRescheduleNotification($this->id);
-            $this->request->session()->flash('success', "Appointment has been rescheduled");
+            flash("Appointment has been rescheduled", 'success');
             return true;
         }
-        $this->request->session()->flash('error', "An error occurred");
+        flash("An error occurred", 'danger');
         return false;
     }
 
@@ -206,7 +206,7 @@ class ReceptionFunctions implements ReceptionRepository {
         if (is_numeric($this->request->patient)) {
             $appointment->patient = $this->request->patient;
         } else {
-            $appointment->guest = $this->request->patient;
+            $appointment->guest = ucwords($this->request->patient);
         }
         $appointment->time = new \Date($this->request->date . ' ' . $this->request->time);
 //$appointment->procedure = $this->request->procedure;
