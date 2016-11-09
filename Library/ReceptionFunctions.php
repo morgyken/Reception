@@ -145,14 +145,16 @@ class ReceptionFunctions implements ReceptionRepository {
             }
             $patient->save();
             //next of kins
-            $nok = NextOfKin::findOrNew($this->id);
-            $nok->patient = $patient->id;
-            $nok->first_name = ucfirst($this->request->first_name_nok);
-            $nok->middle_name = ucfirst($this->request->middle_name_nok);
-            $nok->last_name = ucfirst($this->request->last_name_nok);
-            $nok->mobile = $this->request->mobile_nok;
-            $nok->relationship = $this->request->nok_relationship;
-            $nok->save();
+            if ($this->request->has('first_name_nok')) {
+                $nok = NextOfKin::findOrNew($this->id);
+                $nok->patient = $patient->id;
+                $nok->first_name = ucfirst($this->request->first_name_nok);
+                $nok->middle_name = ucfirst($this->request->middle_name_nok);
+                $nok->last_name = ucfirst($this->request->last_name_nok);
+                $nok->mobile = $this->request->mobile_nok;
+                $nok->relationship = $this->request->nok_relationship;
+                $nok->save();
+            }
             if ($patient->insured == 1) {
                 foreach ($this->request->scheme as $key => $scheme) {
                     $schemes = new PatientInsurance;
@@ -193,13 +195,6 @@ class ReceptionFunctions implements ReceptionRepository {
         $this->request->session()->flash('error', "An error occurred");
         return false;
     }
-
-    /**
-     * Guess the patient id
-     * @todo Make this better might be slow for large data
-     * @author Samuel Okoth <sodhiambo@collabmed.com>
-     * @param string $name
-     */
 
     /**
      * Add an appointment for patient
