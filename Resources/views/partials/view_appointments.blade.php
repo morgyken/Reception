@@ -16,9 +16,9 @@ extract($data);
         @foreach($appointments as $appointment)
         <tr id="row_id{{$appointment->id}}">
             @if($appointment->is_guest)
-            <td>{{$appointment->guest}}</td>
+            <td><span class="badge alert-info" title="Not Enrolled in database">N</span> {{$appointment->guest}}</td>
             @else
-            <td>{{$appointment->patients->full_name}}</td>
+            <td><span class="badge alert-success" title="Enrolled patient">P</span> {{$appointment->patients->full_name}}</td>
             @endif
             <td>{{(new Date($appointment->time))->format('dS M')}}</td>
             <td>{{(new Date($appointment->time))->format('g:ia')}}</td>
