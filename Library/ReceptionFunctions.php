@@ -57,14 +57,17 @@ class ReceptionFunctions implements ReceptionRepository {
      * @return bool
      */
     public function checkin_patient() {
-        //this patient must already be here
-        $today = Visit::where('created_at', '>=', new Date('today'))
-                        ->where('patient', $this->request->patient)->get()->first();
-        if ($today) {
-            $visit = Visit::find($today->id);
-        } else {
-            $visit = new Visit;
-        }
+        /*
+            this patient must already be here
+            $today = Visit::where('created_at', '>=', new Date('today'))
+            ->where('patient', $this->request->patient)->get()->first();
+            if ($today) {
+                $visit = Visit::find($today->id);
+            } else {
+                $visit = new Visit;
+            }
+        */
+        $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
         if ($this->request->has('purpose')) {
