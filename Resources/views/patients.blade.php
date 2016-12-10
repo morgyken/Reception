@@ -4,6 +4,7 @@
  * Project: iClinic
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
+extract($data);
 ?>
 
 @extends('layouts.app')
@@ -19,7 +20,7 @@
         @if($data['patients']->count()>0)
         <table class="table table-condensed table-responsive table-striped" id="patients">
             <tbody>
-                @foreach($data['patients'] as $patient)
+                @foreach($patients as $patient)
                 <tr id="patient{{$patient->id}}">
                     <td>{{$patient->id}}</td>
                     <td>{{$patient->full_name}}</td>
@@ -50,7 +51,7 @@
             </thead>
         </table>
         @else
-        <p class="text-warning"><i class="fa fa-info"></i> No patients! Strange</p>
+        <p class="text-warning"><i class="fa fa-info"></i> No patients. Strange!</p>
         @endif
     </div>
     <div class="box-footer">
@@ -59,10 +60,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        try {
-            $('table').DataTable();
-        } catch (e) {
-        }
+        $('table').DataTable();
     });
 </script>
 @endsection

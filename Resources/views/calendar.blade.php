@@ -4,7 +4,7 @@
  * Project: iClinic
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
-$calendar = $data['calendar'];
+extract($data);
 ?>
 
 @extends('layouts.app')

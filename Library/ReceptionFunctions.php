@@ -13,6 +13,7 @@
 namespace Ignite\Reception\Library;
 
 use Ignite\Evaluation\Entities\Visit;
+use Ignite\Evaluation\Entities\VisitDestinations;
 use Ignite\Reception\Entities\PatientInsurance;
 use Ignite\Reception\Repositories\ReceptionRepository;
 use Illuminate\Http\Request;
@@ -44,8 +45,8 @@ class ReceptionFunctions implements ReceptionRepository {
      * ReceptionFunctions constructor.
      * @param Request $request
      */
-    public function __construct(Request $request) {
-        $this->request = $request;
+    public function __construct() {
+        $this->request = request();
         if ($this->request->has('id')) {
             $this->id = $this->request->id;
         }
@@ -56,29 +57,32 @@ class ReceptionFunctions implements ReceptionRepository {
      * @return bool
      */
     public function checkin_patient() {
-        //this patient must already be here
-        $today = Visit::where('created_at', '>=', new Date('today'))
-                        ->where('patient', $this->request->patient)->get()->first();
-        if ($today) {
-            $visit = Visit::find($today->id);
-        } else {
-            $visit = new Visit;
-        }
+        /*
+            this patient must already be here
+            $today = Visit::where('created_at', '>=', new Date('today'))
+            ->where('patient', $this->request->patient)->get()->first();
+            if ($today) {
+                $visit = Visit::find($today->id);
+            } else {
+                $visit = new Visit;
+            }
+        */
+        $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
         if ($this->request->has('purpose')) {
             $visit->purpose = $this->request->purpose;
         }
         $visit->payment_mode = $this->request->payment_mode;
-        if ($this->request->has('to_nurse')) {
-            $visit->nurse = true;
-        }
-        $this->coallesce($visit, $this->request);
         $visit->user = $this->request->user()->id;
         if ($this->request->has('scheme')) {
             $visit->scheme = $this->request->scheme;
         }
         if ($visit->save()) {
+            $this->checkin_at($visit->id, $this->request->destination);
+            if ($this->request->has('to_nurse')) { //quick way to forge an entry to nurse section
+                $this->checkin_at($visit->id, 'nurse');
+            }
             flash("Patient has been checked in", 'success');
             return true;
         }
@@ -86,35 +90,23 @@ class ReceptionFunctions implements ReceptionRepository {
         return false;
     }
 
-    private function coallesce(&$visit) {
-        if (intval($this->request->destination) > 0) {
-            $visit->destination = $this->request->destination;
-            $visit->evaluation = true;
-        } else {
-            switch ($this->request->destination) {
-                case 'laboratory':
-                    $visit->laboratory = true;
-                    break;
-                case 'theatre':
-                    $visit->theatre = true;
-                    break;
-                case 'diagnostics':
-                    $visit->diagnostics = true;
-                    break;
-                case 'pharmacy' :
-                    $visit->pharmacy = true;
-                    break;
-                case 'optical':
-                    $visit->optical = true;
-                    break;
-                case 'radiology':
-                    $visit->radiology = true;
-                    break;
-                default :
-                    flash("Unknown checkin destination", 'danger');
-                    return false;
-            }
+    /**
+     * New way to checkin patient
+     * @param $visit
+     * @param $place
+     * @return bool
+     */
+    private function checkin_at($visit, $place) {
+        $department = $place;
+        $destination = NULL;
+        if (intval($place) > 0) {
+            $destination = (int) $department;
+            $department = 'doctor';
         }
+        $destinations = VisitDestinations::firstOrNew(['visit' => $visit, 'department' => ucwords($department)]);
+        $destinations->destination = $destination;
+        $destinations->user = $this->request->user()->id;
+        return $destinations->save();
     }
 
     /**

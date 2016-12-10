@@ -4,7 +4,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-$patient = $data['patient'];
+extract($data);
 ?>
 @extends('layouts.app')
 @section('content_title','Checkin Patient')

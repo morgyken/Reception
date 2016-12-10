@@ -4,7 +4,7 @@
  * Project: iClinic
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
-$count = 0;
+extract($data);
 ?>
 @extends('layouts.app')
 @section('content_title','Patient Checkins')
@@ -15,15 +15,15 @@ $count = 0;
     <div class="box-body">
         <table class="table table-striped">
             <tbody>
-                @foreach($data['visits'] as $visit)
+                @foreach($visits as $visit)
                 <tr id="row_id{{$visit->visit_id}}">
                     <td>{{$visit->patients->full_name}}</td>
                     <td>{{(new Date($visit->created_at))->format('dS M g:i a')}}</td>
                     <td>{{$visit->visit_destination}}</td>
-                    <td>{{config('system.checkin_purposes.'.$visit->purpose)}}</td>
+                    <td>{{mconfig('reception.options.checkin_purposes.'.$visit->purpose)}}</td>
                     <td>
-                        <button value="{{$visit->visit_id}}" class="btn btn-xs btn-primary destination">
-                            <i class="fa fa-exchange"></i> Change Destination</button>
+                        <!-- <button value="{{$visit->visit_id}}" class="btn btn-xs btn-primary destination">
+                             <i class="fa fa-exchange"></i> Change Destination</button>-->
                         <button value='{{$visit->visit_id}}' class="btn btn-danger btn-xs delete">
                             <i class="fa fa-ban"></i> Cancel Check In</button>
                     </td>
@@ -34,7 +34,7 @@ $count = 0;
                 <tr>
                     <th>Name</th>
                     <th>Date / Time</th>
-                    <th>Doctor</th>
+                    <th>Department</th>
                     <th>Purpose</th>
                     <th>Actions</th>
                 </tr>
@@ -134,11 +134,7 @@ $count = 0;
             });
             $("#destination").modal('hide');
         });
-        try {
-            $('table').DataTable();
-        } catch (e) {
-            //console.error(e);
-        }
+        $('table').DataTable();
     });
 </script>
 @endsection
