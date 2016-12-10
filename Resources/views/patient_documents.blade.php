@@ -4,8 +4,7 @@
  * Project: iClinic
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
-
-$patients = $data['patients'];
+extract($data);
 ?>
 @extends('layouts.app')
 @section('content_title','Patient Documents')
@@ -21,6 +20,7 @@ $patients = $data['patients'];
             <tbody>
                 @foreach($patients as $patient)
                 <tr>
+                    <td>{{$patient->id}}</td>
                     <td>{{$patient->full_name}}</td>
                     <td>{{$patient->id_no}}</td>
                     <td>{{(new Date($patient->dob))->format('d M Y')}}</td>
@@ -34,6 +34,7 @@ $patients = $data['patients'];
             </tbody>
             <thead>
                 <tr>
+                    <th>Patient ID</th>
                     <th>Name</th>
                     <th>ID Number</th>
                     <th>Date of Birth</th>
@@ -46,10 +47,7 @@ $patients = $data['patients'];
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        try {
-            $('table').DataTable();
-        } catch (e) {
-        }
+        $('table').DataTable();
     });
 </script>
 @endsection

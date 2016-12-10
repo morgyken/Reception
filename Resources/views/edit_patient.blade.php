@@ -4,7 +4,7 @@
  * Project: iClinic
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
-$patient = $data['patient'];
+extract($data);
 ?>
 @extends('layouts.app')
 @section('content_title','View Patient')

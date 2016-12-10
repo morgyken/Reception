@@ -4,6 +4,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+extract($data);
 ?>
 @extends('layouts.app')
 @section('content_title','Checkin Patients')
@@ -24,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($data['patients'] as $patient)
+                @foreach($patients as $patient)
                 <tr>
                     <td>{{$patient->id}}</td>
                     <td>{{$patient->id_no}}</td>
@@ -40,10 +41,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        try {
-            $('table').DataTable();
-        } catch (e) {
-        }
+        $('table').DataTable();
     });
 </script>
 @endsection
