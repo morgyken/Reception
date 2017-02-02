@@ -4,6 +4,7 @@ use Illuminate\Routing\Router;
 
 $router->get('patients/add/{id?}', ['uses' => 'ReceptionController@add_patient', 'as' => 'add_patient']);
 $router->post('patients/save/{id?}', ['uses' => 'ReceptionController@save_patient', 'as' => 'save_patient']);
+$router->post('patients/update/', ['uses' => 'ReceptionController@save_patient', 'as' => 'update_patient']);
 $router->get('patients/show', ['as' => 'show_patients', 'uses' => 'ReceptionController@show_patients']);
 // $router->match(['post', 'get'], 'patients/edit/{id?}', ['uses' => 'ReceptionController@edit_patient', 'as' => 'edit_patient']);
 $router->get('patients/view/{id}', ['uses' => 'ReceptionController@view_patient', 'as' => 'view_patient']);
