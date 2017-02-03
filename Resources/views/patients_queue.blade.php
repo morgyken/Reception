@@ -16,15 +16,15 @@ extract($data);
         <table class="table table-striped">
             <tbody>
                 @foreach($visits as $visit)
-                <tr id="row_id{{$visit->visit_id}}">
+                <tr id="row_id{{$visit->id}}">
                     <td>{{$visit->patients->full_name}}</td>
                     <td>{{(new Date($visit->created_at))->format('dS M g:i a')}}</td>
                     <td>{{$visit->visit_destination}}</td>
                     <td>{{mconfig('reception.options.checkin_purposes.'.$visit->purpose)}}</td>
                     <td>
-                        <!-- <button value="{{$visit->visit_id}}" class="btn btn-xs btn-primary destination">
+                        <!-- <button value="{{$visit->id}}" class="btn btn-xs btn-primary destination">
                              <i class="fa fa-exchange"></i> Change Destination</button>-->
-                        <button value='{{$visit->visit_id}}' class="btn btn-danger btn-xs delete">
+                        <button value='{{$visit->id}}' class="btn btn-danger btn-xs delete">
                             <i class="fa fa-ban"></i> Cancel Check In</button>
                     </td>
                 </tr>
@@ -88,6 +88,7 @@ extract($data);
         var to_delete = null;
         var CANCEL_URL = "{{route('api.reception.cancel_checkin')}}";
         var CHANGE_DEST_URL = "{{route('api.reception.change_destination')}}";
+
         $('.delete').click(function () {
             to_delete = $(this).val();
             $('#myModal').modal('show');
