@@ -112,6 +112,11 @@ class ReceptionController extends AdminBaseController {
         }
     }
 
+    public function appointments_res(CreateAppointmentRequest $request) {
+        $this->receptionRepository->reschedule_appointment($request, $request->id);
+        return redirect()->route('reception.appointments');
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
