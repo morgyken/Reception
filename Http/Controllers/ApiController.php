@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Ignite\Reception\Entities\Appointments;
+use Ignite\Evaluation\Entities\Visit;
 
 class ApiController extends Controller {
 
@@ -16,7 +17,7 @@ class ApiController extends Controller {
     }
 
     public function cancel_checkin(Request $request) {
-        return Response::json(PatientVisits::destroy($request->id));
+        return Response::json(Visit::destroy($request->id));
     }
 
     public function reschedule(Request $request) {
@@ -31,7 +32,7 @@ class ApiController extends Controller {
     }
 
     public function change_destination(Request $request) {
-        $meta = PatientVisits::find($request->id);
+        $meta = Visit::find($request->id);
         $meta->destination = $request->new_dest;
         return Response::json($meta->save());
     }
