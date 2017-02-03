@@ -10,6 +10,7 @@ $router->get('patients/show', ['as' => 'show_patients', 'uses' => 'ReceptionCont
 $router->get('patients/view/{id}', ['uses' => 'ReceptionController@view_patient', 'as' => 'view_patient']);
 $router->get('patient/schedule/show/{id?}', ['uses' => 'ReceptionController@appointments', 'as' => 'appointments']);
 $router->post('patient/schedule/save/{id?}', ['uses' => 'ReceptionController@appointments_save', 'as' => 'appointments.save']);
+$router->post('patient/reschedule/', ['uses' => 'ReceptionController@appointments_res', 'as' => 'appointments.res']);
 $router->get('patients/calendar', ['uses' => 'ReceptionController@calendar', 'as' => 'calendar']);
 $router->get('patients/google/calendar', ['uses' => 'ReceptionController@google_calendar', 'as' => 'google_calendar']);
 $router->get('patients/documents', ['uses' => 'ReceptionController@documents', 'as' => 'patient_documents']);
