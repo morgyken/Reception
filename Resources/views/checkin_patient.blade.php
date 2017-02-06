@@ -5,6 +5,7 @@
  * and open the template in the editor.
  */
 extract($data);
+//dd($patient->insured);
 ?>
 @extends('layouts.app')
 @section('content_title','Checkin Patient')
@@ -112,7 +113,7 @@ extract($data);
                     {!! Form::label('name', 'Payment Mode',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8" id="mode">
                         <input checked name="payment_mode" type="radio" value="cash" id="cash_option"> Cash
-                        @if($patient->is_insured)
+                        @if($patient->insured>0)
                         <input name="payment_mode" type="radio" value="insurance" id="insurance_option"> Insurance
                         @endif
                         {!! $errors->first('payment_mode', '<span class="help-block">:message</span>') !!}

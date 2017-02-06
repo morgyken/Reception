@@ -13,8 +13,6 @@
             {!! Form::label('insured', 'Patient Has Insurance',['class'=>'control-label col-md-4']) !!}
             <div class="col-md-8">
                 <label class="radio-inline">
-                    <input type="radio" value="0" name="insured" id="h_schemes" checked /> No</label>
-                <label class="radio-inline">
                     <input type="radio" value="1" name="insured" id="s_schemes"/> Yes</label>
             </div>
         </div>

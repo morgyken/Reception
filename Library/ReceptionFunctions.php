@@ -58,15 +58,15 @@ class ReceptionFunctions implements ReceptionRepository {
      */
     public function checkin_patient() {
         /*
-            this patient must already be here
-            $today = Visit::where('created_at', '>=', new Date('today'))
-            ->where('patient', $this->request->patient)->get()->first();
-            if ($today) {
-                $visit = Visit::find($today->id);
-            } else {
-                $visit = new Visit;
-            }
-        */
+          this patient must already be here
+          $today = Visit::where('created_at', '>=', new Date('today'))
+          ->where('patient', $this->request->patient)->get()->first();
+          if ($today) {
+          $visit = Visit::find($today->id);
+          } else {
+          $visit = new Visit;
+          }
+         */
         $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
@@ -132,10 +132,12 @@ class ReceptionFunctions implements ReceptionRepository {
             $patient->address = $this->request->address;
             $patient->post_code = $this->request->post_code;
             $patient->town = ucfirst($this->request->town);
+
             if ($this->request->has('imagesrc')) {
                 $patient->image = $this->request->imagesrc;
             }
             $patient->save();
+
             //next of kins
             if ($this->request->has('first_name_nok')) {
                 $nok = NextOfKin::findOrNew($this->id);
@@ -147,17 +149,18 @@ class ReceptionFunctions implements ReceptionRepository {
                 $nok->relationship = $this->request->nok_relationship;
                 $nok->save();
             }
-            if ($patient->insured == 1) {
-                foreach ($this->request->scheme as $key => $scheme) {
-                    $schemes = new PatientInsurance;
-                    $schemes->patient_id = $patient->patient_id;
-                    $schemes->scheme_id = strtoupper($this->request->scheme[$key]);
-                    $schemes->policy_number = $this->request->policy_number[$key];
-                    $schemes->principal = ucwords($this->request->principal[$key]);
-                    $schemes->dob = $this->request->principal_dob[$key];
-                    $schemes->relationship = $this->request->principal_relationship[$key];
-                    $schemes->save();
-                }
+            //if ($patient->insured == 1) {
+            if ($this->request->has('insured')) {
+                //foreach ((array) $this->request->scheme1 as $key => $scheme) {
+                $schemes = new PatientInsurance;
+                $schemes->patient = $patient->id;
+                $schemes->scheme = strtoupper($this->request->scheme1);
+                $schemes->policy_number = $this->request->policy_number1;
+                $schemes->principal = ucwords($this->request->principal1);
+                $schemes->dob = new \Date($this->request->principal_dob1);
+                $schemes->relationship = $this->request->principal_relationship1;
+                $schemes->save();
+                // }
             }
             $addon = "Click <a href='" . route('reception.checkin', $patient->patient_id) . "'>here</a> to checkin";
             flash()->success($patient->full_name . " details saved. $addon");

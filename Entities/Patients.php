@@ -95,6 +95,10 @@ use SoftDeletes;
         return $this->schemes->count() > 0;
     }
 
+    public function getInsuredAttribute() {
+        return $this->schemes->count();
+    }
+
     public function nok() {
         return $this->hasOne(NextOfKin::class, 'patient');
     }

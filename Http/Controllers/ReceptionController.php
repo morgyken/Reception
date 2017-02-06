@@ -17,6 +17,7 @@ use Ignite\Reception\Entities\Patients;
 use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Ignite\Reception\Entities\PatientDocuments;
 use Ignite\Reception\Entities\Spine;
+use Ignite\Reception\Entities\PatientInsurance;
 use Illuminate\Support\Facades\Auth;
 use Ignite\Reception\Entities\Spine_Visit;
 
@@ -57,9 +58,21 @@ class ReceptionController extends AdminBaseController {
      */
     public function save_patient(CreatePatientRequest $request, $id = null) {
         if ($this->receptionRepository->add_patient($request, $request->id)) {
+            //$this->savePatientScheme($request, $request->id);
             flash("Patient Information saved", 'success');
         }
         return redirect()->route('reception.add_patient');
+    }
+
+    public function savePatientScheme(Request $request, $patient) {
+        $ins = new PatientInsurance;
+        $ins->patient = $patient;
+        $ins->scheme = $request->scheme1;
+        $ins->policy_number = $request->policy_number1;
+        $ins->principal = $request->principal1;
+        $ins->dob = $request->principal_dob1;
+        $ins->relationship = $request->principal_relationship1;
+        $ins->save();
     }
 
     /**
