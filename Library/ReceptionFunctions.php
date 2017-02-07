@@ -123,7 +123,7 @@ class ReceptionFunctions implements ReceptionRepository {
             $patient->middle_name = ucfirst($this->request->middle_name);
             $patient->last_name = ucfirst($this->request->last_name);
             $patient->id_no = $this->request->id_number;
-            $patient->dob = $this->request->dob;
+            $patient->dob = new \Date($this->request->dob);
             $patient->sex = $this->request->sex;
             $patient->telephone = $this->request->telephone;
             $patient->mobile = $this->request->mobile;
@@ -132,7 +132,6 @@ class ReceptionFunctions implements ReceptionRepository {
             $patient->address = $this->request->address;
             $patient->post_code = $this->request->post_code;
             $patient->town = ucfirst($this->request->town);
-
             if ($this->request->has('imagesrc')) {
                 $patient->image = $this->request->imagesrc;
             }
@@ -151,16 +150,18 @@ class ReceptionFunctions implements ReceptionRepository {
             }
             //if ($patient->insured == 1) {
             if ($this->request->has('insured')) {
-                //foreach ((array) $this->request->scheme1 as $key => $scheme) {
-                $schemes = new PatientInsurance;
-                $schemes->patient = $patient->id;
-                $schemes->scheme = strtoupper($this->request->scheme1);
-                $schemes->policy_number = $this->request->policy_number1;
-                $schemes->principal = ucwords($this->request->principal1);
-                $schemes->dob = new \Date($this->request->principal_dob1);
-                $schemes->relationship = $this->request->principal_relationship1;
-                $schemes->save();
-                // }
+                if ($this->request->insured === 1) {
+                    //foreach ((array) $this->request->scheme1 as $key => $scheme) {
+                    $schemes = new PatientInsurance;
+                    $schemes->patient = $patient->id;
+                    $schemes->scheme = strtoupper($this->request->scheme1);
+                    $schemes->policy_number = $this->request->policy_number1;
+                    $schemes->principal = ucwords($this->request->principal1);
+                    $schemes->dob = new \Date($this->request->principal_dob1);
+                    $schemes->relationship = $this->request->principal_relationship1;
+                    $schemes->save();
+                    // }
+                }
             }
             $addon = "Click <a href='" . route('reception.checkin', $patient->patient_id) . "'>here</a> to checkin";
             flash()->success($patient->full_name . " details saved. $addon");
