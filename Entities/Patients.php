@@ -119,4 +119,8 @@ use SoftDeletes;
         return $this->hasMany(Visit::class, 'patient');
     }
 
+    public function drug_purchases() {
+        return $this->hasMany(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'patient');
+    }
+
 }
