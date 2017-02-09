@@ -159,5 +159,10 @@ extract($data);
             </div>
             {!! Form::close() !!}
     </div>
+
+    <script type="text/javascript">
+        var SCHEMES_URL = "{{route('api.settings.get_schemes')}}";
+    </script>
+    <script src="{{m_asset('reception:js/addpatient.min.js')}}"></script>
 </div>
 @endsection

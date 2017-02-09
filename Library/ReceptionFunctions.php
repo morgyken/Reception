@@ -149,8 +149,9 @@ class ReceptionFunctions implements ReceptionRepository {
                 $nok->save();
             }
             //if ($patient->insured == 1) {
-            if ($this->request->has('insured')) {
-                if ($this->request->insured === 1) {
+            if (isset($this->request->insured)) {
+                //dd($this->request->insured);
+                if ($this->request->insured == 1) {
                     //foreach ((array) $this->request->scheme1 as $key => $scheme) {
                     $schemes = new PatientInsurance;
                     $schemes->patient = $patient->id;

@@ -195,46 +195,4 @@ class ReceptionController extends AdminBaseController {
         echo base64_decode($file_meta->document);
     }
 
-    public function Spine() {
-        //$patient = Spine::query()->where('id', '>=', 1)->get();
-        //$this->migrate_patient($patient);
-        $visits = Spine_Visit::query()->where('id', '>=', 1)->get();
-        $this->migrate_visits($visits);
-    }
-
-    public function migrate_patient($data) {
-        foreach ($data as $d) {
-            $p = new Patients;
-            $p->id = $d->id;
-            $p->first_name = $d->First_Name;
-            $p->middle_name = $d->Midle_Name;
-            $p->last_name = $d->Last_Name;
-            $p->dob = new \Date($d->Date_Of_Birth);
-            $p->sex = $d->Sex;
-            $p->id_no = $d->ID_Passport_Number;
-            $p->address = $d->Postal_Address;
-            $p->mobile = $d->Mobile_Number;
-            $p->email = $d->Email_Address;
-            $p->save();
-        }
-        echo 'Patient Data Migration Successfull... Thank you<br/>';
-    }
-
-    public function migrate_visits($data) {
-        foreach ($data as $d) {
-            $visit = new Visit;
-            $visit->clinic = 1;
-            $visit->patient = $d->patient;
-            if ($visit->scheme > 0) {
-                $visit->scheme = $d->scheme;
-            }
-            $visit->purpose = NULL; //$d->purpose;
-            $visit->payment_mode = $d->payment_mode;
-            $visit->user = Auth::user()->id;
-            $visit->created_at = $d->check_in;
-            $visit->save();
-        }
-        echo 'Visit Data Migration Successfull... Thank you<br/>';
-    }
-
 }
