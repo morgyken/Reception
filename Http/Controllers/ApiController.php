@@ -45,6 +45,9 @@ class ApiController extends Controller {
             //$found = \Ignite\Reception\Entities\Patients::where('concat(first_name)', 'like', "%$term%")->get();
         }
         $found = \Ignite\Reception\Entities\Patients::all();
+        //$found = PatientInsurance::with('schemes')
+        //        ->get();
+
         $build = [];
         foreach ($found as $patient) {
             $build[] = [
