@@ -34,7 +34,6 @@ extract($data);
                 <dl class="dl-horizontal">
                     <?php if (isset($patient->nok)) { ?>
                         <dt>Name:</dt><dd>{{$patient->nok?$patient->nok->full_name:''}}</dd>
-                        <dt>Relationship:</dt><dd>{{mconfig('reception.options.relationship.'.$patient->nok?$patient->nok->relationship:'')}}</dd>
                         <dt>Mobile:</dt><dd>{{$patient->nok?$patient->nok->mobile:''}}</dd>
                     <?php } ?>
                 </dl>
