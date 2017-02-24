@@ -19,7 +19,15 @@ extract($data);
                 <tr id="row_id{{$visit->id}}">
                     <td>{{$visit->patients->full_name}}</td>
                     <td>{{(new Date($visit->created_at))->format('dS M g:i a')}}</td>
-                    <td>{{$visit->visit_destination}}</td>
+                    <td>{{$visit->visit_destination}}
+                    </td>
+                    <td>
+                        @foreach($visit->destinations as $d)
+                        @if($d->destination>0)
+                        {{$d->department}} {{$d->medics->profile->name}}<br/>
+                        @endif
+                        @endforeach
+                    </td>
                     <td>{{mconfig('reception.options.checkin_purposes.'.$visit->purpose)}}</td>
                     <td>
                         <!-- <button value="{{$visit->id}}" class="btn btn-xs btn-primary destination">
@@ -35,6 +43,7 @@ extract($data);
                     <th>Name</th>
                     <th>Date / Time</th>
                     <th>Department</th>
+                    <th><i class="fa fa-user-md"></i>Destination</th>
                     <th>Purpose</th>
                     <th>Actions</th>
                 </tr>

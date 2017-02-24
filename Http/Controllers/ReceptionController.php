@@ -182,7 +182,7 @@ class ReceptionController extends AdminBaseController {
     }
 
     public function patients_queue() {
-        $this->data['visits'] = Visit::all();
+        $this->data['visits'] = Visit::with('destinations')->get();
         return view('reception::patients_queue', ['data' => $this->data]);
     }
 
