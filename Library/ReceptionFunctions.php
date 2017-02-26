@@ -22,6 +22,8 @@ use Ignite\Reception\Entities\Patients;
 use Ignite\Reception\Entities\NextOfKin;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Entities\PatientDocuments;
+use Ignite\Evaluation\Entities\Investigations;
+use Ignite\Evaluation\Entities\Procedures;
 use Jenssegers\Date\Date;
 
 /**
@@ -82,6 +84,18 @@ class ReceptionFunctions implements ReceptionRepository {
             $this->checkin_at($visit->id, $this->request->destination);
             if ($this->request->has('to_nurse')) { //quick way to forge an entry to nurse section
                 $this->checkin_at($visit->id, 'nurse');
+            }
+            //precharge
+            if ($this->request->has('precharge')) {
+                $inv = new Investigations;
+                $procedure = Procedures::find($this->request->precharge);
+                $inv->visit = $visit->id;
+                $inv->type = 'treatment';
+                $inv->procedure = $this->request->precharge;
+                $inv->price = $procedure->cash_charge;
+                $inv->user = \Auth::user()->id;
+                $inv->ordered = 1;
+                $inv->save();
             }
             flash("Patient has been checked in", 'success');
             return true;

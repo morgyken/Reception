@@ -5,6 +5,7 @@
  * and open the template in the editor.
  */
 extract($data);
+//$precharge = data['precharge'];
 //dd($patient->insured);
 ?>
 @extends('layouts.app')
@@ -127,6 +128,26 @@ extract($data);
                     </div>
                 </div>
 
+                <div class="form-group">
+                    {!! Form::label('fees', 'Charge Consultation Fee',['class'=>'control-label col-md-4']) !!}
+                    <div class="col-md-8" id="cfees">
+                        <div class="col-md-2">
+                            <input type="checkbox" id="show_fees" name="consaltation" value="1">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="fees">
+                    {!! Form::label('fees', 'Select Consultation Fee',['class'=>'control-label col-md-4']) !!}
+                    <div class="col-md-8" id="cfees">
+                        <select name="precharge" class="form-control">
+                            @foreach($precharge as $p)
+                            <option value="{{$p->id}}">{{$p->name}} - {{$p->cash_charge}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <div class="pull-right">
                     <button type="submit" class="btn btn-success"><i class="fa fa-map-marker"></i> Checkin</button>
                 </div>
@@ -140,6 +161,9 @@ extract($data);
         $("#mode input").click(function () {
             show_schemes();
         });
+        $("#show_fees").click(function () {
+            show_fees();
+        });
         function show_schemes() {
             var status = $("#insurance_option").is(':checked');
             if (status)
@@ -148,6 +172,15 @@ extract($data);
                 $("#schemes").addClass('hidden');
         }
         show_schemes();
+
+        function show_fees() {
+            var status = $("#show_fees").is(':checked');
+            if (status)
+                $("#fees").removeClass('hidden');
+            else
+                $("#fees").addClass('hidden');
+        }
+        show_fees();
     });
 </script>
 @endsection

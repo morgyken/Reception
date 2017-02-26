@@ -20,6 +20,7 @@ use Ignite\Reception\Entities\Spine; //temp
 use Ignite\Reception\Entities\PatientInsurance;
 use Illuminate\Support\Facades\Auth;
 use Ignite\Reception\Entities\NextOfKin;
+use Ignite\Evaluation\Entities\Procedures;
 
 class ReceptionController extends AdminBaseController {
 
@@ -175,6 +176,7 @@ class ReceptionController extends AdminBaseController {
         if (!empty($patient_id)) {
             $this->data['visits'] = Visit::wherePatient($patient_id)->get();
             $this->data['patient'] = Patients::find($patient_id);
+            $this->data['precharge'] = Procedures::where("precharge", "=", 1)->get();
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
         $this->data['patients'] = Patients::all();

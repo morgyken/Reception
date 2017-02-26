@@ -25,5 +25,6 @@ $router->get('patients/view/document/{document}', ['as' => 'view_document', 'use
 //settings
 $router->group(['prefix' => 'setup', 'as' => 'setup.'], function (Router $router) {
     $router->get('appointment/cat/show/{category?}', ['as' => 'app_category', 'uses' => 'SetupController@app_category']);
+    $router->get('consultation/', ['as' => 'consultation', 'uses' => 'SetupController@consultation']);
     $router->post('appointment/cat/save', ['as' => 'app_category.save', 'uses' => 'SetupController@save_app_category']);
 });
