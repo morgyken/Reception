@@ -140,9 +140,11 @@ extract($data);
                 <div class="form-group" id="fees">
                     {!! Form::label('fees', 'Select Consultation Fee',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8" id="cfees">
-                        <select name="precharge" class="form-control">
+                        <select multiple class="diagnosis_auto form-control" name="precharge[]">
                             @foreach($precharge as $p)
-                            <option value="{{$p->id}}">{{$p->name}} - {{$p->cash_charge}}</option>
+                            <option value="{{$p->id}}">
+                                {{$p->name}} - {{$p->cash_charge}}
+                            </option>
                             @endforeach
                         </select>
                     </div>

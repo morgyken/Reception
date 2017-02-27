@@ -87,15 +87,17 @@ class ReceptionFunctions implements ReceptionRepository {
             }
             //precharge
             if ($this->request->has('precharge')) {
-                $inv = new Investigations;
-                $procedure = Procedures::find($this->request->precharge);
-                $inv->visit = $visit->id;
-                $inv->type = 'treatment';
-                $inv->procedure = $this->request->precharge;
-                $inv->price = $procedure->cash_charge;
-                $inv->user = \Auth::user()->id;
-                $inv->ordered = 1;
-                $inv->save();
+                foreach ($this->request->precharge as $key => $value) {
+                    $inv = new Investigations;
+                    $procedure = Procedures::find($value);
+                    $inv->visit = $visit->id;
+                    $inv->type = 'treatment';
+                    $inv->procedure = $value;
+                    $inv->price = $procedure->cash_charge;
+                    $inv->user = \Auth::user()->id;
+                    $inv->ordered = 1;
+                    $inv->save();
+                }
             }
             flash("Patient has been checked in", 'success');
             return true;
