@@ -35,6 +35,8 @@ extract($data);
                         </a>
                         <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
                             <i class="fa fa-sign-in"></i> Check in</a>
+                        <a style="color: red" href="{{route('reception.purge_patient',$patient->id)}}" class="btn btn-xs">
+                            <i class="fa fa-trash"></i>delete</a>
                     </td>
                 </tr>
                 @endforeach
