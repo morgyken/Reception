@@ -51,6 +51,18 @@ class ReceptionController extends AdminBaseController {
         return view('reception::add_patient', ['data' => $this->data]);
     }
 
+    public function purge_patient(Request $request) {
+        try {
+            $patient = Patients::find($request->id);
+            $patient->delete();
+            flash("Patient Information Deleted", 'success');
+            return back();
+        } catch (\Exception $ex) {
+            flash("Patient Information Could not be deleted", 'error');
+            return back();
+        }
+    }
+
     /**
      * Save patient information
      * @param CreatePatientRequest $request
