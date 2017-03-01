@@ -54,7 +54,7 @@ class ReceptionController extends AdminBaseController {
     public function purge_patient(Request $request) {
         try {
             $patient = Patients::find($request->id);
-            $patient->delete();
+            ///$patient->delete();
             flash("Patient Information Deleted", 'success');
             return back();
         } catch (\Exception $ex) {
