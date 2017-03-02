@@ -52,9 +52,15 @@
                     @foreach($data['docs'] as $doc)
                     <tr id="row_id{{$doc->document_id}}">
                         <td>
-                            <a href="{{route('reception.view_document',$doc->id)}}" target="_blank">
-                                {{$doc->filename}}
+                            @if(strpos($doc->mime, 'image') !== false)
+                            <a href="#" data-toggle="modal" data-target="#image_{{$doc->id}}">
+                                {{substr($doc->filename, 0, 50)}}
                             </a>
+                            @else
+                            <a href="{{route('reception.view_document',$doc->id)}}" target="_blank">
+                                {{substr($doc->filename, 0, 50)}}
+                            </a>
+                            @endif
                         </td>
                         <td>{{mconfig('reception.options.document_types.'.$doc->document_type,'Uploaded Document')}}</td>
                         <td>{{number_format($doc->description/1024,2)}} KiB</td>
