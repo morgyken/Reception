@@ -80,6 +80,8 @@ $(document).ready(function () {
                 .attr("name", "imagesrc").val(IMAGE_SRC);
         form.append($(input));
     });
+
+
     $('#photo').change(function (e) {
         var image_path = URL.createObjectURL(e.target.files[0]);
         $('#thephoto').attr("src", image_path);
@@ -103,9 +105,4 @@ $(document).ready(function () {
         };
         img.src = src;
     }
-
-
-    $('#nok_relation').change(function (e) {
-        alert('yea')
-    });
 });
