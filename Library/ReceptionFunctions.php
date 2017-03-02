@@ -248,9 +248,18 @@ class ReceptionFunctions implements ReceptionRepository {
             flash()->warning("Invalid file. Upload aborted");
             return false;
         }
+
         $document = new PatientDocuments;
         $document->patient = $patient;
-        $document->document = base64_encode(file_get_contents($file->getRealPath()));
+
+        if ($this->request->has('imagesrc')) {
+            if (!($this->request->imagesrc == 'not_image')) {
+                $document->document = $this->request->imagesrc;
+            } else {
+                $document->document = base64_encode(file_get_contents($file->getRealPath()));
+            }
+        }
+
         $document->filename = $file->getClientOriginalName();
         $document->mime = $file->getClientMimeType();
         $document->document_type = $this->request->document_type;
