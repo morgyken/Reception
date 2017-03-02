@@ -58,4 +58,13 @@ class ApiController extends Controller {
         return json_encode($ret);
     }
 
+    public function delete_doc(Request $request) {
+        try {
+            $doc = \Ignite\Reception\Entities\PatientDocuments::find($request->id);
+            $doc->delete();
+        } catch (\Exception $ex) {
+            echo 'Error deleting document';
+        }
+    }
+
 }
