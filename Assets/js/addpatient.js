@@ -87,6 +87,7 @@ $(document).ready(function () {
             IMAGE_SRC = base64Img;
         });
     });
+
     function toDataUrl(src, callback) {
         var img = new Image();
         img.crossOrigin = 'Anonymous';
@@ -102,4 +103,9 @@ $(document).ready(function () {
         };
         img.src = src;
     }
+
+
+    $('#nok_relation').change(function (e) {
+        alert('yea')
+    });
 });

@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="form-group {{ $errors->has('nok_relationship') ? ' has-error' : '' }}">
-            {!! Form::label('nok_relationship', 'Relationship',['class'=>'control-label col-md-4']) !!}
+            {!! Form::label('nok_relationship', 'Relationship',['id'=>'nok_relation','class'=>'control-label col-md-4']) !!}
             <div class="col-md-8">
                 {!! Form::select('nok_relationship',mconfig('reception.options.relationship'), old('nok_relationship'), ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}
                 {!! $errors->first('nok_relationship', '<span class="help-block">:message</span>') !!}
