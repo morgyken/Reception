@@ -50,7 +50,7 @@
             <table class="table table-condensed" id="documents-tbl">
                 <tbody>
                     @foreach($data['docs'] as $doc)
-                    <tr id="row_id{{$doc->document_id}}">
+                    <tr id="row_id{{$doc->id}}">
                         <td>
                             @if(strpos($doc->mime, 'image') !== false)
                             <a href="#" data-toggle="modal" data-target="#image_{{$doc->id}}">
@@ -140,7 +140,6 @@
     </div>
 </div>
 <script type="text/javascript">
-
     var DELTE_FILE_URL = "{{route('api.reception.delete_doc')}}";
     $(document).ready(function () {
         var discard = null;
@@ -214,7 +213,5 @@
             };
             img.src = src;
         }
-
-
     });
 </script>
