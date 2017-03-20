@@ -40,11 +40,11 @@ class ApiController extends Controller {
     public function get_patients(Request $request) {
         // $found = collect();
         $ret = [];
-        $term = $request->q;
+        $term = ucfirst($request->q);
         if (!empty($term)) {
             //$found = \Ignite\Reception\Entities\Patients::where('concat(first_name)', 'like', "%$term%")->get();
         }
-        $found = \Ignite\Reception\Entities\Patients::all();
+        $found = \Ignite\Reception\Entities\Patients::where('first_name', 'like', "%$term%")->get();
         //$found = PatientInsurance::with('schemes')
         //        ->get();
 

@@ -80,6 +80,11 @@ class ReceptionFunctions implements ReceptionRepository {
         if ($this->request->has('scheme')) {
             $visit->scheme = $this->request->scheme;
         }
+        //External Requests
+        if ($this->request->has('partner')) {
+            $institution = $this->request->institution;
+            $visit->requesting_institution = $institution;
+        }
         if ($visit->save()) {
             $this->checkin_at($visit->id, $this->request->destination);
             if ($this->request->has('to_nurse')) { //quick way to forge an entry to nurse section
@@ -94,7 +99,9 @@ class ReceptionFunctions implements ReceptionRepository {
                     $inv->type = 'treatment';
                     $inv->procedure = $value;
                     $inv->price = $procedure->cash_charge;
-                    $inv->user = \Auth::user()->id;
+                    if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
+                        $inv->user = $this->request->destination;
+                    }
                     $inv->ordered = 1;
                     $inv->save();
                 }
