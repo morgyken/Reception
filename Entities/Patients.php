@@ -68,6 +68,7 @@ class Patients extends Model {
 
 use SoftDeletes;
 
+//0716732706
     /**
      * The attributes that we should encrypt
      * @var array
@@ -97,6 +98,11 @@ use SoftDeletes;
 
     public function getInsuredAttribute() {
         return $this->schemes->count();
+    }
+
+    public function getAgeAttribute() {
+        $age = \Carbon\Carbon::parse($this->attributes['dob'])->age;
+        return $age;
     }
 
     public function nok() {

@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 use Ignite\Reception\Entities\Patients;
 use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Ignite\Reception\Entities\PatientDocuments;
-use Ignite\Reception\Entities\Spine; //temp
 use Ignite\Reception\Entities\PatientInsurance;
 use Illuminate\Support\Facades\Auth;
 use Ignite\Reception\Entities\NextOfKin;
@@ -54,7 +53,7 @@ class ReceptionController extends AdminBaseController {
     public function purge_patient(Request $request) {
         try {
             $patient = Patients::find($request->id);
-            ///$patient->delete();
+///$patient->delete();
             flash("Patient Information Deleted", 'success');
             return back();
         } catch (\Exception $ex) {
@@ -71,7 +70,7 @@ class ReceptionController extends AdminBaseController {
      */
     public function save_patient(CreatePatientRequest $request, $id = null) {
         if ($this->receptionRepository->add_patient($request, $request->id)) {
-            //$this->savePatientScheme($request, $request->id);
+//$this->savePatientScheme($request, $request->id);
             flash("Patient Information saved", 'success');
         }
         return redirect()->route('reception.add_patient');
@@ -189,6 +188,7 @@ class ReceptionController extends AdminBaseController {
             $this->data['visits'] = Visit::wherePatient($patient_id)->get();
             $this->data['patient'] = Patients::find($patient_id);
             $this->data['precharge'] = Procedures::where("precharge", "=", 1)->get();
+            $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
         $this->data['patients'] = Patients::all();
@@ -215,6 +215,7 @@ class ReceptionController extends AdminBaseController {
       /*
       $ins = Spine::all();
       $n = 0;
+
       foreach ($ins as $i) {
       $n+=1;
       $firm = new \Ignite\Settings\Entities\Insurance;
@@ -274,7 +275,6 @@ class ReceptionController extends AdminBaseController {
       // $s->company = $p->PI_Insurance_Provider_ID;
       // $s->name = $p->PI_Plan_Name;
       // $s->save();
-
       $schemes = new PatientInsurance;
       $schemes->patient = $patient->id;
       $schemes->scheme = $p->PI_Insurance_Provider_ID;
@@ -290,5 +290,5 @@ class ReceptionController extends AdminBaseController {
       echo 'Done';
       // });
       }
-     */
+     * */
 }

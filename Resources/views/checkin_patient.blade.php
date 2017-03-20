@@ -151,6 +151,30 @@ extract($data);
                     </div>
                 </div>
 
+                <div class="form-group">
+                    {!! Form::label('partners', 'Requesting Institution',['class'=>'control-label col-md-4']) !!}
+                    <div class="col-md-8">
+                        <div class="col-md-2">
+                            <input type="checkbox" id="show_partners" name='partner' value="1">
+                        </div>
+                        <small>Partnering institutions (applies to Lab tests mostly)</small>
+                    </div>
+                </div>
+
+                <div class="form-group" id="partners">
+                    {!! Form::label('fees', 'Select Requesting Institution',['class'=>'control-label col-md-4']) !!}
+                    <div class="col-md-8" id="partners">
+                        <select class="diagnosis_auto form-control" name="institution">
+                            <option value="">Select Institution</option>
+                            @foreach($partners as $p)
+                            <option value="{{$p->id}}">
+                                {{$p->name}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <div class="pull-right">
                     <button type="submit" class="btn btn-success"><i class="fa fa-map-marker"></i> Checkin</button>
                 </div>
@@ -167,6 +191,18 @@ extract($data);
         $("#show_fees").click(function () {
             show_fees();
         });
+        $("#show_partners").click(function () {
+            show_partners();
+        });
+        function show_partners() {
+            var status = $("#show_partners").is(':checked');
+            if (status)
+                $("#partners").removeClass('hidden');
+            else
+                $("#partners").addClass('hidden');
+        }
+        show_partners();
+
         function show_schemes() {
             var status = $("#insurance_option").is(':checked');
             if (status)
