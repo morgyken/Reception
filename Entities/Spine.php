@@ -2,9 +2,12 @@
 
 namespace Ignite\Reception\Entities;
 
+use Illuminate\Database\Eloquent\Model;
+
 class Spine extends Model {
 
     protected $fillable = [];
-    public $table = "patient";
+    public $table = "patient_decrypted";
 
+    //public $table = "schemes";
 }

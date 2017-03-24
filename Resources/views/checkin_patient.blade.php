@@ -75,7 +75,7 @@ extract($data);
           </div> */
         ?>
         <div class="col-md-6">
-            <h4>Checkin details</h4>
+            <h4>Check-in details</h4>
             <div class="form-horizontal">
                 {!! Form::open(['route'=>['reception.do_check',$patient->id]])!!}
                 <input type="hidden" name="patient" value="{{$patient->id}}"/>
@@ -152,17 +152,17 @@ extract($data);
                 </div>
 
                 <div class="form-group">
-                    {!! Form::label('partners', 'Requesting Institution',['class'=>'control-label col-md-4']) !!}
+                    {!! Form::label('partners', 'External Doctor',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
                         <div class="col-md-2">
-                            <input type="checkbox" id="show_partners" name='partner' value="1">
+                            <input type="checkbox" id="show_partners" name='external_doctor' value="1">
                         </div>
-                        <small>Partnering institutions (applies to Lab tests mostly)</small>
+                        <small>Applies to Lab-tests (Mostly) requested by external doctors</small>
                     </div>
                 </div>
 
                 <div class="form-group" id="partners">
-                    {!! Form::label('fees', 'Select Requesting Institution',['class'=>'control-label col-md-4']) !!}
+                    {!! Form::label('fees', 'Partner Institution',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8" id="partners">
                         <select class="diagnosis_auto form-control" name="institution">
                             <option value="">Select Institution</option>
@@ -171,8 +171,18 @@ extract($data);
                                 {{$p->name}}
                             </option>
                             @endforeach
+                        </select><br><br>
+
+                        <select class="diagnosis_auto form-control" name="external_doc">
+                            <option value="">Select Doctor/Other Staff</option>
+                            @foreach($external_doctors as $doc)
+                            <option value="{{$doc->id}}">
+                                {{ empty($doc->profile)?ucfirst($doc->username):$doc->profile->full_name}}
+                            </option>
+                            @endforeach
                         </select>
                     </div>
+                    <br>
                 </div>
 
                 <div class="pull-right">
