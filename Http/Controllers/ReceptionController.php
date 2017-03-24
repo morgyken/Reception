@@ -189,6 +189,9 @@ class ReceptionController extends AdminBaseController {
             $this->data['patient'] = Patients::find($patient_id);
             $this->data['precharge'] = Procedures::where("precharge", "=", 1)->get();
             $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
+            $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
+                        $query->whereHas('partnerInstitution');
+                    })->get();
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
         $this->data['patients'] = Patients::all();
@@ -196,7 +199,7 @@ class ReceptionController extends AdminBaseController {
     }
 
     public function patients_queue() {
-        $this->data['visits'] = Visit::with('destinations')->get();
+        $this->data['visits'] = Visit::with('destinations')->latest()->get();
         return view('reception::patients_queue', ['data' => $this->data]);
     }
 
@@ -211,11 +214,9 @@ class ReceptionController extends AdminBaseController {
 
     /*
       public function Skipper() {
-
       /*
       $ins = Spine::all();
       $n = 0;
-
       foreach ($ins as $i) {
       $n+=1;
       $firm = new \Ignite\Settings\Entities\Insurance;
@@ -229,14 +230,14 @@ class ReceptionController extends AdminBaseController {
       $firm->save();
       echo $n . '<br/>';
       } */
+    //\DB::transaction(function () {
     /*
-      //\DB::transaction(function () {
-      $spine = Spine::all();
+      $spine = \Ignite\Reception\Entities\Spine::all();
       //dd($spine);
       foreach ($spine as $p) {
       //patient first
-      $patient = new Patients; //::findOrNew($p->Patient_ID);
-      $patient->id = $p->Patient_ID;
+      $patient = Patients::findOrNew($p->id); //new Patients; //::findOrNew($p->Patient_ID);
+      $patient->id = $p->id;
       $patient->first_name = ucfirst($p->First_Name);
       $patient->middle_name = ucfirst($p->Middle_Name);
       $patient->last_name = ucfirst($p->Last_Name);
@@ -256,10 +257,10 @@ class ReceptionController extends AdminBaseController {
       //  $patient->image = $this->request->imagesrc;
       //}
       $patient->save();
-
       //next of kins
-      if (isset($p->NOK_First_Name)) {
-      $nok = NextOfKin::findOrNew($patient->id);
+      if (isset($p->NOK_First_Name) && $p->NOK_First_Name !== '-') {
+      //dd($patient->id);
+      $nok = new NextOfKin;
       $nok->patient = $patient->id;
       $nok->first_name = ucfirst($p->NOK_First_Name);
       $nok->middle_name = ucfirst($p->NOK_Middle_Name);
@@ -271,10 +272,13 @@ class ReceptionController extends AdminBaseController {
       //if ($patient->insured == 1) {
       if ($p->PI_Insurance_Provider_ID > 0) {
       //foreach ((array) $this->request->scheme1 as $key => $scheme) {
-      // $s = new \Ignite\Settings\Entities\Schemes;
-      // $s->company = $p->PI_Insurance_Provider_ID;
-      // $s->name = $p->PI_Plan_Name;
-      // $s->save();
+      /* $s = new \Ignite\Settings\Entities\Schemes;
+      $s->company = $p->PI_Insurance_Provider_ID;
+      $s->name = $p->PI_Plan_Name;
+      dd($p->PI_Plan_Name);
+      $s->save();
+     */
+    /*
       $schemes = new PatientInsurance;
       $schemes->patient = $patient->id;
       $schemes->scheme = $p->PI_Insurance_Provider_ID;
@@ -283,12 +287,13 @@ class ReceptionController extends AdminBaseController {
       $schemes->dob = new \Date($p->PI_Date_Of_Birth);
       $schemes->relationship = $p->PI_Relationship_ID;
       $schemes->save();
-      // }
       }
+      // }
       //flash()->success($patient->full_name . " details saved. $addon");
       }
       echo 'Done';
-      // });
+      //});
       }
-     * */
+     *
+     */
 }

@@ -80,10 +80,9 @@ class ReceptionFunctions implements ReceptionRepository {
         if ($this->request->has('scheme')) {
             $visit->scheme = $this->request->scheme;
         }
-        //External Requests
-        if ($this->request->has('partner')) {
-            $institution = $this->request->institution;
-            $visit->requesting_institution = $institution;
+        //External Doctor Requests (Applies to Externally Ordered Labs)
+        if ($this->request->has('external_doctor')) {
+            $visit->external_doctor = $this->request->external_doc;
         }
         if ($visit->save()) {
             $this->checkin_at($visit->id, $this->request->destination);
