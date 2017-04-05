@@ -128,8 +128,39 @@ extract($data);
                     </div>
                 </div>
 
+                @if(m_setting('reception.pre_charged_compulsory'))
+                <?php
+                $pre_charged = json_decode(m_setting('reception.pre_charged_compulsory'));
+                ?>
                 <div class="form-group">
-                    {!! Form::label('fees', 'Charge Consultation Fee',['class'=>'control-label col-md-4']) !!}
+                    {!! Form::label('fees', 'Compulsory Fees Applied',['class'=>'control-label col-md-4']) !!}
+                    <div class="col-md-8" id="cfees">
+                        @foreach ($pre_charged as $_p)
+                        <?php
+                        try {
+                            $prepaid = Ignite\Evaluation\Entities\Procedures::find($_p);
+                            ?>
+                            <ol>
+                                <li>{{$prepaid->name}} - {{$prepaid->cash_charge}}</li>
+                            </ol>
+                            <input type="hidden" name="precharge[]" value="{{$_p}}">
+                            <?php
+                        } catch (\Exception $ex) {
+
+                        }
+                        ?>
+                        @endforeach
+                    </div>
+                </div>
+
+                @endif
+
+                <div class="form-group">
+                    @if(m_setting('reception.pre_charged_compulsory'))
+                    {!! Form::label('fees', 'Apply More Fees',['class'=>'control-label col-md-4']) !!}
+                    @else
+                    {!! Form::label('fees', 'Pre Paid Fees',['class'=>'control-label col-md-4']) !!}
+                    @endif
                     <div class="col-md-8" id="cfees">
                         <div class="col-md-2">
                             <input type="checkbox" id="show_fees" name="consaltation" value="1">
@@ -138,18 +169,34 @@ extract($data);
                 </div>
 
                 <div class="form-group" id="fees">
-                    {!! Form::label('fees', 'Select Consultation Fee',['class'=>'control-label col-md-4']) !!}
+                    {!! Form::label('fees', 'Select Fee',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8" id="cfees">
                         <small>press Ctrl and click to select multiple options</small>
                         <select multiple class="diagnosis_auto form-control" name="precharge[]">
+                            @if(m_setting('reception.pre_charged_compulsory'))
+                            <?php
+                            $_pre_charged = json_decode(m_setting('reception.pre_charged_compulsory'));
+                            ?>
+                            @foreach($precharge as $p)
+                            @if(!in_array($p->id, $_pre_charged))
+                            <option value="{{$p->id}}">
+                                {{$p->name}} - {{$p->cash_charge}}
+                            </option>
+                            @endif
+                            @endforeach
+
+                            @else
                             @foreach($precharge as $p)
                             <option value="{{$p->id}}">
                                 {{$p->name}} - {{$p->cash_charge}}
                             </option>
                             @endforeach
+                            @endif
                         </select>
                     </div>
                 </div>
+
+
 
                 <div class="form-group">
                     {!! Form::label('partners', 'External Doctor',['class'=>'control-label col-md-4']) !!}

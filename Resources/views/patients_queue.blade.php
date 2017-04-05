@@ -144,7 +144,9 @@ extract($data);
             });
             $("#destination").modal('hide');
         });
-        $('table').DataTable();
+        $('table').DataTable({
+            "aaSorting": []
+        });
     });
 </script>
 @endsection
