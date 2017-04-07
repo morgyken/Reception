@@ -47,13 +47,6 @@ extract($data);
                 </tr>
                 @endforeach
             </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="5">
-                        <p>{{ $patients->links() }} >> Next 1000 patients</p>
-                    </td>
-                </tr>
-            </tfoot>
         </table>
     </div>
 </div>

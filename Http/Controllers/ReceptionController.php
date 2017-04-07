@@ -92,7 +92,7 @@ class ReceptionController extends AdminBaseController {
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show_patients() {
-        $this->data['patients'] = Patients::paginate(1000);
+        $this->data['patients'] = Patients::all();
         return view('reception::patients', ['data' => $this->data]);
     }
 
@@ -194,7 +194,7 @@ class ReceptionController extends AdminBaseController {
                     })->get();
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
-        $this->data['patients'] = Patients::paginate(1000);
+        $this->data['patients'] = Patients::all();
         return view('reception::checkin', ['data' => $this->data]);
     }
 

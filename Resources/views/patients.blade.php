@@ -53,13 +53,6 @@ extract($data);
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tfoot>
-                <tr>
-                    <td colspan="6">
-                        <p>{{ $patients->links() }} >> Next 1000 patients</p>
-                    </td>
-                </tr>
-            </tfoot>
         </table>
         @else
         <p class="text-warning"><i class="fa fa-info"></i> No patients. Strange!</p>
