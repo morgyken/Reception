@@ -14,8 +14,19 @@ extract($data);
 <div class="box box-info">
     <div class="box-body">
 
-        <table class="table table-stripped table-condensed">
-            <thead>
+        <table class="table table-striped table-condensed">
+            <thead style="background-color: #e0e0e0">
+                <!--
+                <tr>
+                    <td colspan="4">
+                        {{ Form::open(array('route' => 'reception.patient.search')) }}
+                        <input type="text" placeholder="ENTER PATIENT NAME TO SEARCH" size="70" name="key">
+                        <input type="submit" value="SEARCH" class="btn btn-s btn-primary">
+                        {{ Form::close() }}
+                    </td>
+                    <td></td>
+                </tr>
+                -->
                 <tr>
                     <th>#</th>
                     <th>ID No</th>
@@ -36,6 +47,13 @@ extract($data);
                 </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <p>{{ $patients->links() }} >> Next 1000 patients</p>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

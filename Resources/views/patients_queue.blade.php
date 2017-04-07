@@ -48,6 +48,13 @@ extract($data);
                     <th>Actions</th>
                 </tr>
             </thead>
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                        <p>Latest 100 displayed</p>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
