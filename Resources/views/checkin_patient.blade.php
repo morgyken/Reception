@@ -131,33 +131,37 @@ extract($data);
                 @if(m_setting('reception.pre_charged_compulsory'))
                 <?php
                 $pre_charged = json_decode(m_setting('reception.pre_charged_compulsory'));
-                ?>
-                <div class="form-group">
-                    {!! Form::label('fees', 'Compulsory Fees Applied',['class'=>'control-label col-md-4']) !!}
-                    <div class="col-md-8" id="cfees">
-                        @foreach ($pre_charged as $_p)
-                        <?php
-                        try {
-                            $prepaid = Ignite\Evaluation\Entities\Procedures::find($_p);
-                            ?>
-                            <ol>
-                                <li>{{$prepaid->name}} - {{$prepaid->cash_charge}}</li>
-                            </ol>
-                            <input type="hidden" name="precharge[]" value="{{$_p}}">
+                if (!in_array('none', $pre_charged) && count($pre_charged) == 1) {
+                    ?>
+
+                    <div class="form-group">
+                        {!! Form::label('fees', 'Compulsory Fees Applied',['class'=>'control-label col-md-4']) !!}
+                        <div class="col-md-8" id="cfees">
+                            @foreach ($pre_charged as $_p)
                             <?php
-                        } catch (\Exception $ex) {
+                            try {
+                                $prepaid = Ignite\Evaluation\Entities\Procedures::find($_p);
+                                ?>
+                                <ol>
+                                    <li>{{$prepaid->name}} - {{$prepaid->cash_charge}}</li>
+                                </ol>
+                                <input type="hidden" name="precharge[]" value="{{$_p}}">
+                                <?php
+                            } catch (\Exception $ex) {
 
-                        }
-                        ?>
-                        @endforeach
+                            }
+                            ?>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-
+                    <?php
+                }
+                ?>
                 @endif
 
                 <div class="form-group">
                     @if(m_setting('reception.pre_charged_compulsory'))
-                    {!! Form::label('fees', 'Apply More Fees',['class'=>'control-label col-md-4']) !!}
+                    {!! Form::label('fees', 'Pre-paid Fees',['class'=>'control-label col-md-4']) !!}
                     @else
                     {!! Form::label('fees', 'Pre Paid Fees',['class'=>'control-label col-md-4']) !!}
                     @endif

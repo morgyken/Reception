@@ -4,7 +4,7 @@ $pre_charged = get_precharged_fees();
 <div class="form-group">
     <label for="{{ $settingName }}">{{ $moduleInfo['description'] }}</label>
     <select multiple class="charges" name="{{ $settingName }}[]" id="{{ $settingName }}">
-        <option value="">select at least one</option>
+        <option value="none">none</option>
         <?php try { ?>
             @foreach($pre_charged as $p)
             <option value="{{$p->id}}" {{ (isset($data['db_settings'][$settingName]) && isset(array_flip(json_decode($data['db_settings'][$settingName]->value))[$p->id])) ? 'selected' : '' }}>{{$p->name}}</option>>
@@ -25,6 +25,7 @@ $pre_charged = get_precharged_fees();
     $(document).ready(function () {
         $('.charges').selectize({
             delimiter: ',',
+            allowEmptyOption: true,
             plugins: ['remove_button']
         });
     });
