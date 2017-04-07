@@ -129,4 +129,8 @@ use SoftDeletes;
         return $this->hasMany(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'patient');
     }
 
+    public function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
+        return 1000;
+    }
+
 }

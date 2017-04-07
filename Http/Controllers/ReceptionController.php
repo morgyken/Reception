@@ -92,7 +92,7 @@ class ReceptionController extends AdminBaseController {
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show_patients() {
-        $this->data['patients'] = Patients::all();
+        $this->data['patients'] = Patients::paginate(1000);
         return view('reception::patients', ['data' => $this->data]);
     }
 
@@ -194,13 +194,21 @@ class ReceptionController extends AdminBaseController {
                     })->get();
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
-        $this->data['patients'] = Patients::all();
+        $this->data['patients'] = Patients::paginate(1000);
         return view('reception::checkin', ['data' => $this->data]);
     }
 
     public function patients_queue() {
-        $this->data['visits'] = Visit::with('destinations')->oldest()->get();
+        $this->data['visits'] = Visit::with('destinations')
+                ->limit(100)
+                ->orderBy('created_at', 'desc')
+                ->get();
         return view('reception::patients_queue', ['data' => $this->data]);
+    }
+
+    public function SearchPatient(Request $request) {
+        $patients = Patients::where('first_name', 'like', '%' . base64_encode($request->key) . '%')->get();
+        dd($patients);
     }
 
     public function document_viewer($id) {

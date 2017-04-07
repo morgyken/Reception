@@ -23,6 +23,7 @@ $router->get('patients/manage/queued/{visit_id}', ['as' => 'manage_checkin', 'us
 $router->match(['get', 'post'], 'patients/visit/new/{visit_id}', ['as' => 'new_visit', 'uses' => 'ReceptionController@new_visit']);
 $router->get('patients/view/document/{document}', ['as' => 'view_document', 'uses' => 'ReceptionController@document_viewer']);
 $router->get('patients/skipper', ['as' => 'skipper', 'uses' => 'ReceptionController@Skipper']);
+$router->post('patients/search', ['as' => 'patient.search', 'uses' => 'ReceptionController@SearchPatient']);
 //settings
 $router->group(['prefix' => 'setup', 'as' => 'setup.'], function (Router $router) {
     $router->get('appointment/cat/show/{category?}', ['as' => 'app_category', 'uses' => 'SetupController@app_category']);
