@@ -135,3 +135,12 @@ if (!function_exists('get_color_code')) {
     }
 
 }
+
+
+if (!function_exists('get_precharged_fees')) {
+
+    function get_precharged_fees() {
+        return Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
+    }
+
+}

@@ -199,7 +199,7 @@ class ReceptionController extends AdminBaseController {
     }
 
     public function patients_queue() {
-        $this->data['visits'] = Visit::with('destinations')->latest()->get();
+        $this->data['visits'] = Visit::with('destinations')->oldest()->get();
         return view('reception::patients_queue', ['data' => $this->data]);
     }
 
