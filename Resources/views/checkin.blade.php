@@ -13,20 +13,17 @@ extract($data);
 @section('content')
 <div class="box box-info">
     <div class="box-body">
+        <a target="blank" class="btn btn-xs btn-primary" href="{{route('reception.show_patients')}}">View the entire patient list</a><br>
 
         <table class="table table-striped table-condensed">
-            <thead style="background-color: #e0e0e0">
-                <!--
-                <tr>
-                    <td colspan="4">
-                        {{ Form::open(array('route' => 'reception.patient.search')) }}
-                        <input type="text" placeholder="ENTER PATIENT NAME TO SEARCH" size="70" name="key">
-                        <input type="submit" value="SEARCH" class="btn btn-s btn-primary">
-                        {{ Form::close() }}
-                    </td>
-                    <td></td>
+            <thead>
+                <tr style="background-color: #e0e0e0">
+                    <th><input type="text" id="search_patient" placeholder="Search patient by name or or ID Number" class="form-control"></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
-                -->
                 <tr>
                     <th>#</th>
                     <th>ID No</th>
@@ -35,24 +32,27 @@ extract($data);
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($patients as $patient)
-                <tr>
-                    <td>{{$patient->id}}</td>
-                    <td>{{$patient->id_no}}</td>
-                    <td>{{$patient->fullname}}</td>
-                    <td>{{$patient->checked_in_status}}</td>
-                    <td><a href="{{route('reception.checkin',$patient->id)}}">
-                            <i class="fa fa-sign-in"></i> Check in</a></td>
-                </tr>
-                @endforeach
+            <tbody class="results">
             </tbody>
         </table>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('table').DataTable();
+    var GET_PATIENTS = "{{route('api.reception.get_patients')}}";
+    $('#search_patient').keyup(function () {
+        get_patients(this.value);
     });
+    $(document).ready(function () {
+        //$('table').DataTable();
+    });
+
+    function get_patients(term) {
+        $.ajax({
+            url: GET_PATIENTS,
+            data: {'term': term},
+            success: function (data) {
+                $('.results').html(data);
+            }});
+    }
 </script>
 @endsection

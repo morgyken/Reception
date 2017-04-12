@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Evaluation\Entities\Visit;
+use Ignite\Core\Foundation\ShouldEncrypt;
 
 class ApiController extends Controller {
+
+    use ShouldEncrypt;
 
     public function get_schedule(Request $request) {
         $this->data['appointments'] = get_appointments($request);
@@ -56,6 +59,24 @@ class ApiController extends Controller {
         }
         $ret['results'] = $build;
         return json_encode($ret);
+    }
+
+    public function get_checkin_patients(Request $request) {
+        $rows = '';
+        $patients = \Ignite\Reception\Entities\Patients::all();
+        foreach ($patients as $patient) {
+            if (str_contains($patient->fullname, ucfirst($request->term)) || str_contains($patient->id_no, ucfirst($request->term))) {
+                $rows.= '<tr>
+                    <td>' . $patient->id . '</td>
+                    <td>' . $patient->id_no . '</td>
+                    <td>' . $patient->fullname . '</td>
+                    <td>' . $patient->checked_in_status . '</td>
+                    <td><a href=' . route('reception.checkin', $patient->id) . '>
+                            <i class="fa fa-sign-in"></i> Check in</a></td>
+                </tr>';
+            }
+        }
+        echo $rows;
     }
 
     public function delete_doc(Request $request) {
