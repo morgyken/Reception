@@ -68,7 +68,6 @@ class Patients extends Model {
 
 use SoftDeletes;
 
-//0716732706
     /**
      * The attributes that we should encrypt
      * @var array

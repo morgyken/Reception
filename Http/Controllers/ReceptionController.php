@@ -194,14 +194,14 @@ class ReceptionController extends AdminBaseController {
                     })->get();
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
-        $this->data['patients'] = Patients::all();
+        //$this->data['patients'] = Patients::limit(100);
         return view('reception::checkin', ['data' => $this->data]);
     }
 
     public function patients_queue() {
         $this->data['visits'] = Visit::with('destinations')
                 ->limit(100)
-                ->orderBy('created_at', 'desc')
+                ->orderBy('created_at', 'asc')
                 ->get();
         return view('reception::patients_queue', ['data' => $this->data]);
     }
