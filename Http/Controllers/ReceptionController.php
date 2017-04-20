@@ -53,12 +53,30 @@ class ReceptionController extends AdminBaseController {
     public function purge_patient(Request $request) {
         try {
             $patient = Patients::find($request->id);
-///$patient->delete();
+            $this->deletePatientData($request->id);
+            $patient->forceDelete();
             flash("Patient Information Deleted", 'success');
             return back();
         } catch (\Exception $ex) {
             flash("Patient Information Could not be deleted", 'error');
             return back();
+        }
+    }
+
+    public function deletePatientData($id) {
+        $visits = Visit::wherePatient($id)->get();
+        foreach ($visits as $v) {
+            $v->delete();
+            $sale = \Ignite\Inventory\Entities\InventoryBatchProductSales::wherePatient($id)
+                    ->orWhere('visit', '==', $v->id)
+                    ->get();
+            foreach ($sale as $s) {
+                $s->delete();
+            }
+        }
+        $docs = PatientDocuments::wherePatient($id);
+        foreach ($docs as $d) {
+            $d->delete();
         }
     }
 
