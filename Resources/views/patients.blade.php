@@ -14,33 +14,47 @@ extract($data);
 @section('content')
 <div class="box box-info">
     <div class="box-header">
-        <h3 class="box-title">Patient List</h3>
+        <h3 class="box-title">Manage Patients</h3>
     </div>
-    <div class="box-body">
-        @if($data['patients']->count()>0)
-        <table class="table table-condensed table-responsive table-striped" id="patients">
-            <tbody>
-                @foreach($patients as $patient)
-                <tr id="patient{{$patient->id}}">
-                    <td>{{$patient->id}}</td>
-                    <td>{{$patient->full_name}}</td>
-                    <td>{{$patient->id_no}}</td>
-                    <td>{{(new Date($patient->dob))->format('d/m/Y') }}</td>
-                    <td>{{$patient->mobile}}</td>
-                    <td>
-                        <a class="btn  btn-xs" href="{{route('reception.view_patient',$patient->id)}}">
-                            <i class="fa fa-eye-slash"></i> View</a>
-                        <a class="btn  btn-xs" href="{{route('reception.add_patient',$patient->id)}}">
-                            <i class="fa fa-pencil-square-o"></i> Edit
-                        </a>
-                        <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
-                            <i class="fa fa-sign-in"></i> Check in</a>
+    <div class="col-md-12">
+        <input type="text" size="20" id="search_patient" placeholder="Search Patient Name or or ID Number" class="col-xs-4">
+        <a target="blank" class="btn btn-xs btn-primary pull-right" href="{{route('reception.show_patients','all')}}">View entire patient list</a><br>
+    </div>
+    <hr>
 
-                        <a style="color: red" href="{{route('reception.purge_patient',$patient->id)}}" class="btn btn-xs">
-                            <i class="fa fa-trash"></i>delete</a>
-                    </td>
-                </tr>
-                @endforeach
+    <div class="box-body">
+
+        <table id="patients_table" class="table table-condensed table-responsive table-striped" id="patients">
+            <tbody class="results">
+                <?php
+                try {
+                    ?>
+                    @foreach($patients as $patient)
+                    <tr id="patient{{$patient->id}}">
+                        <td>{{$patient->id}}</td>
+                        <td>{{$patient->full_name}}</td>
+                        <td>{{$patient->id_no}}</td>
+                        <td>{{(new Date($patient->dob))->format('d/m/Y') }}</td>
+                        <td>{{$patient->mobile}}</td>
+                        <td>
+                            <a class="btn  btn-xs" href="{{route('reception.view_patient',$patient->id)}}">
+                                <i class="fa fa-eye-slash"></i> View</a>
+                            <a class="btn  btn-xs" href="{{route('reception.add_patient',$patient->id)}}">
+                                <i class="fa fa-pencil-square-o"></i> Edit
+                            </a>
+                            <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
+                                <i class="fa fa-sign-in"></i> Check in</a>
+
+                            <a style="color: red" href="{{route('reception.purge_patient',$patient->id)}}" class="btn btn-xs">
+                                <i class="fa fa-trash"></i>delete</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                    <?php
+                } catch (\Exception $e) {
+                    //Hepa
+                }
+                ?>
             </tbody>
             <thead>
                 <tr>
@@ -53,17 +67,33 @@ extract($data);
                 </tr>
             </thead>
         </table>
-        @else
-        <p class="text-warning"><i class="fa fa-info"></i> No patients. Strange!</p>
-        @endif
     </div>
     <div class="box-footer">
 
     </div>
 </div>
+
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('table').DataTable();
+    var GET_PATIENTS_FOR_MANAGE = "{{route('api.reception.manage_patients')}}";
+    $('#search_patient').keyup(function () {
+        get_patients(this.value);
     });
+    $(document).ready(function () {
+        $('#patients_table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ]
+        });
+    });
+
+    function get_patients(term) {
+        $.ajax({
+            url: GET_PATIENTS_FOR_MANAGE,
+            data: {'term': term},
+            success: function (data) {
+                $('.results').html(data);
+            }});
+    }
 </script>
 @endsection

@@ -12,18 +12,16 @@ extract($data);
 
 @section('content')
 <div class="box box-info">
-    <div class="box-body">
-        <a target="blank" class="btn btn-xs btn-primary" href="{{route('reception.show_patients')}}">View the entire patient list</a><br>
+    <div class="box-header">
+        <h3 class="box-title">Check Patient</h3>
+    </div>
 
+    <div class="box-body">
+        <input type="text" size="20" id="search_patient" placeholder="Search Patient Name or or ID Number" class="col-xs-4">
+        <a target="blank" class="btn btn-xs btn-primary pull-right" href="{{route('reception.show_patients','all')}}">View entire patient list</a><br>
+        <hr>
         <table class="table table-striped table-condensed">
             <thead>
-                <tr style="background-color: #e0e0e0">
-                    <th><input type="text" id="search_patient" placeholder="Search patient by name or or ID Number" class="form-control"></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
                 <tr>
                     <th>#</th>
                     <th>ID No</th>
@@ -36,6 +34,7 @@ extract($data);
             </tbody>
         </table>
     </div>
+</div>
 </div>
 <script type="text/javascript">
     var GET_PATIENTS = "{{route('api.reception.get_patients')}}";
