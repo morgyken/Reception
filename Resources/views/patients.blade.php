@@ -5,8 +5,8 @@
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
 extract($data);
+$roles = get_this_user_roles();
 ?>
-
 @extends('layouts.app')
 @section('content_title','Patients')
 @section('content_description','Featured list of all patients')
@@ -44,9 +44,10 @@ extract($data);
                             </a>
                             <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
                                 <i class="fa fa-sign-in"></i> Check in</a>
-
-                            <a style="color: red" href="{{route('reception.purge_patient',$patient->id)}}" class="btn btn-xs">
-                                <i class="fa fa-trash"></i>delete</a>
+                            <?php if (in_array(5, $roles)) { ?>
+                                <a style="color: red" href="{{route('reception.purge_patient',$patient->id)}}" class="btn btn-xs">
+                                    <i class="fa fa-trash"></i>delete</a>
+                            <?php } ?>
                         </td>
                     </tr>
                     @endforeach

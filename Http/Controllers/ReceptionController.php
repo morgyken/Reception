@@ -144,6 +144,9 @@ class ReceptionController extends AdminBaseController {
     public function appointments() {
         $this->data['clinics'] = Clinics::all();
         $this->data['categories'] = AppointmentCategory::all();
+        $this->data['doctors'] = \Ignite\Users\Entities\User::whereHas('roles', function($query) {
+                    $query->whereRole_id(5);
+                })->get();
         return view('reception::appointments', ['data' => $this->data]);
     }
 

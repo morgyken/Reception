@@ -83,6 +83,7 @@ class ApiController extends Controller {
         $rows = '';
         $patients = \Ignite\Reception\Entities\Patients::all();
         $n = 0;
+        $roles = get_this_user_roles();
         foreach ($patients as $patient) {
             if (str_contains($patient->fullname, ucfirst($request->term)) || str_contains($patient->id_no, ucfirst($request->term))) {
                 $rows.= '
@@ -101,10 +102,14 @@ class ApiController extends Controller {
                         </a>
 
                         <a href=' . route('reception.checkin', $patient->id) . ' class="btn btn-xs">
-                            <i class="fa fa-sign-in"></i> Check in</a>
+                            <i class="fa fa-sign-in"></i> Check in</a>';
 
-                        <a style="color: red" href=' . route('reception.purge_patient', $patient->id) . ' class="btn btn-xs">
-                            <i class="fa fa-trash"></i>delete</a>
+                if (in_array(5, $roles)) {
+                    $rows.='<a style = "color: red" href = ' . route('reception.purge_patient', $patient->id) . ' class = "btn btn-xs">
+                <i class = "fa fa-trash"></i>delete</a >';
+                }
+
+                $rows.='
                     </td>
                 </tr>';
             }
