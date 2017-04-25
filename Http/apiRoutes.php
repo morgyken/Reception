@@ -18,3 +18,4 @@ $router->get('appointment/appointments', ['uses' => 'ApiController@reschedule', 
 $router->delete('appointment/cancel', ['uses' => 'ApiController@cancel_appointment', 'as' => 'cancel_appointment']);
 $router->get('patients', ['uses' => 'ApiController@get_patients', 'as' => 'suggest_patients']);
 $router->get('get_patients', ['uses' => 'ApiController@get_checkin_patients', 'as' => 'get_patients']);
+$router->get('get_patients_for_manage', ['uses' => 'ApiController@get_patients_for_manage', 'as' => 'manage_patients']);

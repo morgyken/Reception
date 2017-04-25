@@ -13,10 +13,14 @@ extract($data);
 @section('content')
 <div class="box box-info">
     <div class="box-body">
+        <h5>Showing for the last 24 hours</h5>
+    </div>
+    <div class="box-body">
         <table class="table table-striped">
             <tbody>
                 @foreach($visits as $visit)
                 <tr id="row_id{{$visit->id}}">
+                    <td>{{$loop->iteration}}</td>
                     <td>{{$visit->patients->full_name}}</td>
                     <td>{{(new Date($visit->created_at))->format('dS M g:i a')}}</td>
                     <td>{{$visit->visit_destination}}
@@ -40,6 +44,7 @@ extract($data);
             </tbody>
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Name</th>
                     <th>Date / Time</th>
                     <th>Department</th>
@@ -48,13 +53,6 @@ extract($data);
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tfoot>
-                <tr>
-                    <td colspan="6">
-                        <p>Latest 100 displayed</p>
-                    </td>
-                </tr>
-            </tfoot>
         </table>
     </div>
 </div>

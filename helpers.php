@@ -38,6 +38,11 @@ if (!function_exists('get_appointments')) {
                 $builder->where('category', $request->category);
             }
         }
+        if ($request->has('doctor')) {
+            if (!empty($request->doctor)) {
+                $builder->where('doctor', $request->doctor);
+            }
+        }
         if ($request->has('start')) {
             $builder->where('time', '>=', $request->start);
         }
@@ -141,6 +146,19 @@ if (!function_exists('get_precharged_fees')) {
 
     function get_precharged_fees() {
         return Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
+    }
+
+}
+
+if (!function_exists('get_this_user_roles')) {
+
+    function get_this_user_roles() {
+        $user = auth()->user();
+        $roles = array();
+        foreach ($user->roles as $role) {
+            $roles[] = $role->role_id;
+        }
+        return $roles;
     }
 
 }
