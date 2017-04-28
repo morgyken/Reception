@@ -46,6 +46,9 @@ return [
         4 => 'Theatre',
         5 => 'Diagnostics',
         6 => 'Physiotherapy',
+        7 => 'Radiology',
+        8 => 'Ultra Sound',
+        9 => 'Nursing',
     ],
     'destinations' => [
         'laboratory' => 'Laboratory',
@@ -55,6 +58,9 @@ return [
         'pharmacy' => 'Pharmacy',
         'optical' => 'Optical',
         'physio' => 'Physiotherapy',
+        'ultra_sound' => 'Ultra Sound',
+        'nursing' => 'Nursing',
+        'doctor' => 'Doctor',
     ],
     'checkin_purposes' => [
         1 => 'First time consultation',

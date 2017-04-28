@@ -95,7 +95,7 @@ class ReceptionFunctions implements ReceptionRepository {
                     $inv = new Investigations;
                     $procedure = Procedures::find($value);
                     $inv->visit = $visit->id;
-                    $inv->type = 'treatment';
+                    $inv->type = strtolower($procedure->categories->name);
                     $inv->procedure = $value;
                     $inv->price = $procedure->cash_charge;
                     if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
