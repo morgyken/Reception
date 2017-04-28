@@ -13,9 +13,7 @@
     "aliases": {
         "Calendar": "MaddHatter\\LaravelFullcalendar\\Facades\\Calendar"
     },
-    "widgets": [
-
-    ],
+    "widgets": [],
     "files": [
         "helpers.php"
     ],

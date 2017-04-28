@@ -72,6 +72,11 @@ class ReceptionFunctions implements ReceptionRepository {
         $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
+        if($this->request->destination == 13){
+            $visit->inpatient = 'on';
+        }
+
+
         if ($this->request->has('purpose')) {
             $visit->purpose = $this->request->purpose;
         }

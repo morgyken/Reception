@@ -5,6 +5,10 @@
  * and open the template in the editor.
  */
 extract($data);
+
+$dests = get_checkin_destinations();
+array_push($dests,'In Patient');
+
 //$precharge = data['precharge'];
 //dd($patient->insured);
 ?>
@@ -82,7 +86,10 @@ extract($data);
                 <div class="form-group req {{ $errors->has('destination') ? ' has-error' : '' }}">
                     {!! Form::label('destination', 'Destination',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::select('destination',get_checkin_destinations(), old('destination'), ['class' => 'form-control']) !!}
+
+
+
+                        {!! Form::select('destination',$dests, old('destination'), ['class' => 'form-control']) !!}
                         {!! $errors->first('destination', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
@@ -127,7 +134,6 @@ extract($data);
                         {!! $errors->first('scheme', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
-
                 <div class="form-group">
                     {!! Form::label('fees', 'Charge Consultation Fee',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8" id="cfees">

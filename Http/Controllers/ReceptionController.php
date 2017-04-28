@@ -178,6 +178,12 @@ class ReceptionController extends AdminBaseController {
     }
 
     public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null) {
+        if($request['inpatient'] == true){
+            $request['inpatient'] = 1;
+        }
+        $request['visit_id'] = $visit_id;
+        $request['clinic'] = 1;
+        $request['user'] = $request['patient'];
         if ($this->receptionRepository->checkin_patient($request, $visit_id)) {
             return redirect()->route('reception.patients_queue');
         }
