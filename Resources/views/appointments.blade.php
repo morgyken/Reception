@@ -13,6 +13,13 @@
 <div class="box box-info">
     <div class="box-header">
         <div class="pull-right">
+            Doctor:
+            <select id="doctor">
+                <option></option>
+                @foreach($data['doctors'] as $doc)
+                <option value="{{$doc->id}}">{{$doc->profile->full_name}}</option>
+                @endforeach
+            </select>
             Start Date: <input type="text" id="date1">
             End Date: <input type="text" id="date2">
             <button id="clearBtn" class="btn btn-warning btn-xs">Clear</button>
@@ -90,5 +97,5 @@
     });
 </script>
 @endif
-<script src="{{m_asset('reception:js/appointments.min.js')}}"></script>
+<script src="{{m_asset('reception:js/appointments.js')}}"></script>
 @endsection

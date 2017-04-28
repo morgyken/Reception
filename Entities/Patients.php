@@ -68,7 +68,6 @@ class Patients extends Model {
 
 use SoftDeletes;
 
-//0716732706
     /**
      * The attributes that we should encrypt
      * @var array
@@ -127,6 +126,10 @@ use SoftDeletes;
 
     public function drug_purchases() {
         return $this->hasMany(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'patient');
+    }
+
+    public function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
+        return 1000;
     }
 
 }

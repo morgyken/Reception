@@ -20,6 +20,8 @@ use Ignite\Reception\Entities\PatientInsurance;
 use Illuminate\Support\Facades\Auth;
 use Ignite\Reception\Entities\NextOfKin;
 use Ignite\Evaluation\Entities\Procedures;
+use Ignite\Evaluation\Entities\VisitDestinations;
+use Carbon\Carbon;
 
 class ReceptionController extends AdminBaseController {
 
@@ -53,12 +55,30 @@ class ReceptionController extends AdminBaseController {
     public function purge_patient(Request $request) {
         try {
             $patient = Patients::find($request->id);
-///$patient->delete();
+            $this->deletePatientData($request->id);
+            $patient->forceDelete();
             flash("Patient Information Deleted", 'success');
             return back();
         } catch (\Exception $ex) {
             flash("Patient Information Could not be deleted", 'error');
             return back();
+        }
+    }
+
+    public function deletePatientData($id) {
+        $visits = Visit::wherePatient($id)->get();
+        foreach ($visits as $v) {
+            $v->delete();
+            $sale = \Ignite\Inventory\Entities\InventoryBatchProductSales::wherePatient($id)
+                    ->orWhere('visit', '==', $v->id)
+                    ->get();
+            foreach ($sale as $s) {
+                $s->delete();
+            }
+        }
+        $docs = PatientDocuments::wherePatient($id);
+        foreach ($docs as $d) {
+            $d->delete();
         }
     }
 
@@ -91,8 +111,14 @@ class ReceptionController extends AdminBaseController {
      * List all patients
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show_patients() {
-        $this->data['patients'] = Patients::all();
+    public function show_patients(Request $request) {
+        if (isset($request->mode)) {
+            if ($request->mode == 'all') {
+                $this->data['patients'] = Patients::all();
+            }
+        } else {
+            /// $this->data['patients'] = Patients::all();
+        }
         return view('reception::patients', ['data' => $this->data]);
     }
 
@@ -118,6 +144,9 @@ class ReceptionController extends AdminBaseController {
     public function appointments() {
         $this->data['clinics'] = Clinics::all();
         $this->data['categories'] = AppointmentCategory::all();
+        $this->data['doctors'] = \Ignite\Users\Entities\User::whereHas('roles', function($query) {
+                    $query->whereRole_id(5);
+                })->get();
         return view('reception::appointments', ['data' => $this->data]);
     }
 
@@ -200,13 +229,22 @@ class ReceptionController extends AdminBaseController {
                     })->get();
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
-        $this->data['patients'] = Patients::all();
+        //$this->data['patients'] = Patients::limit(100);
         return view('reception::checkin', ['data' => $this->data]);
     }
 
     public function patients_queue() {
-        $this->data['visits'] = Visit::with('destinations')->latest()->get();
+        $this->data['visits'] = Visit::whereHas('destinations', function($query) {
+                    $query->whereCheckout(0);
+                })->orderBy('created_at', 'asc')
+                ->get();
+
         return view('reception::patients_queue', ['data' => $this->data]);
+    }
+
+    public function SearchPatient(Request $request) {
+        $patients = Patients::where('first_name', 'like', '%' . base64_encode($request->key) . '%')->get();
+        dd($patients);
     }
 
     public function document_viewer($id) {

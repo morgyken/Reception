@@ -6,7 +6,7 @@ $router->get('patients/add/{id?}', ['uses' => 'ReceptionController@add_patient',
 $router->get('patients/purge/{id?}', ['uses' => 'ReceptionController@purge_patient', 'as' => 'purge_patient']);
 $router->post('patients/save/{id?}', ['uses' => 'ReceptionController@save_patient', 'as' => 'save_patient']);
 $router->post('patients/update/', ['uses' => 'ReceptionController@save_patient', 'as' => 'update_patient']);
-$router->get('patients/show', ['as' => 'show_patients', 'uses' => 'ReceptionController@show_patients']);
+$router->get('patients/show/{mode?}', ['as' => 'show_patients', 'uses' => 'ReceptionController@show_patients']);
 // $router->match(['post', 'get'], 'patients/edit/{id?}', ['uses' => 'ReceptionController@edit_patient', 'as' => 'edit_patient']);
 $router->get('patients/view/{id}', ['uses' => 'ReceptionController@view_patient', 'as' => 'view_patient']);
 $router->get('patient/schedule/show/{id?}', ['uses' => 'ReceptionController@appointments', 'as' => 'appointments']);
@@ -23,6 +23,7 @@ $router->get('patients/manage/queued/{visit_id}', ['as' => 'manage_checkin', 'us
 $router->match(['get', 'post'], 'patients/visit/new/{visit_id}', ['as' => 'new_visit', 'uses' => 'ReceptionController@new_visit']);
 $router->get('patients/view/document/{document}', ['as' => 'view_document', 'uses' => 'ReceptionController@document_viewer']);
 $router->get('patients/skipper', ['as' => 'skipper', 'uses' => 'ReceptionController@Skipper']);
+$router->post('patients/search', ['as' => 'patient.search', 'uses' => 'ReceptionController@SearchPatient']);
 //settings
 $router->group(['prefix' => 'setup', 'as' => 'setup.'], function (Router $router) {
     $router->get('appointment/cat/show/{category?}', ['as' => 'app_category', 'uses' => 'SetupController@app_category']);

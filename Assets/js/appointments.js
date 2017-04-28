@@ -23,7 +23,7 @@ $(function () {
         $.ajax({
             url: GET_SCHEDULE,
             type: "GET",
-            data: {'clinic': active_tab, 'category': active_category, 'start': $("#date1").val(), 'end': $('#date2').val()},
+            data: {'clinic': active_tab, 'category': active_category, 'start': $("#date1").val(), 'end': $('#date2').val(), 'doctor': $('#doctor').val()},
             success: function (data) {
                 $('#appointments').html(data).fadeIn();
                 if (tables)
@@ -45,6 +45,7 @@ $(function () {
         active_category = $(this).attr('sam-ajax2');
         fetch_table();
     });
+
     $("#patient_select").select2({
         tags: true,
         theme: "classic",
@@ -93,6 +94,9 @@ $(function () {
     $("#date2").datepicker({dateFormat: 'yy-mm-dd', onSelect: function (date) {
             fetch_table();
         }});
+    $("#doctor").click(function () {
+        fetch_table();
+    });
     $('#clearBtn').click(function () {
         $("#date1").val('');
         $("#date2").val('');

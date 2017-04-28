@@ -20,4 +20,9 @@ return [
         'view' => 'reception::fields.places',
         'hint' => 'Select destinations for patients'
     ],
+    'pre_charged_compulsory' => [
+        'description' => 'Make charging of consultation fee or any other fee compulsory',
+        'view' => 'reception::fields.pre_charged',
+        'hint' => 'Select fees to be made compulsory'
+    ],
 ];
