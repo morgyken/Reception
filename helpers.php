@@ -129,6 +129,22 @@ if (!function_exists('get_patient_insurance_schemes')) {
     }
 
 }
+
+if (!function_exists('get_patient_schemes')) {
+
+    /**
+     * Get the Patient Insurance schemes / covers
+     * @param int $patient_id
+     * @return mixed
+     */
+    function get_patient_schemes($patient_id) {
+        $schemes = PatientInsurance::wherePatient($patient_id)->get();
+        return $schemes;
+    }
+
+}
+
+
 if (!function_exists('get_color_code')) {
 
     function get_color_code($category_id) {
