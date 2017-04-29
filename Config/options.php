@@ -47,7 +47,7 @@ return [
         5 => 'Diagnostics',
         6 => 'Physiotherapy',
         7 => 'Radiology',
-        8 => 'Ultra Sound',
+        8 => 'Ultrasound',
         9 => 'Nursing',
     ],
     'destinations' => [
@@ -58,7 +58,7 @@ return [
         'pharmacy' => 'Pharmacy',
         'optical' => 'Optical',
         'physio' => 'Physiotherapy',
-        'ultra_sound' => 'Ultra Sound',
+        'ultrasound' => 'Ultra Sound',
         'nursing' => 'Nursing',
         'doctor' => 'Doctor',
     ],
