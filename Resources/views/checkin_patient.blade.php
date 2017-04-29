@@ -7,6 +7,7 @@
 extract($data);
 //$precharge = data['precharge'];
 //dd($patient->insured);
+$patient_schemes = get_patient_schemes($patient->id);
 ?>
 @extends('layouts.app')
 @section('content_title','Checkin Patient')
@@ -123,7 +124,14 @@ extract($data);
                 <div class="form-group {{ $errors->has('scheme') ? ' has-error' : '' }}" id="schemes">
                     {!! Form::label('scheme', 'Insurance Scheme',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::select('scheme',get_patient_insurance_schemes($patient->id), old('scheme'), ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}
+
+                        <select class="form-control" id="scheme" name="scheme">
+                            <option selected="selected" value="">Choose...</option>
+                            @foreach($patient_schemes as $scheme)
+                            <option value="{{$scheme->id}}">{{$scheme->schemes->companies->name}} - {{$scheme->schemes->name}}</option>
+                            @endforeach
+                        </select>
+
                         {!! $errors->first('scheme', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
