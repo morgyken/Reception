@@ -65,7 +65,7 @@ class ApiController extends Controller {
         $rows = '';
         $patients = \Ignite\Reception\Entities\Patients::all();
         foreach ($patients as $patient) {
-            if (str_contains($patient->fullname, ucfirst($request->term)) || str_contains($patient->id_no, ucfirst($request->term))) {
+            if (str_contains(strtolower($patient->fullname), strtolower($request->term)) || str_contains($patient->id_no, $request->term)) {
                 $rows.= '<tr>
                     <td>' . $patient->id . '</td>
                     <td>' . $patient->id_no . '</td>
@@ -85,7 +85,7 @@ class ApiController extends Controller {
         $n = 0;
         $roles = get_this_user_roles();
         foreach ($patients as $patient) {
-            if (str_contains($patient->fullname, ucfirst($request->term)) || str_contains($patient->id_no, ucfirst($request->term))) {
+            if (str_contains(strtolower($patient->fullname), strtolower($request->term)) || str_contains($patient->id_no, $request->term)) {
                 $rows.= '
                     <tr>
                     <td>' . $patient->id . '</td>
