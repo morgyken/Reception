@@ -142,8 +142,6 @@ $patient_schemes = get_patient_schemes($patient->id);
                         {!! $errors->first('scheme', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
-<<<<<<< HEAD
-=======
 
                 @if(m_setting('reception.pre_charged_compulsory'))
                 <?php
@@ -175,8 +173,6 @@ $patient_schemes = get_patient_schemes($patient->id);
                 }
                 ?>
                 @endif
-
->>>>>>> e042878f17eb05d2542212831d9fcab0abd2a481
                 <div class="form-group">
                     @if(m_setting('reception.pre_charged_compulsory'))
                     {!! Form::label('fees', 'Pre-paid Fees',['class'=>'control-label col-md-4']) !!}
