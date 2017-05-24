@@ -7,7 +7,7 @@
 extract($data);
 
 $dests = get_checkin_destinations();
-array_push($dests,'In Patient');
+array_push($dests, 'In Patient');
 
 //$precharge = data['precharge'];
 //dd($patient->insured);
@@ -142,8 +142,30 @@ $patient_schemes = get_patient_schemes($patient->id);
                         {!! $errors->first('scheme', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
-<<<<<<< HEAD
-=======
+
+                @if(isset($external_order))
+                <div class="form-group {{ $errors->has('scheme') ? ' has-error' : '' }}" id="schemes">
+                    {!! Form::label('scheme', 'Ordered Procedures',['class'=>'control-label col-md-4']) !!}
+                    <input type="hidden" name="external_order" value="{{$external_order->id}}">
+                    <div class="col-md-8">
+                        <a href="#" class="" data-toggle="collapse" data-target="#ordered">
+                            See ordered procedures
+                        </a>
+                        <div id="ordered" class="collapse">
+                            <table class="table table-condensed table-striped">
+                                @foreach($external_order->details as $p)
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" checked="" name="ordered_procedure[]" value="{{$p->procedures->id}}">
+                                    </td>
+                                    <td>{{$p->procedures->name}}</td>
+                                </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 @if(m_setting('reception.pre_charged_compulsory'))
                 <?php
@@ -176,7 +198,6 @@ $patient_schemes = get_patient_schemes($patient->id);
                 ?>
                 @endif
 
->>>>>>> e042878f17eb05d2542212831d9fcab0abd2a481
                 <div class="form-group">
                     @if(m_setting('reception.pre_charged_compulsory'))
                     {!! Form::label('fees', 'Pre-paid Fees',['class'=>'control-label col-md-4']) !!}

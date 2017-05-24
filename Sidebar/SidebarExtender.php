@@ -69,6 +69,13 @@ class SidebarExtender implements Panda {
                     $item->route('reception.checkin');
                     $item->authorize($this->auth->hasAccess('reception.patients.checkin'));
                 });
+
+                $item->item('External Order Queue', function (Item $item) {
+                    $item->icon('fa fa-puzzle-piece');
+                    $item->route('reception.external_order_queue');
+                    //$item->authorize($this->auth->hasAccess('evaluation.external'));
+                });
+
                 $item->item('Checked In Patients', function (Item $item) {
                     $item->icon('fa fa-calendar-check-o');
                     $item->route('reception.patients_queue');

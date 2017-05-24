@@ -16,6 +16,15 @@ extract($data);
         @if($patients->isEmpty())
         <p class="text-warning"><i class="fa fa-warning"></i> No patients yet</p>
         @else
+
+        <table class="table table-condensed table-striped">
+            <tbody>
+                <tr>
+                    <td><a href="{{route('reception.bulk_upload')}}" class="btn btn-primary btn-xs">Bulk Upload</a></td>
+                </tr>
+            </tbody>
+        </table>
+
         <table class="table table-condensed table-striped">
             <tbody>
                 @foreach($patients as $patient)

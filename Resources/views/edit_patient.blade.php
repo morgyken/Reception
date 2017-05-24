@@ -122,6 +122,18 @@ extract($data);
                             {!! $errors->first('photo', '<span class="help-block">:message</span>') !!}
                         </div>
                     </div>
+
+                    @if(\Auth::user()->profile->partner_institution<0)
+                    <div class="form-group {{ $errors->has('external_institution') ? ' has-error' : '' }}">
+                        {!! Form::label('external_institution', 'Partner Institution',['class'=>'control-label col-md-4']) !!}
+                        <div class="col-md-8">
+                            {!! Form::select('external_institution',get_external_institutions(), null, ['class' => 'form-control external_institution', 'placeholder' => 'Choose...']) !!}
+                            {!! $errors->first('external_institution', '<span class="help-block">:message</span>') !!}
+                        </div>
+                    </div>
+                    @else
+                    <input type="hidden" name="external_institution" value="{{\Auth::user()->profile->partner_institution}}">
+                    @endif
                 </div>
                 <hr/>
                 @include('reception::partials.nok')
@@ -162,6 +174,9 @@ extract($data);
 
     <script type="text/javascript">
         var SCHEMES_URL = "{{route('api.settings.get_schemes')}}";
+        $(document).ready(function () {
+            $(".external_institution").select2();
+        });
     </script>
     <script src="{{m_asset('reception:js/addpatient.min.js')}}"></script>
 </div>

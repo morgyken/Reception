@@ -24,7 +24,6 @@ use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Entities\PatientDocuments;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Procedures;
-use Jenssegers\Date\Date;
 
 /**
  * Description of ReceptionFunctions
@@ -72,7 +71,8 @@ class ReceptionFunctions implements ReceptionRepository {
         $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
-        if($this->request->destination == 13){
+
+        if ($this->request->destination == 13) {
             $visit->inpatient = 'on';
         }
 
@@ -89,32 +89,47 @@ class ReceptionFunctions implements ReceptionRepository {
         if ($this->request->has('external_doctor')) {
             $visit->external_doctor = $this->request->external_doc;
         }
-        if ($visit->save()) {
-            $this->checkin_at($visit->id, $this->request->destination);
-            if ($this->request->has('to_nurse')) { //quick way to forge an entry to nurse section
-                $this->checkin_at($visit->id, 'nurse');
-            }
-            //precharge
-            if ($this->request->has('precharge')) {
-                foreach ($this->request->precharge as $key => $value) {
-                    $inv = new Investigations;
-                    $procedure = Procedures::find($value);
-                    $inv->visit = $visit->id;
-                    $inv->type = strtolower($procedure->categories->name);
-                    $inv->procedure = $value;
-                    $inv->price = $procedure->cash_charge;
-                    if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
-                        $inv->user = $this->request->destination;
-                    }
-                    $inv->ordered = 1;
-                    $inv->save();
-                }
-            }
-            flash("Patient has been checked in", 'success');
-            return true;
+
+        $visit->save();
+
+        if ($this->request->has('external_order')) {
+            $visit->external_order = $this->request->external_order;
+            $this->order_procedures($this->request->ordered_procedure, $visit);
         }
-        flash("An error occurred", 'danger');
-        return false;
+
+        $this->checkin_at($visit->id, $this->request->destination);
+        if ($this->request->has('to_nurse')) { //quick way to forge an entry to nurse section
+            $this->checkin_at($visit->id, 'nurse');
+        }
+        //precharge
+        if ($this->request->has('precharge')) {
+            $this->order_procedures($this->request->precharge, $visit);
+        }
+        flash("Patient has been checked in", 'success');
+        return true;
+        //flash("An error occurred", 'danger');
+        //return false;
+    }
+
+    public function order_procedures($procedures, $visit) {
+        foreach ($procedures as $key => $value) {
+            $inv = new Investigations;
+            $procedure = Procedures::find($value);
+            $inv->visit = $visit->id;
+
+            if (preg_match('/Lab/', $procedure->categories->name)) {
+                $inv->type = 'laboratory';
+            } else {
+                $inv->type = strtolower($procedure->categories->name);
+            }
+            $inv->procedure = $value;
+            $inv->price = $procedure->cash_charge;
+            if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
+                $inv->user = $this->request->destination;
+            }
+            $inv->ordered = 1;
+            $inv->save();
+        }
     }
 
     /**
@@ -161,6 +176,10 @@ class ReceptionFunctions implements ReceptionRepository {
             $patient->town = ucfirst($this->request->town);
             if ($this->request->has('imagesrc')) {
                 $patient->image = $this->request->imagesrc;
+            }
+
+            if ($this->request->has('external_institution')) {
+                $patient->external_institution = $this->request->external_institution;
             }
             $patient->save();
 

@@ -17,11 +17,7 @@ use Ignite\Reception\Entities\Patients;
 use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Ignite\Reception\Entities\PatientDocuments;
 use Ignite\Reception\Entities\PatientInsurance;
-use Illuminate\Support\Facades\Auth;
-use Ignite\Reception\Entities\NextOfKin;
-use Ignite\Evaluation\Entities\Procedures;
-use Ignite\Evaluation\Entities\VisitDestinations;
-use Carbon\Carbon;
+use Ignite\Evaluation\Entities\ExternalOrders;
 
 class ReceptionController extends AdminBaseController {
 
@@ -206,8 +202,19 @@ class ReceptionController extends AdminBaseController {
         return view('reception::upload_doc', ['data' => $this->data]);
     }
 
+    public function bulk_upload(Request $request) {
+        if ($request->isMethod('post')) {
+            if ($this->receptionRepository->upload_document($request->id)) {
+                return back();
+            }
+        }
+        $this->data['patient'] = Patients::find($request->id);
+        $this->data['docs'] = PatientDocuments::wherePatient($request->id)->get();
+        return view('reception::bulk_upload', ['data' => $this->data]);
+    }
+
     public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null) {
-        if($request['inpatient'] == true){
+        if ($request['inpatient'] == true) {
             $request['inpatient'] = 1;
         }
         $request['visit_id'] = $visit_id;
@@ -218,19 +225,38 @@ class ReceptionController extends AdminBaseController {
         }
     }
 
-    public function checkin($patient_id = null, $visit_id = null) {
+    public function checkin(Request $request, $patient_id = null, $visit_id = null) {
         if (!empty($patient_id)) {
+            if (!is_null($request->order_id)) {
+                $this->data['external_order'] = ExternalOrders::find($request->order_id);
+            }
+
             $this->data['visits'] = Visit::wherePatient($patient_id)->get();
             $this->data['patient'] = Patients::find($patient_id);
-            $this->data['precharge'] = Procedures::where("precharge", "=", 1)->get();
+            $this->data['precharge'] = \Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
             $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
             $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
                         $query->whereHas('partnerInstitution');
                     })->get();
+
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
         //$this->data['patients'] = Patients::limit(100);
         return view('reception::checkin', ['data' => $this->data]);
+    }
+
+    public function external_checkin(Request $request) {
+        $this->data['external_order'] = $order = ExternalOrders::find($request->order_id);
+        $patient_id = $order->patient->id;
+        $this->data['visits'] = Visit::wherePatient($patient_id)->get();
+        $this->data['patient'] = Patients::find($patient_id);
+        $this->data['precharge'] = \Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
+        $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
+        $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
+                    $query->whereHas('partnerInstitution');
+                })->get();
+
+        return view('reception::checkin_patient', ['data' => $this->data]);
     }
 
     public function patients_queue() {
@@ -254,6 +280,11 @@ class ReceptionController extends AdminBaseController {
         header("Content-Transfer-Encoding:binary");
         header("Accept-Ranges:bytes");
         echo base64_decode($file_meta->document);
+    }
+
+    public function external_order_queue(Request $request) {
+        $this->data['orders'] = \Ignite\Evaluation\Entities\ExternalOrders::all();
+        return view('reception::external.queue', ['data' => $this->data]);
     }
 
     /*

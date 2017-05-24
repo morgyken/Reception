@@ -70,6 +70,18 @@ if (!function_exists('get_patients')) {
     }
 
 }
+
+if (!function_exists('get_external_institutions')) {
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    function get_external_institutions() {
+        return PartnerInstitution::all()->pluck('name', 'id');
+    }
+
+}
+
 if (!function_exists('auto_complete_patient_names')) {
 
     function auto_complete_patient_names() {
