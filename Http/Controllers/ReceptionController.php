@@ -283,7 +283,7 @@ class ReceptionController extends AdminBaseController {
     }
 
     public function external_order_queue(Request $request) {
-        $this->data['orders'] = \Ignite\Evaluation\Entities\ExternalOrders::all();
+        $this->data['orders'] = \Ignite\Evaluation\Entities\ExternalOrders::whereNull('status')->get();
         return view('reception::external.queue', ['data' => $this->data]);
     }
 

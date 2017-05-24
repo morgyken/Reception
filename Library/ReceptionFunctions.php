@@ -95,6 +95,7 @@ class ReceptionFunctions implements ReceptionRepository {
         if ($this->request->has('external_order')) {
             $visit->external_order = $this->request->external_order;
             $this->order_procedures($this->request->ordered_procedure, $visit);
+            $this->updateExternalOrder($this->request->external_order);
         }
 
         $this->checkin_at($visit->id, $this->request->destination);
@@ -112,24 +113,34 @@ class ReceptionFunctions implements ReceptionRepository {
     }
 
     public function order_procedures($procedures, $visit) {
-        foreach ($procedures as $key => $value) {
-            $inv = new Investigations;
-            $procedure = Procedures::find($value);
-            $inv->visit = $visit->id;
+        try {
+            foreach ($procedures as $key => $value) {
+                $inv = new Investigations;
+                $procedure = Procedures::find($value);
+                $inv->visit = $visit->id;
 
-            if (preg_match('/Lab/', $procedure->categories->name)) {
-                $inv->type = 'laboratory';
-            } else {
-                $inv->type = strtolower($procedure->categories->name);
+                if (preg_match('/Lab/', $procedure->categories->name)) {
+                    $inv->type = 'laboratory';
+                } else {
+                    $inv->type = strtolower($procedure->categories->name);
+                }
+                $inv->procedure = $value;
+                $inv->price = $procedure->cash_charge;
+                if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
+                    $inv->user = $this->request->destination;
+                }
+                $inv->ordered = 1;
+                $inv->save();
             }
-            $inv->procedure = $value;
-            $inv->price = $procedure->cash_charge;
-            if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
-                $inv->user = $this->request->destination;
-            }
-            $inv->ordered = 1;
-            $inv->save();
+        } catch (\Exception $e) {
+
         }
+    }
+
+    public function updateExternalOrder($id) {
+        $order = \Ignite\Evaluation\Entities\ExternalOrders::find($id);
+        $order->status = 'processed';
+        return $order->update();
     }
 
     /**

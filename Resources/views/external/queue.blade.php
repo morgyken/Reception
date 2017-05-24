@@ -26,7 +26,6 @@
                     <th>Mobile</th>
                     <th>Institution</th>
                     <th>Date</th>
-                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -39,11 +38,10 @@
                     <td>{{$order->patient->mobile}}</td>
                     <td>{{$order->from->name}}</td>
                     <td>{{$order->created_at}}</td>
-                    <td>{{$order->status}}</td>
                     <td>
                         <a href="{{route('reception.external_checkin',$order->id)}}" class="btn btn-xs">
                             <i class="fa fa-sign-in"></i> Check in</a>
-                        '
+
                         <a href="" class="btn btn-xs btn-primary">
                             <i class="fa fa-eye"></i> View</a>
                     </td>
