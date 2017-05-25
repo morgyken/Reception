@@ -31,7 +31,7 @@ class PatientQueueWidget extends BaseDashboardWidgets {
      * PatientQueueWidget constructor.
      */
     public function __construct() {
-        $this->info['patients'] = Patients::all()->take(10);
+        $this->info['patients'] = Patients::all()->take(5);
     }
 
     /**
@@ -51,8 +51,8 @@ class PatientQueueWidget extends BaseDashboardWidgets {
     protected function options() {
         return [
             'width' => '6',
-            'height' => '2',
-            'x' => '2',
+            'height' => '1',
+            'x' => '6'
         ];
     }
 

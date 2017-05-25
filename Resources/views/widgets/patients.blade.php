@@ -1,9 +1,9 @@
 <?php extract($data); ?>
-<div class="box box-info">
+<div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Patient List</h3>
-    </div>
-    <div class="box-body">
+        <h3 class="box-title">Newest Patients</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body no-padding">
         @if($patients->count()>0)
         <table class="table table-condensed table-responsive table-striped" id="patients">
             <tbody>
@@ -26,8 +26,5 @@
         @else
         <p class="text-warning"><i class="fa fa-info"></i> No patients! Strange</p>
         @endif
-    </div>
-    <div class="box-footer">
-
-    </div>
+    </div><!-- /.box-body -->
 </div>
