@@ -60,6 +60,16 @@ if (!function_exists('get_schedule_cat')) {
     }
 
 }
+
+function get_destinations($order) {
+    $types = array();
+    foreach ($order->details as $item) {
+        $types[] = $item->type;
+    }
+    //return json_encode(array_flatten(array_unique($types)));
+    return array_unique($types);
+}
+
 if (!function_exists('get_patients')) {
 
     /**

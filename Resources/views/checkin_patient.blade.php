@@ -86,18 +86,19 @@ $patient_schemes = get_patient_schemes($patient->id);
                 <input type="hidden" name="patient" value="{{$patient->id}}"/>
                 <div class="form-group req {{ $errors->has('destination') ? ' has-error' : '' }}">
                     {!! Form::label('destination', 'Destination',['class'=>'control-label col-md-4']) !!}
+                    @if(isset($external_order))
+                    <?php $select = get_destinations($external_order) ?>
                     <div class="col-md-8">
-
-
-
+                        <input type="hidden" name="as_ordered" value="1">
+                        <small>NOTE: Already selected based on procedures ordered</small>
+                        {!! Form::select('destination[]', $dests, $select,  ['class' => 'form-control','multiple']) !!}
+                    </div>
+                    @else
+                    <div class="col-md-8">
                         {!! Form::select('destination',$dests, old('destination'), ['class' => 'form-control']) !!}
                         {!! $errors->first('destination', '<span class="help-block">:message</span>') !!}
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-8 col-md-offset-4">
-                        <label class="checkbox-inline"><input  type="checkbox" name="to_nurse" value="1" checked/> Also check in patient to Nurse </label>
-                    </div>
+                    @endif
                 </div>
                 <div class="form-group {{ $errors->has('time') ? ' has-error' : '' }}">
                     {!! Form::label('time', 'Check In time',['class'=>'control-label col-md-4']) !!}

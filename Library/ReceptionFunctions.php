@@ -80,8 +80,10 @@ class ReceptionFunctions implements ReceptionRepository {
         if ($this->request->has('purpose')) {
             $visit->purpose = $this->request->purpose;
         }
+
         $visit->payment_mode = $this->request->payment_mode;
         $visit->user = $this->request->user()->id;
+
         if ($this->request->has('scheme')) {
             $visit->scheme = $this->request->scheme;
         }
@@ -98,10 +100,19 @@ class ReceptionFunctions implements ReceptionRepository {
             $this->updateExternalOrder($this->request->external_order);
         }
 
-        $this->checkin_at($visit->id, $this->request->destination);
+        if ($this->request->has('as_ordered')) {
+            //From external order
+            foreach ($this->request->destination as $destination) {
+                $this->checkin_at($visit->id, $destination);
+            }
+        } else {
+            $this->checkin_at($visit->id, $this->request->destination);
+        }
+
         if ($this->request->has('to_nurse')) { //quick way to forge an entry to nurse section
             $this->checkin_at($visit->id, 'nurse');
         }
+
         //precharge
         if ($this->request->has('precharge')) {
             $this->order_procedures($this->request->precharge, $visit);
