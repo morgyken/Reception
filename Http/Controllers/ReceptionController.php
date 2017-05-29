@@ -194,6 +194,7 @@ class ReceptionController extends AdminBaseController {
     public function upload_doc(Request $request, $id) {
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->upload_document($id)) {
+                flash("Scan complete, all patient related files have been uploaded");
                 return back();
             }
         }
@@ -204,7 +205,7 @@ class ReceptionController extends AdminBaseController {
 
     public function bulk_upload(Request $request) {
         if ($request->isMethod('post')) {
-            if ($this->receptionRepository->upload_document($request->id)) {
+            if ($this->receptionRepository->scan_and_upload($request)) {
                 return back();
             }
         }

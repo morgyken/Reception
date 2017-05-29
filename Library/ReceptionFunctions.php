@@ -325,4 +325,41 @@ class ReceptionFunctions implements ReceptionRepository {
         return false;
     }
 
+    public function scan_and_upload(Request $request) {
+        $path = $request->path;
+        $files = \File::allFiles($path);
+        $patients = Patients::all();
+        foreach ($patients as $p) {
+            foreach ($files as $file) {
+                $f = pathinfo($file);
+                $name = $f['filename'];
+                $dirname = $f['dirname'];
+                $basename = $f['basename']; //name with extension
+                $extension = $f['extension'];
+                if ($name == $p->id) {
+                    $this->bulk_uploader($p->id, $file);
+                }
+            }
+        }
+        flash()->success("Scan complete, all patient related files have been uploaded");
+    }
+
+    public function bulk_uploader($patient, $file) {
+        $f = pathinfo($file);
+        $document = new PatientDocuments;
+        $document->patient = $patient;
+        $document->document = base64_encode(file_get_contents($file->getRealPath()));
+        $document->filename = $f['basename'];
+        $document->mime = $this->mime($file);
+        $document->document_type = $f['extension'];
+        $document->description = $file->getSize();
+        $document->user = $this->request->user()->id;
+        $document->save();
+    }
+
+    public function mime($file) {
+        $mime = finfo_open(FILEINFO_MIME_TYPE);
+        return finfo_file($mime, $file->getRealPath());
+    }
+
 }
