@@ -72,6 +72,10 @@ class ReceptionFunctions implements ReceptionRepository {
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
 
+        if ($this->request->has('external_order')) {
+            $visit->external_order = $this->request->external_order;
+        }
+
         if ($this->request->destination == 13) {
             $visit->inpatient = 'on';
         }
@@ -332,11 +336,8 @@ class ReceptionFunctions implements ReceptionRepository {
         foreach ($patients as $p) {
             foreach ($files as $file) {
                 $f = pathinfo($file);
-                $name = $f['filename'];
-                $dirname = $f['dirname'];
-                $basename = $f['basename']; //name with extension
-                $extension = $f['extension'];
-                if ($name == $p->id) {
+                $filename = $f['filename'];
+                if ($filename == $p->patient_no) {
                     $this->bulk_uploader($p->id, $file);
                 }
             }

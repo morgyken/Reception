@@ -28,6 +28,10 @@ extract($data);
             <div class="col-md-6">
                 <label>Path to Folder</label>
                 <div class="input-group input-group-sm">
+                    <ul>
+                        <li>For example: <b>C:\Documents\Folder</b> in Windows</li>
+                        <li>Or: <b>/home/user/Desktop/Folder</b> in Linux</li>
+                    </ul>
                     <input type="text" class="form-control" name="path" style="width: 100%">
                     <span class="input-group-btn">
                         <input type="submit" value="Go" class="btn btn-primary btn-flat">
