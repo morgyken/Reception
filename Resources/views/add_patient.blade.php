@@ -19,6 +19,15 @@
         {!! Form::open(['files'=>true,'route'=>'reception.save_patient']) !!}
         <div class="box-body">
             <div class="col-md-6">
+
+                <div class="form-group {{ $errors->has('patient_no') ? ' has-error' : '' }}">
+                    {!! Form::label('patient_no', 'Patient Number',['class'=>'control-label col-md-4']) !!}
+                    <div class="col-md-8">
+                        {!! Form::text('patient_no', old('patient_no'), ['class' => 'form-control', 'placeholder' => 'Patient Number']) !!}
+                        {!! $errors->first('patient_no', '<span class="help-block">:message</span>') !!}
+                    </div>
+                </div>
+
                 <div class="form-group req {{ $errors->has('first_name') ? ' has-error' : '' }}">
                     {!! Form::label('first_name', 'First Name',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">

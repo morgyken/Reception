@@ -306,6 +306,7 @@ class ReceptionController extends AdminBaseController {
       $firm->save();
       echo $n . '<br/>';
       } */
+
     //\DB::transaction(function () {
     /*
       $spine = \Ignite\Reception\Entities\Spine::all();
@@ -372,4 +373,27 @@ class ReceptionController extends AdminBaseController {
       }
      *
      */
+
+    public function ImportRawPatientData(Request $request) {
+        \DB::transaction(function () {
+            $data = \Ignite\Reception\Entities\Temp::all();
+            $n = 0;
+            foreach ($data as $p) {
+                try {
+                    $patient = new Patients;
+                    $patient->first_name = ucfirst($p->first_name);
+                    $patient->middle_name = ucfirst($p->middle_name);
+                    $patient->last_name = ucfirst($p->last_name);
+                    $patient->mobile = $p->phone_no;
+                    $patient->patient_no = $p->patient_no;
+                    $patient->save();
+                    $n+=1;
+                } catch (\Exception $e) {
+
+                }
+            }
+            echo $n . ' Patient Records Created... Thank you';
+        });
+    }
+
 }
