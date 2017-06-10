@@ -89,7 +89,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <img src="{{$doc->document}}"  alt="Patient Image" height="300px"/>
+                                            <img src="{{$doc->document}}"  alt="Patient Image" style="width: 100%"/>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
