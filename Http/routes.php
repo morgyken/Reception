@@ -17,6 +17,8 @@ $router->get('patients/google/calendar', ['uses' => 'ReceptionController@google_
 $router->get('patients/documents', ['uses' => 'ReceptionController@documents', 'as' => 'patient_documents']);
 $router->match(['post', 'get'], 'patients/upload/docs/{id}', ['uses' => 'ReceptionController@upload_doc', 'as' => 'upload_doc']);
 $router->match(['post', 'get'], 'patients/bulkupload/{id?}', ['uses' => 'ReceptionController@bulk_upload', 'as' => 'bulk_upload']);
+$router->get('patients/documents/image/{id?}', ['uses' => 'ReceptionController@view_image', 'as' => 'view_image']);
+
 
 $router->get('checkin/{id?}/{visit?}', ['uses' => 'ReceptionController@checkin', 'as' => 'checkin']);
 $router->get('external/checkin/{order_id?}', ['uses' => 'ReceptionController@external_checkin', 'as' => 'external_checkin']);

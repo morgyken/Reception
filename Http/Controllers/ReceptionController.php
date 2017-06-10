@@ -191,6 +191,11 @@ class ReceptionController extends AdminBaseController {
         return view('reception::patient_documents', ['data' => $this->data]);
     }
 
+    public function view_image(Request $request) {
+        $this->data['image'] = PatientDocuments::find($request->id);
+        return view('reception::view_image', ['data' => $this->data]);
+    }
+
     public function upload_doc(Request $request, $id) {
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->upload_document($id)) {

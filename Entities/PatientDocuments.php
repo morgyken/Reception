@@ -38,7 +38,7 @@ class PatientDocuments extends Model {
     protected $guarded = [];
 
     public function patients() {
-        return $this->belongsTo(Patients::class, 'patient_id', 'patient_id');
+        return $this->belongsTo(Patients::class, 'patient');
     }
 
     public function users() {

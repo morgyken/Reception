@@ -53,7 +53,12 @@
                     <tr id="row_id{{$doc->id}}">
                         <td>
                             @if(strpos($doc->mime, 'image') !== false)
+                            <!--
                             <a href="#" data-toggle="modal" data-target="#image_{{$doc->id}}">
+                                {{substr($doc->filename, 0, 50)}}
+                            </a>
+                            <br/> -->
+                            <a href="{{route('reception.view_image',$doc->id)}}" target="_blank">
                                 {{substr($doc->filename, 0, 50)}}
                             </a>
                             @else
