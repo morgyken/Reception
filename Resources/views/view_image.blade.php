@@ -16,7 +16,7 @@ extract($data);
         <h3 class="box-title"> Patient Name: {{$image->patients->fullname}} </h3>
     </div>
     <div class="box-body">
-        <img src="data:{{$image->mime}};{{$image->document}}"  alt="Patient Image" style="width: 100%"/>
+        <img src="{{$image->document}}"  alt="Patient Image" style="width: 100%"/>
     </div>
 </div>
 @endsection
