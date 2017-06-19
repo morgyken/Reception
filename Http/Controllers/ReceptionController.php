@@ -23,7 +23,8 @@ use Ignite\Evaluation\Entities\Procedures;
 use Ignite\Evaluation\Entities\VisitDestinations;
 use Carbon\Carbon;
 
-class ReceptionController extends AdminBaseController {
+class ReceptionController extends AdminBaseController
+{
 
     /**
      * @var ReceptionRepository
@@ -34,7 +35,8 @@ class ReceptionController extends AdminBaseController {
      * ReceptionController constructor.
      * @param ReceptionRepository $receptionRepository
      */
-    public function __construct(ReceptionRepository $receptionRepository) {
+    public function __construct(ReceptionRepository $receptionRepository)
+    {
         parent::__construct();
         $this->receptionRepository = $receptionRepository;
     }
@@ -44,7 +46,8 @@ class ReceptionController extends AdminBaseController {
      * @param null|int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function add_patient($id = null) {
+    public function add_patient($id = null)
+    {
         $this->data['patient'] = Patients::findOrNew($id);
         if (!empty($id)) {
             return view('reception::edit_patient', ['data' => $this->data]);
@@ -52,7 +55,8 @@ class ReceptionController extends AdminBaseController {
         return view('reception::add_patient', ['data' => $this->data]);
     }
 
-    public function purge_patient(Request $request) {
+    public function purge_patient(Request $request)
+    {
         try {
             $patient = Patients::find($request->id);
             $this->deletePatientData($request->id);
@@ -65,13 +69,14 @@ class ReceptionController extends AdminBaseController {
         }
     }
 
-    public function deletePatientData($id) {
+    public function deletePatientData($id)
+    {
         $visits = Visit::wherePatient($id)->get();
         foreach ($visits as $v) {
             $v->delete();
             $sale = \Ignite\Inventory\Entities\InventoryBatchProductSales::wherePatient($id)
-                    ->orWhere('visit', '==', $v->id)
-                    ->get();
+                ->orWhere('visit', '==', $v->id)
+                ->get();
             foreach ($sale as $s) {
                 $s->delete();
             }
@@ -88,7 +93,8 @@ class ReceptionController extends AdminBaseController {
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function save_patient(CreatePatientRequest $request, $id = null) {
+    public function save_patient(CreatePatientRequest $request, $id = null)
+    {
         if ($this->receptionRepository->add_patient($request, $request->id)) {
 //$this->savePatientScheme($request, $request->id);
             flash("Patient Information saved", 'success');
@@ -96,7 +102,8 @@ class ReceptionController extends AdminBaseController {
         return redirect()->route('reception.add_patient');
     }
 
-    public function savePatientScheme(Request $request, $patient) {
+    public function savePatientScheme(Request $request, $patient)
+    {
         $ins = new PatientInsurance;
         $ins->patient = $patient;
         $ins->scheme = $request->scheme1;
@@ -111,7 +118,8 @@ class ReceptionController extends AdminBaseController {
      * List all patients
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show_patients(Request $request) {
+    public function show_patients(Request $request)
+    {
         if (isset($request->mode)) {
             if ($request->mode == 'all') {
                 $this->data['patients'] = Patients::all();
@@ -127,7 +135,8 @@ class ReceptionController extends AdminBaseController {
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function view_patient($id) {
+    public function view_patient($id)
+    {
         $this->data['patient'] = Patients::with('nok')->find($id);
         $this->data['docs'] = PatientDocuments::wherePatient($id)->get();
         if (empty($this->data['patient'])) {
@@ -141,12 +150,13 @@ class ReceptionController extends AdminBaseController {
      * Get all appointments
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function appointments() {
+    public function appointments()
+    {
         $this->data['clinics'] = Clinics::all();
         $this->data['categories'] = AppointmentCategory::all();
-        $this->data['doctors'] = \Ignite\Users\Entities\User::whereHas('roles', function($query) {
-                    $query->whereRole_id(5);
-                })->get();
+        $this->data['doctors'] = \Ignite\Users\Entities\User::whereHas('roles', function ($query) {
+            $query->whereRole_id(5);
+        })->get();
         return view('reception::appointments', ['data' => $this->data]);
     }
 
@@ -156,17 +166,19 @@ class ReceptionController extends AdminBaseController {
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function appointments_save(CreateAppointmentRequest $request, $id = null) {
+    public function appointments_save(CreateAppointmentRequest $request, $id = null)
+    {
         if (!empty($id)) {
-            $this->receptionRepository->reschedule_appointment($request, $id);
+            $this->receptionRepository->reschedule_appointment();
             return redirect()->route('reception.appointments');
         }
-        if ($this->receptionRepository->add_appointment($request)) {
+        if ($this->receptionRepository->add_appointment()) {
             return redirect()->route('reception.appointments');
         }
     }
 
-    public function appointments_res(CreateAppointmentRequest $request) {
+    public function appointments_res(CreateAppointmentRequest $request)
+    {
         $this->receptionRepository->reschedule_appointment($request, $request->id);
         return redirect()->route('reception.appointments');
     }
@@ -174,14 +186,15 @@ class ReceptionController extends AdminBaseController {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function calendar() {
+    public function calendar()
+    {
         ReceptionPipeline::calendar_assets($this->assetPipeline, $this->assetManager);
         $events = Appointments::all();
         $this->data['calendar'] = Calendar::addEvents($events)
-                        ->setOptions(calendar_options())
-                        ->setCallbacks([
-                            'dayClick' => 'function(date, jsEvent, view) { changeView(view,date);}'
-                        ])->setId('sam');
+            ->setOptions(calendar_options())
+            ->setCallbacks([
+                'dayClick' => 'function(date, jsEvent, view) { changeView(view,date);}'
+            ])->setId('sam');
         return view('reception::calendar', ['data' => $this->data]);
     }
 
@@ -190,12 +203,14 @@ class ReceptionController extends AdminBaseController {
       return view('reception::patient_schedule', ['data', $this->data]);
       } */
 
-    public function documents() {
+    public function documents()
+    {
         $this->data['patients'] = Patients::all();
         return view('reception::patient_documents', ['data' => $this->data]);
     }
 
-    public function upload_doc(Request $request, $id) {
+    public function upload_doc(Request $request, $id)
+    {
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->upload_document($id)) {
                 return back();
@@ -206,8 +221,9 @@ class ReceptionController extends AdminBaseController {
         return view('reception::upload_doc', ['data' => $this->data]);
     }
 
-    public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null) {
-        if($request['inpatient'] == true){
+    public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null)
+    {
+        if ($request['inpatient'] == true) {
             $request['inpatient'] = 1;
         }
         $request['visit_id'] = $visit_id;
@@ -218,36 +234,40 @@ class ReceptionController extends AdminBaseController {
         }
     }
 
-    public function checkin($patient_id = null, $visit_id = null) {
+    public function checkin($patient_id = null, $visit_id = null)
+    {
         if (!empty($patient_id)) {
             $this->data['visits'] = Visit::wherePatient($patient_id)->get();
             $this->data['patient'] = Patients::find($patient_id);
             $this->data['precharge'] = Procedures::where("precharge", "=", 1)->get();
             $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
             $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
-                        $query->whereHas('partnerInstitution');
-                    })->get();
+                $query->whereHas('partnerInstitution');
+            })->get();
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
         //$this->data['patients'] = Patients::limit(100);
         return view('reception::checkin', ['data' => $this->data]);
     }
 
-    public function patients_queue() {
-        $this->data['visits'] = Visit::whereHas('destinations', function($query) {
-                    $query->whereCheckout(0);
-                })->orderBy('created_at', 'asc')
-                ->get();
+    public function patients_queue()
+    {
+        $this->data['visits'] = Visit::whereHas('destinations', function ($query) {
+            $query->whereCheckout(0);
+        })->orderBy('created_at', 'asc')
+            ->get();
 
         return view('reception::patients_queue', ['data' => $this->data]);
     }
 
-    public function SearchPatient(Request $request) {
+    public function SearchPatient(Request $request)
+    {
         $patients = Patients::where('first_name', 'like', '%' . base64_encode($request->key) . '%')->get();
         dd($patients);
     }
 
-    public function document_viewer($id) {
+    public function document_viewer($id)
+    {
         $file_meta = PatientDocuments::find($id);
         header("Content-type: $file_meta->mime");
         header("Content-Disposition: inline; filename='$file_meta->filename'");

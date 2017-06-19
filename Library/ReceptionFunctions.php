@@ -15,6 +15,8 @@ namespace Ignite\Reception\Library;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Evaluation\Entities\VisitDestinations;
 use Ignite\Reception\Entities\PatientInsurance;
+use Ignite\Reception\Events\AppointmentCreated;
+use Ignite\Reception\Events\AppointmentRescheduled;
 use Ignite\Reception\Repositories\ReceptionRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +33,8 @@ use Jenssegers\Date\Date;
  *
  * @author Samuel Dervis <samueldervis@gmail.com>
  */
-class ReceptionFunctions implements ReceptionRepository {
+class ReceptionFunctions implements ReceptionRepository
+{
 
     /**
      * @var Request
@@ -47,7 +50,8 @@ class ReceptionFunctions implements ReceptionRepository {
      * ReceptionFunctions constructor.
      * @param Request $request
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->request = request();
         if ($this->request->has('id')) {
             $this->id = $this->request->id;
@@ -58,7 +62,8 @@ class ReceptionFunctions implements ReceptionRepository {
      * Performs a fast forward checkin. Just dive in to checkin without prior appointments
      * @return bool
      */
-    public function checkin_patient() {
+    public function checkin_patient()
+    {
         /*
           this patient must already be here
           $today = Visit::where('created_at', '>=', new Date('today'))
@@ -72,7 +77,7 @@ class ReceptionFunctions implements ReceptionRepository {
         $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
-        if($this->request->destination == 13){
+        if ($this->request->destination == 13) {
             $visit->inpatient = 'on';
         }
 
@@ -123,11 +128,12 @@ class ReceptionFunctions implements ReceptionRepository {
      * @param $place
      * @return bool
      */
-    private function checkin_at($visit, $place) {
+    private function checkin_at($visit, $place)
+    {
         $department = $place;
         $destination = NULL;
         if (intval($place) > 0) {
-            $destination = (int) $department;
+            $destination = (int)$department;
             $department = 'doctor';
         }
         $destinations = VisitDestinations::firstOrNew(['visit' => $visit, 'department' => ucwords($department)]);
@@ -142,7 +148,8 @@ class ReceptionFunctions implements ReceptionRepository {
      * @param null $this ->id
      * @return bool
      */
-    public function add_patient() {
+    public function add_patient()
+    {
         DB::transaction(function () {
             //patient first
             $patient = Patients::findOrNew($this->id);
@@ -198,12 +205,10 @@ class ReceptionFunctions implements ReceptionRepository {
     }
 
     /**
-     * Reschedules previously added appointments
-     * @param Request $this ->request
-     * @param $this ->id
      * @return bool
      */
-    public function reschedule_appointment() {
+    public function reschedule_appointment()
+    {
         $appointment = Appointments::find($this->id);
         $appointment->time = new \Date($this->request->date . ' ' . $this->request->time);
 //$appointment->procedure = $this->request->procedure;
@@ -212,7 +217,7 @@ class ReceptionFunctions implements ReceptionRepository {
         $appointment->clinic = $this->request->clinic;
         $appointment->category = $this->request->category;
         if ($appointment->save()) {
-//  self::sendRescheduleNotification($this->id);
+            event(new AppointmentRescheduled($appointment));
             flash("Appointment has been rescheduled", 'success');
             return true;
         }
@@ -221,11 +226,11 @@ class ReceptionFunctions implements ReceptionRepository {
     }
 
     /**
-     * Add an appointment for patient
-     * @param Request $this ->request
+     * Add a new appointment
      * @return bool
      */
-    public function add_appointment() {
+    public function add_appointment()
+    {
         $appointment = new Appointments;
         if (is_numeric($this->request->patient)) {
             $appointment->patient = $this->request->patient;
@@ -239,8 +244,7 @@ class ReceptionFunctions implements ReceptionRepository {
         $appointment->clinic = $this->request->clinic;
         $appointment->category = $this->request->category;
         if ($appointment->save()) {
-//dispatch(new \Dervis\Jobs\SendNotificationSMS($appointment->schedule_id), 'reminders');
-//  sendAppointmentNotification($appointment);
+            event(new AppointmentCreated($appointment));
             flash("Appointment has been saved", 'success');
             return true;
         }
@@ -253,7 +257,8 @@ class ReceptionFunctions implements ReceptionRepository {
      * @param int $patient
      * @return bool
      */
-    public function upload_document($patient) {
+    public function upload_document($patient)
+    {
         $file = $this->request->file('doc');
         if (empty($file) || !$file->isValid()) {
             flash()->warning("Invalid file. Upload aborted");

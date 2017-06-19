@@ -2,6 +2,8 @@
 
 namespace Ignite\Reception\Http\Controllers;
 
+use Ignite\Reception\Entities\PatientDocuments;
+use Ignite\Reception\Entities\Patients;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -47,7 +49,7 @@ class ApiController extends Controller {
         if (!empty($term)) {
             //$found = \Ignite\Reception\Entities\Patients::where('concat(first_name)', 'like', "%$term%")->get();
         }
-        $found = \Ignite\Reception\Entities\Patients::where('first_name', 'like', "%$term%")->get();
+        $found = Patients::where('first_name', 'like', "%$term%")->get();
         //$found = PatientInsurance::with('schemes')
         //        ->get();
 
@@ -63,7 +65,7 @@ class ApiController extends Controller {
 
     public function get_checkin_patients(Request $request) {
         $rows = '';
-        $patients = \Ignite\Reception\Entities\Patients::all();
+        $patients = Patients::all();
         foreach ($patients as $patient) {
             if (str_contains(strtolower($patient->fullname), strtolower($request->term)) || str_contains($patient->id_no, $request->term)) {
                 $rows.= '<tr>
@@ -81,7 +83,7 @@ class ApiController extends Controller {
 
     public function get_patients_for_manage(Request $request) {
         $rows = '';
-        $patients = \Ignite\Reception\Entities\Patients::all();
+        $patients = Patients::all();
         $n = 0;
         $roles = get_this_user_roles();
         foreach ($patients as $patient) {
@@ -119,7 +121,7 @@ class ApiController extends Controller {
 
     public function delete_doc(Request $request) {
         try {
-            $doc = \Ignite\Reception\Entities\PatientDocuments::find($request->id);
+            $doc = PatientDocuments::find($request->id);
             $doc->delete();
         } catch (\Exception $ex) {
             echo 'Error deleting document';

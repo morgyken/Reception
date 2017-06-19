@@ -13,10 +13,18 @@
 namespace Ignite\Reception\Repositories;
 
 /**
- * Description of ReceptionREpository
- *
- * @author samuel
+ * Interface ReceptionRepository
+ * @package Ignite\Reception\Repositories
  */
-interface ReceptionRepository {
+interface ReceptionRepository
+{
+    /**
+     * @return mixed
+     */
+    public function reschedule_appointment();
 
+    /**
+     * @return mixed
+     */
+    public function add_appointment();
 }
