@@ -163,6 +163,8 @@
                 </a>
             </div>
             <div class="pull-right">
+                <button type="submit" name="save_and_checkin" value="1" class="btn btn-primary">
+                    <i class="fa fa-save"></i> Save and Checkin</button>
                 <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
             </div>
         </div>

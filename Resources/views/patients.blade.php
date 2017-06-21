@@ -44,9 +44,11 @@ $roles = get_this_user_roles();
                             </a>
                             <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
                                 <i class="fa fa-sign-in"></i> Check in</a>
+                            <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
+                                <i class="fa fa-sign-in"></i> Review</a>
                             <?php if (in_array(5, $roles)) { ?>
-                                <a style="color: red" href="{{route('reception.purge_patient',$patient->id)}}" class="btn btn-xs">
-                                    <i class="fa fa-trash"></i>delete</a>
+                                <!-- <a style="color: red" href="{{route('reception.purge_patient',$patient->id)}}" class="btn btn-xs">
+                                     <i class="fa fa-trash"></i>delete</a> -->
                             <?php } ?>
                         </td>
                     </tr>

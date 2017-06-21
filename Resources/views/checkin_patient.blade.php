@@ -7,8 +7,7 @@
 extract($data);
 
 $dests = get_checkin_destinations();
-array_push($dests, 'In Patient');
-
+//array_push($dests, 'In Patient');
 //$precharge = data['precharge'];
 //dd($patient->insured);
 $patient_schemes = get_patient_schemes($patient->id);

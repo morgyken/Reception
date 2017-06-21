@@ -41,21 +41,18 @@ class ApiController extends Controller {
     }
 
     public function get_patients(Request $request) {
-        // $found = collect();
         $ret = [];
-        $term = ucfirst($request->q);
-        if (!empty($term)) {
-            //$found = \Ignite\Reception\Entities\Patients::where('concat(first_name)', 'like', "%$term%")->get();
-        }
-        $found = \Ignite\Reception\Entities\Patients::where('first_name', 'like', "%$term%")->get();
-        //$found = PatientInsurance::with('schemes')
-        //        ->get();
-
+        $patients = \Ignite\Reception\Entities\Patients::all();
+        $term = array_get($request->term, 'term');
         $build = [];
-        foreach ($found as $patient) {
-            $build[] = [
-                'text' => $patient->full_name,
-                'id' => $patient->id];
+        foreach ($patients as $patient) {
+            if (str_contains(strtolower($patient->fullname), strtolower($term))) {
+                $name = $patient->fullname;
+                $id = $patient->id;
+                $build[] = [
+                    'text' => $name,
+                    'id' => $id];
+            }
         }
         $ret['results'] = $build;
         return json_encode($ret);

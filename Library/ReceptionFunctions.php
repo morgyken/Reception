@@ -238,6 +238,11 @@ class ReceptionFunctions implements ReceptionRepository {
             }
             $addon = "Click <a href='" . route('reception.checkin', $patient->patient_id) . "'>here</a> to checkin";
             flash()->success($patient->full_name . " details saved. $addon");
+
+            if ($this->request->has('save_and_checkin')) {
+                session(['patient_just_created' => $patient->id]);
+                // return redirect()->route('reception.checkin', $patient->id);
+            }
         });
         return true;
     }
