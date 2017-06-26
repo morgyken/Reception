@@ -17,7 +17,7 @@ extract($data);
     </div>
 
     <div class="box-body">
-        <input type="text" size="20" id="search_patient" placeholder="Search Patient Name or or ID Number" class="col-xs-4">
+        <input type="text" size="20" id="search_patient" placeholder="Find patient by names or ID Number (for best results minimise spaces)" class="col-xs-4">
         <a target="blank" class="btn btn-xs btn-primary pull-right" href="{{route('reception.show_patients','all')}}">View entire patient list</a><br>
         <hr>
         <table class="table table-striped table-condensed">

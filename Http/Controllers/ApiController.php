@@ -46,7 +46,10 @@ class ApiController extends Controller {
         $term = array_get($request->term, 'term');
         $build = [];
         foreach ($patients as $patient) {
-            if (str_contains(strtolower($patient->fullname), strtolower($term))) {
+            if (
+                str_contains(strtolower($patient->full_name), strtolower($term))||
+                str_contains($patient->id_no, $term)
+            ){
                 $name = $patient->fullname;
                 $id = $patient->id;
                 $build[] = [
@@ -62,7 +65,10 @@ class ApiController extends Controller {
         $rows = '';
         $patients = \Ignite\Reception\Entities\Patients::all();
         foreach ($patients as $patient) {
-            if (str_contains(strtolower($patient->fullname), strtolower($request->term)) || str_contains($patient->id_no, $request->term)) {
+            if (
+                str_contains($patient->id_no, $request->term)
+                ||str_contains(strtolower($patient->full_name), strtolower($request->term))
+            ) {
                 $rows.= '<tr>
                     <td>' . $patient->id . '</td>
                     <td>' . $patient->id_no . '</td>
@@ -81,8 +87,11 @@ class ApiController extends Controller {
         $patients = \Ignite\Reception\Entities\Patients::all();
         $n = 0;
         $roles = get_this_user_roles();
+        $term =  $request->term;
         foreach ($patients as $patient) {
-            if (str_contains(strtolower($patient->fullname), strtolower($request->term)) || str_contains($patient->id_no, $request->term)) {
+            if ( str_contains($patient->id_no, $request->term)
+                ||str_contains(strtolower($patient->full_name), strtolower($request->term))
+            ) {
                 $rows.= '
                     <tr>
                     <td>' . $patient->id . '</td>

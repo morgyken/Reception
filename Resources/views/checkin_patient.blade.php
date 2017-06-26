@@ -24,7 +24,7 @@ $patient_schemes = get_patient_schemes($patient->id);
             <dl class="dl-horizontal">
                 <dt>Name:</dt><dd>{{$patient->full_name}}</dd>
                 <dt>Date of Birth:</dt><dd>{{(new Date($patient->dob))->format('m/d/y')}}
-                    <strong>({{(new Date($patient->dob))->age}} years old)</strong></dd>
+                    <strong>({{get_patient_age($patient->dob)}} old)</strong></dd>
                 <dt>Gender:</dt><dd>{{$patient->sex}}</dd>
                 <dt>Mobile Number:</dt><dd>{{$patient->mobile}}</dd>
                 <dt>ID number:</dt><dd>{{$patient->id_no}}</dd>

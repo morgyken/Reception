@@ -80,11 +80,7 @@ use SoftDeletes;
     }
 
     public function getFullNameAttribute() {
-        return $this->first_name . " " . $this->middle_name . ' ' . $this->last_name;
-    }
-
-    public function getNameAttribute() {
-        return ucwords($this->first_name . ' ' . $this->last_name);
+        return $this->first_name . " " . $this->middle_name . " " . $this->last_name;
     }
 
     public function getCheckedInStatusAttribute() {
@@ -126,6 +122,10 @@ use SoftDeletes;
 
     public function drug_purchases() {
         return $this->hasMany(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'patient');
+    }
+
+    public function invoices() {
+        return $this->hasMany(\Ignite\Finance\Entities\PatientInvoice::class, 'patient_id');
     }
 
     public function paginateCount($conditions = null, $recursive = 0, $extra = array()) {

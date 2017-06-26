@@ -67,6 +67,8 @@ return [
         2 => 'Review after surgery',
         3 => 'Follow up review',
         4 => 'General Consultation',
+        5 => 'Vaccination',
+        6 => 'Other',
     ],
     'visit_status' => [
         1 => 'Scheduled',
