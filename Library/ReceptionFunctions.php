@@ -211,14 +211,20 @@ class ReceptionFunctions implements ReceptionRepository {
 
             //next of kins
             if ($this->request->has('first_name_nok')) {
-                $nok = NextOfKin::findOrNew($this->id);
-                $nok->patient = $patient->id;
-                $nok->first_name = ucfirst($this->request->first_name_nok);
-                $nok->middle_name = ucfirst($this->request->middle_name_nok);
-                $nok->last_name = ucfirst($this->request->last_name_nok);
-                $nok->mobile = $this->request->mobile_nok;
-                $nok->relationship = $this->request->nok_relationship;
-                $nok->save();
+                foreach ($this->request->first_name_nok as $key=>$value){
+                   try{
+                        $nok = NextOfKin::findOrNew($this->id);
+                        $nok->patient = $patient->id;
+                        $nok->first_name = ucfirst($this->request->first_name_nok[$key]);
+                        $nok->middle_name = ucfirst($this->request->middle_name_nok[$key]);
+                        $nok->last_name = ucfirst($this->request->last_name_nok[$key]);
+                        $nok->mobile = $this->request->mobile_nok[$key];
+                        $nok->relationship = $this->request->nok_relationship[$key];
+                        $nok->save();
+                   }catch (\Exception $e){
+                        //Something weird may have happened
+                   }
+                }
             }
             //if ($patient->insured == 1) {
             if (isset($this->request->insured)) {

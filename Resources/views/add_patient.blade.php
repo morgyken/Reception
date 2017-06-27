@@ -154,6 +154,7 @@
 
             </div>
             @include('reception::partials.nok')
+            <div class="more_nok">@include('reception::partials.nok')</div>
             @include('reception::partials.patient_insurance')
         </div>
         <div class="box-footer">
