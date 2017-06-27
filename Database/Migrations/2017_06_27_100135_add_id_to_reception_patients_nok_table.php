@@ -14,8 +14,8 @@ class AddIdToReceptionPatientsNokTable extends Migration
     public function up()
     {
         Schema::table('reception_patients_nok', function (Blueprint $table) {
-            $table->dropPrimary();
-            $table->increments('id');
+            //$table->dropPrimary();
+            //$table->increments('id');
         });
     }
 
@@ -27,8 +27,8 @@ class AddIdToReceptionPatientsNokTable extends Migration
     public function down()
     {
         Schema::table('reception_patients_nok', function (Blueprint $table) {
-            $table->dropColumn(['id']);
-            $table->integer('patient', true)->unsigned()->change();
+           // $table->dropColumn(['id']);
+           // $table->integer('patient', true)->unsigned()->change();
         });
     }
 }
