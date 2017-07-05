@@ -13,6 +13,6 @@ use Illuminate\Database\Eloquent\Model;
 class Temp extends Model {
 
     protected $fillable = [];
-    public $table = "cth_patients";
+    public $table = "dental_malindi_patients";
 
 }

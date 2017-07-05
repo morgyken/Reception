@@ -388,18 +388,26 @@ class ReceptionController extends AdminBaseController {
             $data = \Ignite\Reception\Entities\Temp::all();
             $n = 0;
             foreach ($data as $p) {
-                try {
+                $names =  explode(" ", $p->names);
+                $count = count($names);
+               // dd($names[1]);
+               try {
                     $patient = new Patients;
-                    $patient->first_name = ucfirst($p->first_name);
-                    $patient->middle_name = ucfirst($p->middle_name);
-                    $patient->last_name = ucfirst($p->last_name);
-                    $patient->mobile = $p->phone_no;
-                    $patient->patient_no = $p->patient_no;
+                    $patient->first_name = ucfirst($names[0]);
+                if($count>2){
+                    $patient->middle_name = ucfirst($names[1]);
+                    $patient->last_name = ucfirst($names[2]);
+                }else{
+                    //$patient->middle_name = ucfirst($names[1]);
+                    $patient->last_name = ucfirst($names[1]);
+                }
+                    $patient->mobile = $p->contact;
+                    $patient->patient_no = $p->dacm_no;
                     $patient->save();
                     $n+=1;
-                } catch (\Exception $e) {
+               } catch (\Exception $e) {
 
-                }
+               }
             }
             echo $n . ' Patient Records Created... Thank you';
         });
