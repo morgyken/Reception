@@ -142,6 +142,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                         {!! $errors->first('scheme', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
+
                 @if(isset($external_order))
                 <div class="form-group {{ $errors->has('scheme') ? ' has-error' : '' }}" id="schemes">
                     {!! Form::label('scheme', 'Ordered Procedures',['class'=>'control-label col-md-4']) !!}
@@ -170,7 +171,6 @@ $patient_schemes = get_patient_schemes($patient->id);
                 $pre_charged = json_decode(m_setting('reception.pre_charged_compulsory'));
                 if (!in_array('none', $pre_charged) && count($pre_charged) == 1) {
                     ?>
-
                     <div class="form-group">
                         {!! Form::label('fees', 'Compulsory Fees Applied',['class'=>'control-label col-md-4']) !!}
                         <div class="col-md-8" id="cfees">
@@ -235,8 +235,6 @@ $patient_schemes = get_patient_schemes($patient->id);
                         </select>
                     </div>
                 </div>
-
-
 
                 <div class="form-group">
                     {!! Form::label('partners', 'External Doctor',['class'=>'control-label col-md-4']) !!}

@@ -331,7 +331,6 @@ class ReceptionFunctions implements ReceptionRepository
                 $document->document = base64_encode(file_get_contents($file->getRealPath()));
             }
         }
-
         $document->filename = $file->getClientOriginalName();
         $document->mime = $file->getClientMimeType();
         $document->document_type = $this->request->document_type;

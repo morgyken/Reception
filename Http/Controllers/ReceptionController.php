@@ -208,12 +208,14 @@ class ReceptionController extends AdminBaseController
         return view('reception::patient_documents', ['data' => $this->data]);
     }
 
+
     public function view_image(Request $request) {
         $this->data['image'] = PatientDocuments::find($request->id);
         return view('reception::view_image', ['data' => $this->data]);
     }
 
-    public function upload_doc(Request $request, $id) {
+    public function upload_doc(Request $request, $id)
+    {
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->upload_document($id)) {
                 flash("Scan complete, all patient related files have been uploaded");
@@ -263,14 +265,14 @@ class ReceptionController extends AdminBaseController
             $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
                  $query->whereHas('partnerInstitution');
              })->get();
-
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
         //$this->data['patients'] = Patients::limit(100);
         return view('reception::checkin', ['data' => $this->data]);
     }
 
-    public function external_checkin(Request $request) {
+    public function external_checkin(Request $request)
+    {
         $this->data['external_order'] = $order = ExternalOrders::find($request->order_id);
         $patient_id = $order->patient->id;
         $this->data['visits'] = Visit::wherePatient($patient_id)->get();
@@ -278,8 +280,17 @@ class ReceptionController extends AdminBaseController
         $this->data['precharge'] = \Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
         $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
         $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
-                    $query->whereHas('partnerInstitution');
-                })->get();
+            $query->whereHas('partnerInstitution');
+        })->get();
+        return view('reception::checkin_patient', ['data' => $this->data]);
+    }
+    
+    public function patients_queue()
+    {
+        $this->data['visits'] = Visit::whereHas('destinations', function ($query) {
+            $query->whereCheckout(0);
+        })->orderBy('created_at', 'asc')
+            ->get();
 
         return view('reception::checkin_patient', ['data' => $this->data]);
     }
