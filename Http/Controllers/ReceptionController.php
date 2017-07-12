@@ -89,13 +89,8 @@ class ReceptionController extends AdminBaseController
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-<<<<<<< cd9bb25f747aff5aa080d2887dce8d52af80b2bf
-    public function save_patient(CreatePatientRequest $request, $id = null) {
-        //dd($request);
-=======
     public function save_patient(CreatePatientRequest $request, $id = null)
     {
->>>>>>> Add event listeners
         if ($this->receptionRepository->add_patient($request, $request->id)) {
             //$this->savePatientScheme($request, $request->id);
             flash("Patient Information saved", 'success');
@@ -213,17 +208,12 @@ class ReceptionController extends AdminBaseController
         return view('reception::patient_documents', ['data' => $this->data]);
     }
 
-<<<<<<< cd9bb25f747aff5aa080d2887dce8d52af80b2bf
     public function view_image(Request $request) {
         $this->data['image'] = PatientDocuments::find($request->id);
         return view('reception::view_image', ['data' => $this->data]);
     }
 
     public function upload_doc(Request $request, $id) {
-=======
-    public function upload_doc(Request $request, $id)
-    {
->>>>>>> Add event listeners
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->upload_document($id)) {
                 flash("Scan complete, all patient related files have been uploaded");
@@ -235,7 +225,6 @@ class ReceptionController extends AdminBaseController
         return view('reception::upload_doc', ['data' => $this->data]);
     }
 
-<<<<<<< cd9bb25f747aff5aa080d2887dce8d52af80b2bf
     public function bulk_upload(Request $request) {
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->scan_and_upload($request)) {
@@ -247,11 +236,8 @@ class ReceptionController extends AdminBaseController
         return view('reception::bulk_upload', ['data' => $this->data]);
     }
 
-    public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null) {
-=======
     public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null)
     {
->>>>>>> Add event listeners
         if ($request['inpatient'] == true) {
             $request['inpatient'] = 1;
         }
@@ -263,12 +249,7 @@ class ReceptionController extends AdminBaseController
         }
     }
 
-<<<<<<< cd9bb25f747aff5aa080d2887dce8d52af80b2bf
     public function checkin(Request $request, $patient_id = null, $visit_id = null) {
-=======
-    public function checkin($patient_id = null, $visit_id = null)
-    {
->>>>>>> Add event listeners
         if (!empty($patient_id)) {
             if (!is_null($request->order_id)) {
                 $this->data['external_order'] = ExternalOrders::find($request->order_id);
@@ -278,22 +259,17 @@ class ReceptionController extends AdminBaseController
             $this->data['patient'] = Patients::find($patient_id);
             $this->data['precharge'] = \Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
             $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
-            $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
-<<<<<<< cd9bb25f747aff5aa080d2887dce8d52af80b2bf
-                        $query->whereHas('partnerInstitution');
-                    })->get();
 
-=======
-                $query->whereHas('partnerInstitution');
-            })->get();
->>>>>>> Add event listeners
+            $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
+                 $query->whereHas('partnerInstitution');
+             })->get();
+
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
         //$this->data['patients'] = Patients::limit(100);
         return view('reception::checkin', ['data' => $this->data]);
     }
 
-<<<<<<< cd9bb25f747aff5aa080d2887dce8d52af80b2bf
     public function external_checkin(Request $request) {
         $this->data['external_order'] = $order = ExternalOrders::find($request->order_id);
         $patient_id = $order->patient->id;
@@ -307,21 +283,13 @@ class ReceptionController extends AdminBaseController
 
         return view('reception::checkin_patient', ['data' => $this->data]);
     }
-
-    public function patients_queue() {
-        $this->data['visits'] = Visit::whereHas('destinations', function($query) {
-                    $query->whereCheckout(0);
-                })->orderBy('created_at', 'asc')
-                ->get();
-=======
+    
     public function patients_queue()
     {
         $this->data['visits'] = Visit::whereHas('destinations', function ($query) {
             $query->whereCheckout(0);
         })->orderBy('created_at', 'asc')
             ->get();
->>>>>>> Add event listeners
-
         return view('reception::patients_queue', ['data' => $this->data]);
     }
 

@@ -76,14 +76,11 @@ class ReceptionFunctions implements ReceptionRepository
         $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
-<<<<<<< cd9bb25f747aff5aa080d2887dce8d52af80b2bf
 
         if ($this->request->has('external_order')) {
             $visit->external_order = $this->request->external_order;
         }
 
-=======
->>>>>>> Add event listeners
         if ($this->request->destination == 13) {
             $visit->inpatient = 'on';
         }
