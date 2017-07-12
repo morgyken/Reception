@@ -284,7 +284,7 @@ class ReceptionController extends AdminBaseController
         })->get();
         return view('reception::checkin_patient', ['data' => $this->data]);
     }
-    
+
     public function patients_queue()
     {
         $this->data['visits'] = Visit::whereHas('destinations', function ($query) {
@@ -293,15 +293,6 @@ class ReceptionController extends AdminBaseController
             ->get();
 
         return view('reception::checkin_patient', ['data' => $this->data]);
-    }
-    
-    public function patients_queue()
-    {
-        $this->data['visits'] = Visit::whereHas('destinations', function ($query) {
-            $query->whereCheckout(0);
-        })->orderBy('created_at', 'asc')
-            ->get();
-        return view('reception::patients_queue', ['data' => $this->data]);
     }
 
     public function SearchPatient(Request $request)
