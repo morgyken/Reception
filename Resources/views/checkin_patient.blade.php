@@ -86,7 +86,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                 <div class="form-group req {{ $errors->has('destination') ? ' has-error' : '' }}">
                     {!! Form::label('destination', 'Destination',['class'=>'control-label col-md-4']) !!}
                     @if(isset($external_order))
-                    <?php $select = get_destinations($external_order) ?>
+                    <?php $select = get_destinations($external_order); ?>
                     <div class="col-md-8">
                         <input type="hidden" name="as_ordered" value="1">
                         <small>NOTE: Already selected based on procedures ordered</small>
