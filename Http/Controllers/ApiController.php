@@ -2,6 +2,7 @@
 
 namespace Ignite\Reception\Http\Controllers;
 
+use function GuzzleHttp\Psr7\str;
 use Ignite\Reception\Entities\PatientDocuments;
 use Ignite\Reception\Entities\Patients;
 use Illuminate\Routing\Controller;
@@ -45,21 +46,23 @@ class ApiController extends Controller {
     public function get_patients(Request $request) {
         $ret = [];
         $patients = \Ignite\Reception\Entities\Patients::all();
-        $term = array_get($request->term, 'term');
-        $term = ucfirst($request->q);
+       // $term = array_get($request->term, 'term');
+       // $term = ucfirst($request->q);
+        $q = $request->input('term');
+        $term = $q['term'];
+
         if (!empty($term)) {
             //$found = \Ignite\Reception\Entities\Patients::where('concat(first_name)', 'like', "%$term%")->get();
         }
         $found = Patients::where('first_name', 'like', "%$term%")->get();
         //$found = PatientInsurance::with('schemes')
         //        ->get();
-
         //Add event listeners
         $build = [];
         foreach ($patients as $patient) {
             if (
-                str_contains(strtolower($patient->full_name), strtolower($term))||
-                str_contains($patient->id_no, $term)
+                strpos(strtolower($patient->full_name), strtolower($term)) !== false ||
+                strpos($patient->id_no, strtolower($term) !==false)
             ){
                 $name = $patient->fullname;
                 $id = $patient->id;
