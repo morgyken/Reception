@@ -5,7 +5,6 @@
  * and open the template in the editor.
  */
 extract($data);
-
 $dests = get_checkin_destinations();
 array_push($dests, 'In Patient');
 
@@ -41,44 +40,6 @@ $patient_schemes = get_patient_schemes($patient->id);
             <strong class="text-info">No image</strong>
             @endif
         </div>
-        <!-- TODO Work on this-->
-        <?php
-        /*
-          <div class="col-md-4">
-          <h4>Patient Schedule</h4>
-          if($visits->isEmpty())
-
-          <p class="text-success">
-          No previous appointments. <br/>
-          No upcoming appointments too.
-          </p>
-          else
-          <p>Previous and upcoming appointments</p>
-          <table class="table table-condensed">
-
-          <tbody>
-          foreach($visits as $visit)
-          <tr>
-          <td>{{(new Date($visit->time))->format('dS M')}}</td>
-          <td>{{$visit->doctors->full_name}}</td>
-          <td>{{config('system.visit_status.'.$visit->status)}}</td>
-          <td><a class="btn btn-xs" href="{{route('system.evaluation.nurse_manage',[$patient->patient_id,1])}}">
-          <i class="fa fa-deafness"></i> Review</a></td>
-          </tr>
-          endforeach
-          </tbody>
-          <thead>
-          <tr>
-          <th>Date</th>
-          <th>Doctor</th>
-          <th>Status</th>
-          <th>Action</th>
-          </tr>
-          </thead>
-          </table>
-          endif
-          </div> */
-        ?>
         <div class="col-md-6">
             <h4>Check-in details</h4>
             <div class="form-horizontal">
@@ -87,18 +48,17 @@ $patient_schemes = get_patient_schemes($patient->id);
                 <div class="form-group req {{ $errors->has('destination') ? ' has-error' : '' }}">
                     {!! Form::label('destination', 'Destination',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-
-
-
                         {!! Form::select('destination',$dests, old('destination'), ['class' => 'form-control']) !!}
                         {!! $errors->first('destination', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
+                @if(m_setting('reception.checkin_to_nurse'))
                 <div class="form-group">
                     <div class="col-md-8 col-md-offset-4">
                         <label class="checkbox-inline"><input  type="checkbox" name="to_nurse" value="1" checked/> Also check in patient to Nurse </label>
                     </div>
                 </div>
+                @endif
                 <div class="form-group {{ $errors->has('time') ? ' has-error' : '' }}">
                     {!! Form::label('time', 'Check In time',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
@@ -111,6 +71,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                         <p class="form-control-static">{{get_clinic_name()}}</p>
                     </div>
                 </div>
+                @if(m_setting('reception.purpose_of_visit'))
                 <div class="form-group req {{ $errors->has('purpose') ? ' has-error' : '' }}">
                     {!! Form::label('purpose', 'Purpose of visit',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
@@ -118,6 +79,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                         {!! $errors->first('purpose', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
+                @endif
                 <div class="form-group {{ $errors->has('payment_mode') ? ' has-error' : '' }}">
                     {!! Form::label('name', 'Payment Mode',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8" id="mode">
@@ -131,14 +93,12 @@ $patient_schemes = get_patient_schemes($patient->id);
                 <div class="form-group {{ $errors->has('scheme') ? ' has-error' : '' }}" id="schemes">
                     {!! Form::label('scheme', 'Insurance Scheme',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-
                         <select class="form-control" id="scheme" name="scheme">
                             <option selected="selected" value="">Choose...</option>
                             @foreach($patient_schemes as $scheme)
                             <option value="{{$scheme->id}}">{{$scheme->schemes->companies->name}} - {{$scheme->schemes->name}}</option>
                             @endforeach
                         </select>
-
                         {!! $errors->first('scheme', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>

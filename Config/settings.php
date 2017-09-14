@@ -25,4 +25,14 @@ return [
         'view' => 'reception::fields.pre_charged',
         'hint' => 'Select fees to be made compulsory'
     ],
+    'checkin_to_nurse' => [
+        'description' => 'Also check-in patients to nurse by default',
+        'view' => 'checkbox',
+        'hint' => 'check to allow'
+    ],
+    'purpose_of_visit' => [
+        'description' => 'Display purpose of visit at check-in',
+        'view' => 'checkbox',
+        'hint' => 'check to allow'
+    ],
 ];
