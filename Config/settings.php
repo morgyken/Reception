@@ -26,13 +26,15 @@ return [
         'hint' => 'Select fees to be made compulsory'
     ],
     'checkin_to_nurse' => [
-        'description' => 'Also check-in patients to nurse by default',
-        'view' => 'checkbox',
-        'hint' => 'check to allow'
+        'description' => 'Check-in patients to nurse by default',
+        'view' => 'checkbox'
     ],
     'purpose_of_visit' => [
-        'description' => 'Display purpose of visit at check-in',
-        'view' => 'checkbox',
-        'hint' => 'check to allow'
+        'description' => 'Enable selection of purpose of visit when checking in patients',
+        'view' => 'checkbox'
+    ],
+    'external_doctor' => [
+        'description' => 'Enable external doctor',
+        'view' => 'checkbox'
     ],
 ];

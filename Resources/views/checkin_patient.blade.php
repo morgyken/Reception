@@ -199,8 +199,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                     </div>
                 </div>
 
-
-
+                @if(m_setting('reception.external_doctor'))
                 <div class="form-group">
                     {!! Form::label('partners', 'External Doctor',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
@@ -210,7 +209,6 @@ $patient_schemes = get_patient_schemes($patient->id);
                         <small>Applies to Lab-tests (Mostly) requested by external doctors</small>
                     </div>
                 </div>
-
                 <div class="form-group" id="partners">
                     {!! Form::label('fees', 'Partner Institution',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8" id="partners">
@@ -234,6 +232,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                     </div>
                     <br>
                 </div>
+                @endif
 
                 <div class="pull-right">
                     <button type="submit" class="btn btn-success"><i class="fa fa-map-marker"></i> Checkin</button>
