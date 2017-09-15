@@ -128,6 +128,10 @@ use SoftDeletes;
         return $this->hasMany(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'patient');
     }
 
+    public function invoices() {
+        return $this->hasMany(\Ignite\Finance\Entities\PatientInvoice::class, 'patient_id');
+    }
+
     public function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
         return 1000;
     }
