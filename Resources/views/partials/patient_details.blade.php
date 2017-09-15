@@ -16,7 +16,14 @@ if (!empty($data['section'])) {
     <div class="col-md-12">
         <dl class="dl-horizontal">
             <div class="col-md-3">
-                <dt>Name:</dt><dd>{{$patient->full_name}} <strong>({{(new Date($patient->dob))->age}} years)</strong></dd>
+                <dt>Name:</dt>
+                <dd>{{$patient->full_name}}
+                    <strong>({{(new Date($patient->dob))->age}} years)</strong>
+                </dd>
+                <dt>NO:</dt>
+                <dd>
+                    {{m_setting('reception.patient_id_abr')}}{{$invoice->patient->id}}
+                </dd>
             </div>
             <div class="col-md-6">
                 @if(!empty($f_vitals))

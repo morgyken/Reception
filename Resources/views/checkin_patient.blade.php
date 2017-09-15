@@ -20,6 +20,8 @@ $patient_schemes = get_patient_schemes($patient->id);
             <h4>Patient Information</h4>
             <dl class="dl-horizontal">
                 <dt>Name:</dt><dd>{{$patient->full_name}}</dd>
+                <dt>Patient No:</dt>
+                <dd>{{m_setting('reception.patient_id_abr')}}{{$patient->id}}</dd>
                 <dt>Date of Birth:</dt><dd>{{(new Date($patient->dob))->format('m/d/y')}}
                     <strong>({{(new Date($patient->dob))->age}} years old)</strong></dd>
                 <dt>Gender:</dt><dd>{{$patient->sex}}</dd>

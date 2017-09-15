@@ -10,6 +10,10 @@
  * =============================================================================
  */
 return [
+    'patient_id_abr' => [
+        'description' => 'Patient ID Abbreviation',
+        'view' => 'text'
+    ],
     'checkin_destinations' => [
         'description' => 'Checkin destination',
         'view' => 'reception::fields.checkin',
