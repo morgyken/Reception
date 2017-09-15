@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Ignite\Reception\Entities\AppointmentCategory
  *
- * @property integer $id
+ * @property int $id
  * @property string $name
- * @property string $payload
- * @property string $deleted_at
+ * @property string|null $payload
+ * @property string|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\Appointments[] $appointments
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\AppointmentCategory whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\AppointmentCategory whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\AppointmentCategory wherePayload($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\AppointmentCategory whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\AppointmentCategory whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\AppointmentCategory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\AppointmentCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\AppointmentCategory wherePayload($value)
  * @mixin \Eloquent
  */
 class AppointmentCategory extends Model {
