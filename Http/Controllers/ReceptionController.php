@@ -287,88 +287,124 @@ class ReceptionController extends AdminBaseController {
         return view('reception::external.queue', ['data' => $this->data]);
     }
 
-    /*
-      public function Skipper() {
-      /*
-      $ins = Spine::all();
-      $n = 0;
-      foreach ($ins as $i) {
-      $n+=1;
-      $firm = new \Ignite\Settings\Entities\Insurance;
-      $firm->id = $i->Insurance_ID;
-      $firm->name = $i->Insurance_Name;
-      $firm->post_code = $i->Post_Code;
-      $firm->street = $i->Street;
-      $firm->town = $i->City;
-      $firm->email = $i->Email;
-      $firm->telephone = $i->Telephone;
-      $firm->save();
-      echo $n . '<br/>';
-      } */
-    //\DB::transaction(function () {
-    /*
-      $spine = \Ignite\Reception\Entities\Spine::all();
-      //dd($spine);
-      foreach ($spine as $p) {
-      //patient first
-      $patient = Patients::findOrNew($p->id); //new Patients; //::findOrNew($p->Patient_ID);
-      $patient->id = $p->id;
-      $patient->first_name = ucfirst($p->First_Name);
-      $patient->middle_name = ucfirst($p->Middle_Name);
-      $patient->last_name = ucfirst($p->Last_Name);
+    public function patient_encrypter(){
+        \DB::transaction(function () {
+            $n = 0;
+            $patients = \Ignite\Reception\Entities\Spine::all();
+            //dd($patients);
+            foreach ($patients as $p) {
+                //patient first
+                $patient = new  Patients();//::findOrNew($p->id); //new Patients; //::findOrNew($p->Patient_ID);
+                //$patient->id = $p->id;
+                $patient->first_name = ucfirst($p->f_name);
+                $patient->middle_name = ucfirst($p->m_name);
+                $patient->last_name = ucfirst($p->l_name);
+                //$patient->id_no = $p->ID_Passport_Number;
+                $patient->patient_no = $p->no;
+//                $patient->dob = new \Date($p->Date_Of_Birth);
+//
+//                $patient->sex = $p->Sex ? $p->Sex : 'male';
+//                //$patient->telephone = $p->telephone;
+                $patient->mobile = $p->contact;
+//                //$patient->alt_number = $this->request->alt_number;
+//                $patient->email = strtolower($p->Email_Address);
+//                $patient->address = $p->Postal_Address;
+//                $patient->post_code = $p->Post_Code;
+//                //$patient->town = ucfirst($this->request->town);
+//                //if ($this->request->has('imagesrc')) {
+//                //  $patient->image = $this->request->imagesrc;
+//                //}
+                $patient->save();
+                $n+=1;
+            }
+            echo $n.'Patients Saved, Done';
+        });
 
-      $patient->id_no = $p->ID_Passport_Number;
-      $patient->dob = new \Date($p->Date_Of_Birth);
+    }
 
-      $patient->sex = $p->Sex ? $p->Sex : 'male';
-      //$patient->telephone = $p->telephone;
-      $patient->mobile = $p->Mobile_Number;
-      //$patient->alt_number = $this->request->alt_number;
-      $patient->email = strtolower($p->Email_Address);
-      $patient->address = $p->Postal_Address;
-      $patient->post_code = $p->Post_Code;
-      //$patient->town = ucfirst($this->request->town);
-      //if ($this->request->has('imagesrc')) {
-      //  $patient->image = $this->request->imagesrc;
-      //}
-      $patient->save();
-      //next of kins
-      if (isset($p->NOK_First_Name) && $p->NOK_First_Name !== '-') {
-      //dd($patient->id);
-      $nok = new NextOfKin;
-      $nok->patient = $patient->id;
-      $nok->first_name = ucfirst($p->NOK_First_Name);
-      $nok->middle_name = ucfirst($p->NOK_Middle_Name);
-      $nok->last_name = ucfirst($p->NOK_Last_Name);
-      $nok->mobile = $p->NOK_Mobile;
-      $nok->relationship = $p->NOK_Relationship_ID;
-      $nok->save();
-      }
-      //if ($patient->insured == 1) {
-      if ($p->PI_Insurance_Provider_ID > 0) {
-      //foreach ((array) $this->request->scheme1 as $key => $scheme) {
-      /* $s = new \Ignite\Settings\Entities\Schemes;
-      $s->company = $p->PI_Insurance_Provider_ID;
-      $s->name = $p->PI_Plan_Name;
-      dd($p->PI_Plan_Name);
-      $s->save();
-     */
-    /*
-      $schemes = new PatientInsurance;
-      $schemes->patient = $patient->id;
-      $schemes->scheme = $p->PI_Insurance_Provider_ID;
-      $schemes->policy_number = $p->PI_Policy_Number;
-      $schemes->principal = ucwords($p->PI_Subscriber);
-      $schemes->dob = new \Date($p->PI_Date_Of_Birth);
-      $schemes->relationship = $p->PI_Relationship_ID;
-      $schemes->save();
-      }
-      // }
-      //flash()->success($patient->full_name . " details saved. $addon");
-      }
-      echo 'Done';
-      //});
-      }
-     *
-     */
+//      public function Skipper() {
+//      /*$ins = Spine::all();
+//      $n = 0;
+//
+//      foreach ($ins as $i) {
+//      $n+=1;
+//      $firm = new \Ignite\Settings\Entities\Insurance;
+//      $firm->id = $i->Insurance_ID;
+//      $firm->name = $i->Insurance_Name;
+//      $firm->post_code = $i->Post_Code;
+//      $firm->street = $i->Street;
+//      $firm->town = $i->City;
+//      $firm->email = $i->Email;
+//      $firm->telephone = $i->Telephone;
+//      $firm->save();
+//      echo $n . '<br/>';
+//      }
+//      */
+//    \DB::transaction(function () {
+//
+//      $spine = \Ignite\Reception\Entities\Spine::all();
+//      //dd($spine);
+//      foreach ($spine as $p) {
+//      //patient first
+//      $patient = Patients::findOrNew($p->id); //new Patients; //::findOrNew($p->Patient_ID);
+//      $patient->id = $p->id;
+//      $patient->first_name = ucfirst($p->First_Name);
+//      $patient->middle_name = ucfirst($p->Middle_Name);
+//      $patient->last_name = ucfirst($p->Last_Name);
+//
+//      $patient->id_no = $p->ID_Passport_Number;
+//      $patient->dob = new \Date($p->Date_Of_Birth);
+//
+//      $patient->sex = $p->Sex ? $p->Sex : 'male';
+//      //$patient->telephone = $p->telephone;
+//      $patient->mobile = $p->Mobile_Number;
+//      //$patient->alt_number = $this->request->alt_number;
+//      $patient->email = strtolower($p->Email_Address);
+//      $patient->address = $p->Postal_Address;
+//      $patient->post_code = $p->Post_Code;
+//      //$patient->town = ucfirst($this->request->town);
+//      //if ($this->request->has('imagesrc')) {
+//      //  $patient->image = $this->request->imagesrc;
+//      //}
+//      $patient->save();
+//      //next of kins
+//     /*
+//      if (isset($p->NOK_First_Name) && $p->NOK_First_Name !== '-') {
+//      //dd($patient->id);
+//      $nok = new NextOfKin;
+//      $nok->patient = $patient->id;
+//      $nok->first_name = ucfirst($p->NOK_First_Name);
+//      $nok->middle_name = ucfirst($p->NOK_Middle_Name);
+//      $nok->last_name = ucfirst($p->NOK_Last_Name);
+//      $nok->mobile = $p->NOK_Mobile;
+//      $nok->relationship = $p->NOK_Relationship_ID;
+//      $nok->save();
+//      }
+//      */
+//      //if ($patient->insured == 1) {
+//      if ($p->PI_Insurance_Provider_ID > 0) {
+//      //foreach ((array) $this->request->scheme1 as $key => $scheme) {
+//      /* $s = new \Ignite\Settings\Entities\Schemes;
+//      $s->company = $p->PI_Insurance_Provider_ID;
+//      $s->name = $p->PI_Plan_Name;
+//      dd($p->PI_Plan_Name);
+//      $s->save();
+//     */
+//
+//      $schemes = new PatientInsurance;
+//      $schemes->patient = $patient->id;
+//      $schemes->scheme = $p->PI_Insurance_Provider_ID;
+//      $schemes->policy_number = $p->PI_Policy_Number;
+//      $schemes->principal = ucwords($p->PI_Subscriber);
+//      $schemes->dob = new \Date($p->PI_Date_Of_Birth);
+//      $schemes->relationship = $p->PI_Relationship_ID;
+//      $schemes->save();
+//      }
+//      // }
+//      //flash()->success($patient->full_name . " details saved. $addon");
+//      }
+//      echo 'Done';
+//      });
+//      }
+
 }
