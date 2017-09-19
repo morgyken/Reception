@@ -30,6 +30,7 @@ $router->match(['get', 'post'], 'patients/visit/new/{visit_id}', ['as' => 'new_v
 $router->get('patients/view/document/{document}', ['as' => 'view_document', 'uses' => 'ReceptionController@document_viewer']);
 $router->get('patients/skipper', ['as' => 'skipper', 'uses' => 'ReceptionController@Skipper']);
 $router->get('patients/importer', ['as' => 'importer', 'uses' => 'ReceptionController@ImportRawPatientData']);
+$router->get('patients/encrypt', ['as' => 'encrypter', 'uses' => 'ReceptionController@patient_encrypter']);
 $router->post('patients/search', ['as' => 'patient.search', 'uses' => 'ReceptionController@SearchPatient']);
 
 $router->match(['post', 'get'], 'externalorders/queue/', ['uses' => 'ReceptionController@external_order_queue', 'as' => 'external_order_queue']);

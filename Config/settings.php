@@ -10,6 +10,10 @@
  * =============================================================================
  */
 return [
+    'patient_id_abr' => [
+        'description' => 'Patient ID Abbreviation',
+        'view' => 'text'
+    ],
     'checkin_destinations' => [
         'description' => 'Checkin destination',
         'view' => 'reception::fields.checkin',
@@ -24,5 +28,17 @@ return [
         'description' => 'Make charging of consultation fee or any other fee compulsory',
         'view' => 'reception::fields.pre_charged',
         'hint' => 'Select fees to be made compulsory'
+    ],
+    'checkin_to_nurse' => [
+        'description' => 'Check-in patients to nurse by default',
+        'view' => 'checkbox'
+    ],
+    'purpose_of_visit' => [
+        'description' => 'Enable selection of purpose of visit when checking in patients',
+        'view' => 'checkbox'
+    ],
+    'external_doctor' => [
+        'description' => 'Enable external doctor',
+        'view' => 'checkbox'
     ],
 ];
