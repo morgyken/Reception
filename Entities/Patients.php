@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Ignite\Users\Entities\UserProfile;
 use Ignite\Inpatient\Entities\Visit;
-use Ignite\Inpatient\Entities\PatientAccount;
+use Ignite\Finance\Entities\PatientAccount;
 use Ignite\Inpatient\Entities\RequestAdmission;
 use Ignite\Inpatient\Entities\Ward;
 use Ignite\Inpatient\Entities\Bed;
@@ -107,7 +107,7 @@ class Patients extends Model {
     }
 
     public function account(){
-        return $this->hasOne(PatientAccount::class,'patient_id');
+        return $this->hasOne(PatientAccount::class,'patient');
     }
 
     public function admission(){
