@@ -2,6 +2,9 @@
 
 namespace Ignite\Reception\Http\Controllers;
 
+use function GuzzleHttp\Psr7\str;
+use Ignite\Reception\Entities\PatientDocuments;
+use Ignite\Reception\Entities\Patients;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -41,21 +44,32 @@ class ApiController extends Controller {
     }
 
     public function get_patients(Request $request) {
-        // $found = collect();
         $ret = [];
-        $term = ucfirst($request->q);
+        $patients = \Ignite\Reception\Entities\Patients::all();
+       // $term = array_get($request->term, 'term');
+       // $term = ucfirst($request->q);
+        $q = $request->input('term');
+        $term = $q['term'];
+
         if (!empty($term)) {
             //$found = \Ignite\Reception\Entities\Patients::where('concat(first_name)', 'like', "%$term%")->get();
         }
-        $found = \Ignite\Reception\Entities\Patients::where('first_name', 'like', "%$term%")->get();
+        $found = Patients::where('first_name', 'like', "%$term%")->get();
         //$found = PatientInsurance::with('schemes')
         //        ->get();
-
+        //Add event listeners
         $build = [];
-        foreach ($found as $patient) {
-            $build[] = [
-                'text' => $patient->full_name,
-                'id' => $patient->id];
+        foreach ($patients as $patient) {
+            if (
+                strpos(strtolower($patient->full_name), strtolower($term)) !== false ||
+                strpos($patient->id_no, strtolower($term) !==false)
+            ){
+                $name = $patient->fullname;
+                $id = $patient->id;
+                $build[] = [
+                    'text' => $name,
+                    'id' => $id];
+            }
         }
         $ret['results'] = $build;
         return json_encode($ret);
@@ -63,9 +77,12 @@ class ApiController extends Controller {
 
     public function get_checkin_patients(Request $request) {
         $rows = '';
-        $patients = \Ignite\Reception\Entities\Patients::all();
+        $patients = Patients::all();
         foreach ($patients as $patient) {
-            if (str_contains(strtolower($patient->fullname), strtolower($request->term)) || str_contains($patient->id_no, $request->term)) {
+            if (
+                str_contains($patient->id_no, $request->term)
+                ||str_contains(strtolower($patient->full_name), strtolower($request->term))
+            ) {
                 $rows.= '<tr>
                     <td>' . $patient->id . '</td>
                     <td>' . $patient->id_no . '</td>
@@ -81,11 +98,14 @@ class ApiController extends Controller {
 
     public function get_patients_for_manage(Request $request) {
         $rows = '';
-        $patients = \Ignite\Reception\Entities\Patients::all();
+        $patients = Patients::all();
         $n = 0;
         $roles = get_this_user_roles();
+        $term =  $request->term;
         foreach ($patients as $patient) {
-            if (str_contains(strtolower($patient->fullname), strtolower($request->term)) || str_contains($patient->id_no, $request->term)) {
+            if ( str_contains($patient->id_no, $request->term)
+                ||str_contains(strtolower($patient->full_name), strtolower($request->term))
+            ) {
                 $rows.= '
                     <tr>
                     <td>' . $patient->id . '</td>
@@ -119,7 +139,7 @@ class ApiController extends Controller {
 
     public function delete_doc(Request $request) {
         try {
-            $doc = \Ignite\Reception\Entities\PatientDocuments::find($request->id);
+            $doc = PatientDocuments::find($request->id);
             $doc->delete();
         } catch (\Exception $ex) {
             echo 'Error deleting document';

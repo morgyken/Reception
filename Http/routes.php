@@ -17,6 +17,8 @@ $router->get('patients/google/calendar', ['uses' => 'ReceptionController@google_
 $router->get('patients/documents', ['uses' => 'ReceptionController@documents', 'as' => 'patient_documents']);
 $router->match(['post', 'get'], 'patients/upload/docs/{id}', ['uses' => 'ReceptionController@upload_doc', 'as' => 'upload_doc']);
 $router->match(['post', 'get'], 'patients/bulkupload/{id?}', ['uses' => 'ReceptionController@bulk_upload', 'as' => 'bulk_upload']);
+$router->get('patients/documents/image/{id?}', ['uses' => 'ReceptionController@view_image', 'as' => 'view_image']);
+
 
 $router->get('checkin/{id?}/{visit?}', ['uses' => 'ReceptionController@checkin', 'as' => 'checkin']);
 $router->get('external/checkin/{order_id?}', ['uses' => 'ReceptionController@external_checkin', 'as' => 'external_checkin']);
@@ -26,6 +28,8 @@ $router->get('patients/queue', ['as' => 'patients_queue', 'uses' => 'ReceptionCo
 $router->get('patients/manage/queued/{visit_id}', ['as' => 'manage_checkin', 'uses' => 'ReceptionController@manage_checkin']);
 $router->match(['get', 'post'], 'patients/visit/new/{visit_id}', ['as' => 'new_visit', 'uses' => 'ReceptionController@new_visit']);
 $router->get('patients/view/document/{document}', ['as' => 'view_document', 'uses' => 'ReceptionController@document_viewer']);
+$router->get('patients/skipper', ['as' => 'skipper', 'uses' => 'ReceptionController@Skipper']);
+$router->get('patients/importer', ['as' => 'importer', 'uses' => 'ReceptionController@ImportRawPatientData']);
 $router->get('patients/encrypt', ['as' => 'encrypter', 'uses' => 'ReceptionController@patient_encrypter']);
 $router->post('patients/search', ['as' => 'patient.search', 'uses' => 'ReceptionController@SearchPatient']);
 

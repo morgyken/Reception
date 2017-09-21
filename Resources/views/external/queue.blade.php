@@ -42,8 +42,8 @@
                         <a href="{{route('reception.external_checkin',$order->id)}}" class="btn btn-xs">
                             <i class="fa fa-sign-in"></i> Check in</a>
 
-                        <a href="" class="btn btn-xs btn-primary">
-                            <i class="fa fa-eye"></i> View</a>
+                        <a href="{{route('evaluation.exdoctor.order.view',$order->id)}}" class="btn btn-xs btn-primary">
+                            <i class="fa fa-eye"></i> Preview</a>
                     </td>
                 </tr>
                 @endforeach

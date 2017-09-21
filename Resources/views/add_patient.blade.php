@@ -19,10 +19,19 @@
         {!! Form::open(['files'=>true,'route'=>'reception.save_patient']) !!}
         <div class="box-body">
             <div class="col-md-6">
+
+                <div class="form-group {{ $errors->has('patient_no') ? ' has-error' : '' }}">
+                    {!! Form::label('patient_no', 'Patient Number',['class'=>'control-label col-md-4']) !!}
+                    <div class="col-md-8">
+                        {!! Form::text('patient_no', old('patient_no'), ['class' => 'form-control', 'placeholder' => 'Patient Number']) !!}
+                        {!! $errors->first('patient_no', '<span class="help-block">:message</span>') !!}
+                    </div>
+                </div>
+
                 <div class="form-group req {{ $errors->has('first_name') ? ' has-error' : '' }}">
                     {!! Form::label('first_name', 'First Name',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::text('first_name', old('first_name'), ['class' => 'form-control', 'placeholder' => 'First Name']) !!}
+                        {!! Form::text('first_name', old('first_name'), ['class' => 'form-control', 'placeholder' => 'First Name','required' => 'required']) !!}
                         {!! $errors->first('first_name', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
@@ -36,14 +45,14 @@
                 <div class="form-group req {{ $errors->has('last_name') ? ' has-error' : '' }}">
                     {!! Form::label('last_name', 'Last Name',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::text('last_name', old('last_name'), ['class' => 'form-control', 'placeholder' => 'Last Name']) !!}
+                        {!! Form::text('last_name', old('last_name'), ['class' => 'form-control', 'placeholder' => 'Last Name', 'required' => 'required']) !!}
                         {!! $errors->first('last_name', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
                 <div class="form-group {{ $errors->has('dob') ? ' has-error' : '' }}">
                     {!! Form::label('dob', 'Date of Birth',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::text('dob', old('dob'), ['class' => 'form-control date', 'placeholder' => 'Date of Birth']) !!}
+                        {!! Form::text('dob', old('dob'), ['class' => 'form-control date', 'placeholder' => 'Date of Birth', 'required' => 'required']) !!}
                         {!! $errors->first('dob', '<span class="help-block">:message</span>') !!}
                         <br/> <label for="ex2">OR:</label>
                         <div class="form-group row">
@@ -75,7 +84,7 @@
                 <div class="form-group {{ $errors->has('mobile') ? ' has-error' : '' }} req">
                     {!! Form::label('mobile', 'Mobile Number',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::text('mobile', old('mobile'), ['class' => 'form-control', 'placeholder' => '07xxxxxxxx']) !!}
+                        {!! Form::text('mobile', old('mobile'), ['class' => 'form-control', 'placeholder' => '07xxxxxxxx', 'required' => 'required']) !!}
                         {!! $errors->first('mobile', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
@@ -158,6 +167,7 @@
 
             </div>
             @include('reception::partials.nok')
+            <div class="more_nok">@include('reception::partials.nok')</div>
             @include('reception::partials.patient_insurance')
         </div>
         <div class="box-footer">
@@ -167,6 +177,8 @@
                 </a>
             </div>
             <div class="pull-right">
+                <button type="submit" name="save_and_checkin" value="1" class="btn btn-primary">
+                    <i class="fa fa-save"></i> Save and Checkin</button>
                 <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
             </div>
         </div>

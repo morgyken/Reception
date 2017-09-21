@@ -19,6 +19,7 @@ class SetupController extends AdminBaseController {
      * @param CreateScheduleRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
+    
     public function save_app_category(CreateScheduleRequest $request) {
         if (SetupFunctions::add_schedule_category($request)) {
             return redirect()->route('setup.schedule_cat');

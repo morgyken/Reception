@@ -54,12 +54,24 @@ if (!function_exists('get_appointments')) {
 
 }
 if (!function_exists('get_schedule_cat')) {
-
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     function get_schedule_cat() {
         return AppointmentCategory::all()->pluck('name', 'id');
     }
 
 }
+
+function get_destinations($order) {
+    $types = array();
+    foreach ($order->details as $item) {
+        $types[] = $item->type;
+    }
+    //return json_encode(array_flatten(array_unique($types)));
+    return array_unique($types);
+}
+
 if (!function_exists('get_patients')) {
 
     /**
@@ -89,6 +101,28 @@ if (!function_exists('auto_complete_patient_names')) {
     }
 
 }
+
+if (!function_exists('get_patient_age')) {
+
+    function get_patient_age($dob) {
+        if((new Date($dob))->age>0){
+            if((new Date($dob))->diff(Carbon\Carbon::now())->format('%m')>0){
+                $age = (new Date($dob))->diff(Carbon\Carbon::now())->format('%y year(s), %m month(s)');
+            }else{
+                $age = (new Date($dob))->diff(Carbon\Carbon::now())->format('%y year(s)');
+            }
+        }else{
+            if((new Date($dob))->diff(Carbon\Carbon::now())->format('%m')>0){
+                $age = (new Date($dob))->diff(Carbon\Carbon::now())->format('%m month(s) , %d day(s)');
+            }else{
+                $age = (new Date($dob))->diff(Carbon\Carbon::now())->format('%d day(s)');
+            }
+        }
+        return $age;
+    }
+
+}
+
 if (!function_exists('calendar_options')) {
 
     /**
@@ -158,7 +192,10 @@ if (!function_exists('get_patient_schemes')) {
 
 
 if (!function_exists('get_color_code')) {
-
+    /**
+     * @param $category_id
+     * @return mixed|string
+     */
     function get_color_code($category_id) {
         $color = config('system.colors.' . $category_id);
         if (empty($color)) {
@@ -171,7 +208,9 @@ if (!function_exists('get_color_code')) {
 
 
 if (!function_exists('get_precharged_fees')) {
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     function get_precharged_fees() {
         return Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
     }
@@ -179,7 +218,9 @@ if (!function_exists('get_precharged_fees')) {
 }
 
 if (!function_exists('get_this_user_roles')) {
-
+    /**
+     * @return array
+     */
     function get_this_user_roles() {
         $user = auth()->user();
         $roles = array();

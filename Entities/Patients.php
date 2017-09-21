@@ -3,9 +3,18 @@
 namespace Ignite\Reception\Entities;
 
 use Ignite\Core\Foundation\ShouldEncrypt;
-use Ignite\Evaluation\Entities\Visit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use Ignite\Users\Entities\UserProfile;
+use Ignite\Inpatient\Entities\Visit;
+use Ignite\Finance\Entities\PatientAccount;
+use Ignite\Inpatient\Entities\RequestAdmission;
+use Ignite\Inpatient\Entities\Ward;
+use Ignite\Inpatient\Entities\Bed;
+use Ignite\Inpatient\Entities\Admission;
+use Ignite\Finance\Entities\PatientInvoice;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
 
 /**
  * Ignite\Reception\Entities\Patients
@@ -76,13 +85,14 @@ class Patients extends Model {
 
     use ShouldEncrypt;
 
-use SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that we should encrypt
      * @var array
      */
     protected $shouldEncrypt = ['first_name', 'middle_name', 'last_name', 'mobile', 'email', 'id_no', 'telephone', 'alt_number'];
+
     protected $hidden = ['image'];
 
     public function getSexAttribute($value) {
@@ -90,11 +100,7 @@ use SoftDeletes;
     }
 
     public function getFullNameAttribute() {
-        return $this->first_name . " " . $this->middle_name . ' ' . $this->last_name;
-    }
-
-    public function getNameAttribute() {
-        return ucwords($this->first_name . ' ' . $this->last_name);
+        return $this->first_name . " " . $this->middle_name . " " . $this->last_name;
     }
 
     public function getCheckedInStatusAttribute() {
@@ -112,6 +118,10 @@ use SoftDeletes;
     public function getAgeAttribute() {
         $age = \Carbon\Carbon::parse($this->attributes['dob'])->age;
         return $age;
+    }
+
+    public function getRegisteredAttribute(){
+        return \Carbon\Carbon::parse($this->created_at)->format('m/d/y');
     }
 
     public function nok() {
@@ -135,15 +145,36 @@ use SoftDeletes;
     }
 
     public function drug_purchases() {
-        return $this->hasMany(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'patient');
+        return $this->hasMany(InventoryBatchProductSales::class, 'patient');
     }
 
     public function invoices() {
-        return $this->hasMany(\Ignite\Finance\Entities\PatientInvoice::class, 'patient_id');
+        return $this->hasMany(PatientInvoice::class, 'patient_id');
     }
 
     public function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
         return 1000;
     }
 
+    public function admissionRequest(){
+        return $this->hasOne(RequestAdmission::class, 'admissionRequest');
+    }
+
+    public function bed(){
+        return $this->hasOne(Bed::class, 'id');
+    }
+
+    public function profile(){
+        return $this->hasOne(UserProfile::class, 'user_id');
+    }
+
+    public function account(){
+        return $this->hasOne(PatientAccount::class,'patient');
+    }
+
+    public function admission(){
+        return $this->hasOne(Admission::class,'patient_id');
+    }
+
+   
 }

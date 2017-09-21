@@ -6,6 +6,9 @@
  */
 extract($data);
 $dests = get_checkin_destinations();
+//array_push($dests, 'In Patient');
+//$precharge = data['precharge'];
+//dd($patient->insured);
 array_push($dests, 'In Patient');
 $patient_schemes = get_patient_schemes($patient->id);
 ?>
@@ -23,7 +26,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                 <dt>Patient No:</dt>
                 <dd>{{m_setting('reception.patient_id_abr')}}{{$patient->id}}</dd>
                 <dt>Date of Birth:</dt><dd>{{(new Date($patient->dob))->format('m/d/y')}}
-                    <strong>({{(new Date($patient->dob))->age}} years old)</strong></dd>
+                    <strong>({{get_patient_age($patient->dob)}} old)</strong></dd>
                 <dt>Gender:</dt><dd>{{$patient->sex}}</dd>
                 <dt>Mobile Number:</dt><dd>{{$patient->mobile}}</dd>
                 <dt>ID number:</dt><dd>{{$patient->id_no}}</dd>
@@ -45,10 +48,19 @@ $patient_schemes = get_patient_schemes($patient->id);
                 <input type="hidden" name="patient" value="{{$patient->id}}"/>
                 <div class="form-group req {{ $errors->has('destination') ? ' has-error' : '' }}">
                     {!! Form::label('destination', 'Destination',['class'=>'control-label col-md-4']) !!}
+                    @if(isset($external_order))
+                    <?php $select = get_destinations($external_order); ?>
+                    <div class="col-md-8">
+                        <input type="hidden" name="as_ordered" value="1">
+                        <small>NOTE: Already selected based on procedures ordered</small>
+                        {!! Form::select('destination[]', $dests, $select,  ['class' => 'form-control','multiple']) !!}
+                    </div>
+                    @else
                     <div class="col-md-8">
                         {!! Form::select('destination',$dests, old('destination'), ['class' => 'form-control']) !!}
                         {!! $errors->first('destination', '<span class="help-block">:message</span>') !!}
                     </div>
+                    @endif
                 </div>
                 @if(m_setting('reception.checkin_to_nurse'))
                 <div class="form-group">
@@ -128,7 +140,6 @@ $patient_schemes = get_patient_schemes($patient->id);
                 $pre_charged = json_decode(m_setting('reception.pre_charged_compulsory'));
                 if (!in_array('none', $pre_charged) && count($pre_charged) == 1) {
                     ?>
-
                     <div class="form-group">
                         {!! Form::label('fees', 'Compulsory Fees Applied',['class'=>'control-label col-md-4']) !!}
                         <div class="col-md-8" id="cfees">

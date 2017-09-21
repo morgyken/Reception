@@ -66,8 +66,8 @@ class ReceptionController extends AdminBaseController {
         foreach ($visits as $v) {
             $v->delete();
             $sale = \Ignite\Inventory\Entities\InventoryBatchProductSales::wherePatient($id)
-                    ->orWhere('visit', '==', $v->id)
-                    ->get();
+                ->orWhere('visit', '==', $v->id)
+                ->get();
             foreach ($sale as $s) {
                 $s->delete();
             }
@@ -84,10 +84,19 @@ class ReceptionController extends AdminBaseController {
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function save_patient(CreatePatientRequest $request, $id = null) {
+    public function save_patient(Request $request, $id = null) {
+        // $validator = Validator::make($request->all(), $request->rules);
+
+        // if ($validator->fails()) {
+        //     return back()->withErrors($validator)->withInput();
+        // }
+        // dd($request);
         if ($this->receptionRepository->add_patient($request, $request->id)) {
-//$this->savePatientScheme($request, $request->id);
+            // $this->savePatientScheme($request, $request->id);
             flash("Patient Information saved", 'success');
+            if ($request->has('save_and_checkin')) {
+                return redirect()->route('reception.checkin', \Session::get('patient_just_created'));
+            }
         }
         return redirect()->route('reception.add_patient');
     }
@@ -141,8 +150,8 @@ class ReceptionController extends AdminBaseController {
         $this->data['clinics'] = Clinics::all();
         $this->data['categories'] = AppointmentCategory::all();
         $this->data['doctors'] = \Ignite\Users\Entities\User::whereHas('roles', function($query) {
-                    $query->whereRole_id(5);
-                })->get();
+            $query->whereRole_id(5);
+        })->get();
         return view('reception::appointments', ['data' => $this->data]);
     }
 
@@ -174,10 +183,10 @@ class ReceptionController extends AdminBaseController {
         ReceptionPipeline::calendar_assets($this->assetPipeline, $this->assetManager);
         $events = Appointments::all();
         $this->data['calendar'] = Calendar::addEvents($events)
-                        ->setOptions(calendar_options())
-                        ->setCallbacks([
-                            'dayClick' => 'function(date, jsEvent, view) { changeView(view,date);}'
-                        ])->setId('sam');
+            ->setOptions(calendar_options())
+            ->setCallbacks([
+                'dayClick' => 'function(date, jsEvent, view) { changeView(view,date);}'
+            ])->setId('sam');
         return view('reception::calendar', ['data' => $this->data]);
     }
 
@@ -191,9 +200,15 @@ class ReceptionController extends AdminBaseController {
         return view('reception::patient_documents', ['data' => $this->data]);
     }
 
+    public function view_image(Request $request) {
+        $this->data['image'] = PatientDocuments::find($request->id);
+        return view('reception::view_image', ['data' => $this->data]);
+    }
+
     public function upload_doc(Request $request, $id) {
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->upload_document($id)) {
+                flash("Scan complete, all patient related files have been uploaded");
                 return back();
             }
         }
@@ -204,7 +219,7 @@ class ReceptionController extends AdminBaseController {
 
     public function bulk_upload(Request $request) {
         if ($request->isMethod('post')) {
-            if ($this->receptionRepository->upload_document($request->id)) {
+            if ($this->receptionRepository->scan_and_upload($request)) {
                 return back();
             }
         }
@@ -236,8 +251,8 @@ class ReceptionController extends AdminBaseController {
             $this->data['precharge'] = \Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
             $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
             $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
-                        $query->whereHas('partnerInstitution');
-                    })->get();
+                $query->whereHas('partnerInstitution');
+            })->get();
 
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
@@ -253,17 +268,17 @@ class ReceptionController extends AdminBaseController {
         $this->data['precharge'] = \Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
         $this->data['partners'] = \Ignite\Evaluation\Entities\PartnerInstitution::all();
         $this->data['external_doctors'] = \Ignite\Users\Entities\User::whereHas('profile', function ($query) {
-                    $query->whereHas('partnerInstitution');
-                })->get();
+            $query->whereHas('partnerInstitution');
+        })->get();
 
         return view('reception::checkin_patient', ['data' => $this->data]);
     }
 
     public function patients_queue() {
         $this->data['visits'] = Visit::whereHas('destinations', function($query) {
-                    $query->whereCheckout(0);
-                })->orderBy('created_at', 'asc')
-                ->get();
+            $query->whereCheckout(0);
+        })->orderBy('created_at', 'asc')
+            ->get();
 
         return view('reception::patients_queue', ['data' => $this->data]);
     }
@@ -285,6 +300,121 @@ class ReceptionController extends AdminBaseController {
     public function external_order_queue(Request $request) {
         $this->data['orders'] = \Ignite\Evaluation\Entities\ExternalOrders::whereNull('status')->get();
         return view('reception::external.queue', ['data' => $this->data]);
+    }
+
+      // public function Skipper() {
+      /*
+      $ins = Spine::all();
+      $n = 0;
+      foreach ($ins as $i) {
+      $n+=1;
+      $firm = new \Ignite\Settings\Entities\Insurance;
+      $firm->id = $i->Insurance_ID;
+      $firm->name = $i->Insurance_Name;
+      $firm->post_code = $i->Post_Code;
+      $firm->street = $i->Street;
+      $firm->town = $i->City;
+      $firm->email = $i->Email;
+      $firm->telephone = $i->Telephone;
+      $firm->save();
+      echo $n . '<br/>';
+      } */
+
+    //\DB::transaction(function () {
+    /*
+      $spine = \Ignite\Reception\Entities\Spine::all();
+      //dd($spine);
+      foreach ($spine as $p) {
+      //patient first
+      $patient = Patients::findOrNew($p->id); //new Patients; //::findOrNew($p->Patient_ID);
+      $patient->id = $p->id;
+      $patient->first_name = ucfirst($p->First_Name);
+      $patient->middle_name = ucfirst($p->Middle_Name);
+      $patient->last_name = ucfirst($p->Last_Name);
+
+      $patient->id_no = $p->ID_Passport_Number;
+      $patient->dob = new \Date($p->Date_Of_Birth);
+
+      $patient->sex = $p->Sex ? $p->Sex : 'male';
+      //$patient->telephone = $p->telephone;
+      $patient->mobile = $p->Mobile_Number;
+      //$patient->alt_number = $this->request->alt_number;
+      $patient->email = strtolower($p->Email_Address);
+      $patient->address = $p->Postal_Address;
+      $patient->post_code = $p->Post_Code;
+      //$patient->town = ucfirst($this->request->town);
+      //if ($this->request->has('imagesrc')) {
+      //  $patient->image = $this->request->imagesrc;
+      //}
+      $patient->save();
+      //next of kins
+      if (isset($p->NOK_First_Name) && $p->NOK_First_Name !== '-') {
+      //dd($patient->id);
+      $nok = new NextOfKin;
+      $nok->patient = $patient->id;
+      $nok->first_name = ucfirst($p->NOK_First_Name);
+      $nok->middle_name = ucfirst($p->NOK_Middle_Name);
+      $nok->last_name = ucfirst($p->NOK_Last_Name);
+      $nok->mobile = $p->NOK_Mobile;
+      $nok->relationship = $p->NOK_Relationship_ID;
+      $nok->save();
+      }
+      //if ($patient->insured == 1) {
+      if ($p->PI_Insurance_Provider_ID > 0) {
+      //foreach ((array) $this->request->scheme1 as $key => $scheme) {
+      /* $s = new \Ignite\Settings\Entities\Schemes;
+      $s->company = $p->PI_Insurance_Provider_ID;
+      $s->name = $p->PI_Plan_Name;
+      dd($p->PI_Plan_Name);
+      $s->save();
+     */
+    /*
+      $schemes = new PatientInsurance;
+      $schemes->patient = $patient->id;
+      $schemes->scheme = $p->PI_Insurance_Provider_ID;
+      $schemes->policy_number = $p->PI_Policy_Number;
+      $schemes->principal = ucwords($p->PI_Subscriber);
+      $schemes->dob = new \Date($p->PI_Date_Of_Birth);
+      $schemes->relationship = $p->PI_Relationship_ID;
+      $schemes->save();
+      }
+      // }
+      //flash()->success($patient->full_name . " details saved. $addon");
+      }
+      echo 'Done';
+      //});
+      }
+     *
+     */
+
+    public function ImportRawPatientData(Request $request) {
+        \DB::transaction(function () {
+            $data = \Ignite\Reception\Entities\Temp::all();
+            $n = 0;
+            foreach ($data as $p) {
+                $names =  explode(" ", $p->names);
+                $count = count($names);
+                // dd($names[1]);
+                try {
+                    $patient = new Patients;
+                    $patient->first_name = ucfirst($names[0]);
+                    if($count>2){
+                        $patient->middle_name = ucfirst($names[1]);
+                        $patient->last_name = ucfirst($names[2]);
+                    }else{
+                        //$patient->middle_name = ucfirst($names[1]);
+                        $patient->last_name = ucfirst($names[1]);
+                    }
+                    $patient->mobile = $p->contact;
+                    $patient->patient_no = $p->dacm_no;
+                    $patient->save();
+                    $n+=1;
+                } catch (\Exception $e) {
+
+                }
+            }
+            echo $n . ' Patient Records Created... Thank you';
+        });
     }
 
     public function patient_encrypter(){
