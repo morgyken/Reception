@@ -5,12 +5,10 @@ namespace Ignite\Reception\Entities;
 use Ignite\Core\Foundation\ShouldEncrypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use Ignite\Users\Entities\UserProfile;
-use Ignite\Inpatient\Entities\Visit;
+use Ignite\Evaluation\Entities\Visit;
 use Ignite\Finance\Entities\PatientAccount;
 use Ignite\Inpatient\Entities\RequestAdmission;
-use Ignite\Inpatient\Entities\Ward;
 use Ignite\Inpatient\Entities\Bed;
 use Ignite\Inpatient\Entities\Admission;
 use Ignite\Finance\Entities\PatientInvoice;
