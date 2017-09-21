@@ -40,11 +40,24 @@
                         {!! $errors->first('last_name', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
-                <div class="form-group req {{ $errors->has('dob') ? ' has-error' : '' }}">
+                <div class="form-group {{ $errors->has('dob') ? ' has-error' : '' }}">
                     {!! Form::label('dob', 'Date of Birth',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
                         {!! Form::text('dob', old('dob'), ['class' => 'form-control date', 'placeholder' => 'Date of Birth']) !!}
                         {!! $errors->first('dob', '<span class="help-block">:message</span>') !!}
+                        <br/> <label for="ex2">OR:</label>
+                        <div class="form-group row">
+                            <div class="col-xs-6">
+                                <label for="ex2">Age</label>
+                                <input class="form-control" name="age" type='number'>
+                                {!! $errors->first('age', '<span class="help-block">:message</span>') !!}
+                            </div>
+                            <div class="col-xs-6">
+                                <label for="ex3">In</label>
+                                {!! Form::select('age_in',mconfig('reception.options.age_in'), old('age_in'), ['class' => 'form-control', 'placeholder' => '']) !!}
+                                {!! $errors->first('age', '<span class="help-block">:message</span>') !!}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group {{ $errors->has('sex') ? ' has-error' : '' }}">

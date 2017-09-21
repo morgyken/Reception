@@ -18,7 +18,7 @@ class CreatePatientRequest extends FormRequest {
             //basics
             "first_name" => "required",
             "last_name" => "required",
-            "dob" => "required|date",
+           //"dob" => "required|date",
             "id_number" => "numeric|digits_between:7,8",
             "sex" => "required",
             //contacts

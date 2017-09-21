@@ -188,9 +188,15 @@ class ReceptionFunctions implements ReceptionRepository {
             if ($this->request->has('imagesrc')) {
                 $patient->image = $this->request->imagesrc;
             }
-
             if ($this->request->has('external_institution')) {
                 $patient->external_institution = $this->request->external_institution;
+            }
+            if ($this->request->has('age')) {
+                $patient->age = $this->request->age;
+                $patient->age_in = $this->request->age_in;
+                if($this->request->dob ==''){
+                    $patient->dob = $this->reverse_birthday($this->request->age, $this->request->age_in);
+                }
             }
             $patient->save();
 
@@ -225,6 +231,11 @@ class ReceptionFunctions implements ReceptionRepository {
             flash()->success($patient->full_name . " details saved. $addon");
         });
         return true;
+    }
+
+    function reverse_birthday($age, $in){
+        $dob = date('Y-m-d', strtotime($age . ' years ago'));
+        return $dob;
     }
 
     /**
