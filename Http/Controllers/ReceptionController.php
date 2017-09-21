@@ -84,7 +84,12 @@ class ReceptionController extends AdminBaseController {
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function save_patient(CreatePatientRequest $request, $id = null) {
+    public function save_patient(Request $request, $id = null) {
+        // $validator = Validator::make($request->all(), $request->rules);
+
+        // if ($validator->fails()) {
+        //     return back()->withErrors($validator)->withInput();
+        // }
         // dd($request);
         if ($this->receptionRepository->add_patient($request, $request->id)) {
             // $this->savePatientScheme($request, $request->id);

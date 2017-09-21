@@ -240,7 +240,7 @@ class ReceptionFunctions implements ReceptionRepository
                     //foreach ((array) $this->request->scheme1 as $key => $scheme) {
                     $schemes = new PatientInsurance;
                     $schemes->patient = $patient->id;
-                    $schemes->scheme = strtoupper($this->request->scheme1);
+                    $schemes->scheme = $this->request->scheme1;
                     $schemes->policy_number = $this->request->policy_number1;
                     $schemes->principal = ucwords($this->request->principal1);
                     $schemes->dob = new \Date($this->request->principal_dob1);
