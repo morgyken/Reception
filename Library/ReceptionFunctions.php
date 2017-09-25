@@ -119,7 +119,7 @@ class ReceptionFunctions implements ReceptionRepository
         }
 
         if ($this->request->has('to_nurse')) { //quick way to forge an entry to nurse section
-            $this->checkin_at($visit->id, 'nurse');
+            $this->checkin_at($visit->id, 'nursing');
         }
 
         //precharge
