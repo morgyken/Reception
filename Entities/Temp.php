@@ -10,6 +10,11 @@ namespace Ignite\Reception\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Ignite\Reception\Entities\Temp
+ *
+ * @mixin \Eloquent
+ */
 class Temp extends Model {
 
     protected $fillable = [];
