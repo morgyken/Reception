@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\Router;
 
+/** @var Router $router */
 $router->get('patients/add/{id?}', ['uses' => 'ReceptionController@add_patient', 'as' => 'add_patient']);
 $router->get('patients/purge/{id?}', ['uses' => 'ReceptionController@purge_patient', 'as' => 'purge_patient']);
 $router->post('patients/save/{id?}', ['uses' => 'ReceptionController@save_patient', 'as' => 'save_patient']);

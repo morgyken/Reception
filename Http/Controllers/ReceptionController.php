@@ -19,7 +19,8 @@ use Ignite\Reception\Entities\PatientDocuments;
 use Ignite\Reception\Entities\PatientInsurance;
 use Ignite\Evaluation\Entities\ExternalOrders;
 
-class ReceptionController extends AdminBaseController {
+class ReceptionController extends AdminBaseController
+{
 
     /**
      * @var ReceptionRepository
@@ -30,7 +31,8 @@ class ReceptionController extends AdminBaseController {
      * ReceptionController constructor.
      * @param ReceptionRepository $receptionRepository
      */
-    public function __construct(ReceptionRepository $receptionRepository) {
+    public function __construct(ReceptionRepository $receptionRepository)
+    {
         parent::__construct();
         $this->receptionRepository = $receptionRepository;
     }
@@ -40,7 +42,8 @@ class ReceptionController extends AdminBaseController {
      * @param null|int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function add_patient($id = null) {
+    public function add_patient($id = null)
+    {
         $this->data['patient'] = Patients::findOrNew($id);
         if (!empty($id)) {
             return view('reception::edit_patient', ['data' => $this->data]);
@@ -48,7 +51,8 @@ class ReceptionController extends AdminBaseController {
         return view('reception::add_patient', ['data' => $this->data]);
     }
 
-    public function purge_patient(Request $request) {
+    public function purge_patient(Request $request)
+    {
         try {
             $patient = Patients::find($request->id);
             $this->deletePatientData($request->id);
@@ -61,7 +65,8 @@ class ReceptionController extends AdminBaseController {
         }
     }
 
-    public function deletePatientData($id) {
+    public function deletePatientData($id)
+    {
         $visits = Visit::wherePatient($id)->get();
         foreach ($visits as $v) {
             $v->delete();
@@ -84,7 +89,8 @@ class ReceptionController extends AdminBaseController {
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function save_patient(Request $request, $id = null) {
+    public function save_patient(Request $request, $id = null)
+    {
         // $validator = Validator::make($request->all(), $request->rules);
 
         // if ($validator->fails()) {
@@ -101,7 +107,8 @@ class ReceptionController extends AdminBaseController {
         return redirect()->route('reception.add_patient');
     }
 
-    public function savePatientScheme(Request $request, $patient) {
+    public function savePatientScheme(Request $request, $patient)
+    {
         $ins = new PatientInsurance;
         $ins->patient = $patient;
         $ins->scheme = $request->scheme1;
@@ -116,7 +123,8 @@ class ReceptionController extends AdminBaseController {
      * List all patients
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show_patients(Request $request) {
+    public function show_patients(Request $request)
+    {
         if (isset($request->mode)) {
             if ($request->mode == 'all') {
                 $this->data['patients'] = Patients::all();
@@ -132,7 +140,8 @@ class ReceptionController extends AdminBaseController {
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function view_patient($id) {
+    public function view_patient($id)
+    {
         $this->data['patient'] = Patients::with('nok')->find($id);
         $this->data['docs'] = PatientDocuments::wherePatient($id)->get();
         if (empty($this->data['patient'])) {
@@ -146,10 +155,11 @@ class ReceptionController extends AdminBaseController {
      * Get all appointments
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function appointments() {
+    public function appointments()
+    {
         $this->data['clinics'] = Clinics::all();
         $this->data['categories'] = AppointmentCategory::all();
-        $this->data['doctors'] = \Ignite\Users\Entities\User::whereHas('roles', function($query) {
+        $this->data['doctors'] = \Ignite\Users\Entities\User::whereHas('roles', function ($query) {
             $query->whereRole_id(5);
         })->get();
         return view('reception::appointments', ['data' => $this->data]);
@@ -161,7 +171,8 @@ class ReceptionController extends AdminBaseController {
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function appointments_save(CreateAppointmentRequest $request, $id = null) {
+    public function appointments_save(CreateAppointmentRequest $request, $id = null)
+    {
         if (!empty($id)) {
             $this->receptionRepository->reschedule_appointment($request, $id);
             return redirect()->route('reception.appointments');
@@ -171,7 +182,8 @@ class ReceptionController extends AdminBaseController {
         }
     }
 
-    public function appointments_res(CreateAppointmentRequest $request) {
+    public function appointments_res(CreateAppointmentRequest $request)
+    {
         $this->receptionRepository->reschedule_appointment($request, $request->id);
         return redirect()->route('reception.appointments');
     }
@@ -179,7 +191,8 @@ class ReceptionController extends AdminBaseController {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function calendar() {
+    public function calendar()
+    {
         ReceptionPipeline::calendar_assets($this->assetPipeline, $this->assetManager);
         $events = Appointments::all();
         $this->data['calendar'] = Calendar::addEvents($events)
@@ -195,17 +208,20 @@ class ReceptionController extends AdminBaseController {
       return view('reception::patient_schedule', ['data', $this->data]);
       } */
 
-    public function documents() {
+    public function documents()
+    {
         $this->data['patients'] = Patients::all();
         return view('reception::patient_documents', ['data' => $this->data]);
     }
 
-    public function view_image(Request $request) {
+    public function view_image(Request $request)
+    {
         $this->data['image'] = PatientDocuments::find($request->id);
         return view('reception::view_image', ['data' => $this->data]);
     }
 
-    public function upload_doc(Request $request, $id) {
+    public function upload_doc(Request $request, $id)
+    {
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->upload_document($id)) {
                 flash("Scan complete, all patient related files have been uploaded");
@@ -217,7 +233,8 @@ class ReceptionController extends AdminBaseController {
         return view('reception::upload_doc', ['data' => $this->data]);
     }
 
-    public function bulk_upload(Request $request) {
+    public function bulk_upload(Request $request)
+    {
         if ($request->isMethod('post')) {
             if ($this->receptionRepository->scan_and_upload($request)) {
                 return back();
@@ -228,19 +245,25 @@ class ReceptionController extends AdminBaseController {
         return view('reception::bulk_upload', ['data' => $this->data]);
     }
 
-    public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null) {
+    public function do_check(CheckinPatientRequest $request, $patient_id = null, $visit_id = null)
+    {
         if ($request['inpatient'] == true) {
             $request['inpatient'] = 1;
         }
         $request['visit_id'] = $visit_id;
         $request['clinic'] = 1;
         $request['user'] = $request['patient'];
+        if ($request->has('gas')) {
+            //todo Add redirects
+//            return redirect();
+        }
         if ($this->receptionRepository->checkin_patient($request, $visit_id)) {
             return redirect()->route('reception.patients_queue');
         }
     }
 
-    public function checkin(Request $request, $patient_id = null, $visit_id = null) {
+    public function checkin(Request $request, $patient_id = null, $visit_id = null)
+    {
         if (!empty($patient_id)) {
             if (!is_null($request->order_id)) {
                 $this->data['external_order'] = ExternalOrders::find($request->order_id);
@@ -260,7 +283,8 @@ class ReceptionController extends AdminBaseController {
         return view('reception::checkin', ['data' => $this->data]);
     }
 
-    public function external_checkin(Request $request) {
+    public function external_checkin(Request $request)
+    {
         $this->data['external_order'] = $order = ExternalOrders::find($request->order_id);
         $patient_id = $order->patient->id;
         $this->data['visits'] = Visit::wherePatient($patient_id)->get();
@@ -274,8 +298,9 @@ class ReceptionController extends AdminBaseController {
         return view('reception::checkin_patient', ['data' => $this->data]);
     }
 
-    public function patients_queue() {
-        $this->data['visits'] = Visit::whereHas('destinations', function($query) {
+    public function patients_queue()
+    {
+        $this->data['visits'] = Visit::whereHas('destinations', function ($query) {
             $query->whereCheckout(0);
         })->orderBy('created_at', 'asc')
             ->get();
@@ -283,12 +308,14 @@ class ReceptionController extends AdminBaseController {
         return view('reception::patients_queue', ['data' => $this->data]);
     }
 
-    public function SearchPatient(Request $request) {
+    public function SearchPatient(Request $request)
+    {
         $patients = Patients::where('first_name', 'like', '%' . base64_encode($request->key) . '%')->get();
         dd($patients);
     }
 
-    public function document_viewer($id) {
+    public function document_viewer($id)
+    {
         $file_meta = PatientDocuments::find($id);
         header("Content-type: $file_meta->mime");
         header("Content-Disposition: inline; filename='$file_meta->filename'");
@@ -297,28 +324,29 @@ class ReceptionController extends AdminBaseController {
         echo base64_decode($file_meta->document);
     }
 
-    public function external_order_queue(Request $request) {
+    public function external_order_queue(Request $request)
+    {
         $this->data['orders'] = \Ignite\Evaluation\Entities\ExternalOrders::whereNull('status')->get();
         return view('reception::external.queue', ['data' => $this->data]);
     }
 
-      // public function Skipper() {
-      /*
-      $ins = Spine::all();
-      $n = 0;
-      foreach ($ins as $i) {
-      $n+=1;
-      $firm = new \Ignite\Settings\Entities\Insurance;
-      $firm->id = $i->Insurance_ID;
-      $firm->name = $i->Insurance_Name;
-      $firm->post_code = $i->Post_Code;
-      $firm->street = $i->Street;
-      $firm->town = $i->City;
-      $firm->email = $i->Email;
-      $firm->telephone = $i->Telephone;
-      $firm->save();
-      echo $n . '<br/>';
-      } */
+    // public function Skipper() {
+    /*
+    $ins = Spine::all();
+    $n = 0;
+    foreach ($ins as $i) {
+    $n+=1;
+    $firm = new \Ignite\Settings\Entities\Insurance;
+    $firm->id = $i->Insurance_ID;
+    $firm->name = $i->Insurance_Name;
+    $firm->post_code = $i->Post_Code;
+    $firm->street = $i->Street;
+    $firm->town = $i->City;
+    $firm->email = $i->Email;
+    $firm->telephone = $i->Telephone;
+    $firm->save();
+    echo $n . '<br/>';
+    } */
 
     //\DB::transaction(function () {
     /*
@@ -387,28 +415,29 @@ class ReceptionController extends AdminBaseController {
      *
      */
 
-    public function ImportRawPatientData(Request $request) {
+    public function ImportRawPatientData(Request $request)
+    {
         \DB::transaction(function () {
             $data = \Ignite\Reception\Entities\Temp::all();
             $n = 0;
             foreach ($data as $p) {
-                $names =  explode(" ", $p->names);
+                $names = explode(" ", $p->names);
                 $count = count($names);
                 // dd($names[1]);
                 try {
                     $patient = new Patients;
                     $patient->first_name = ucfirst($names[0]);
-                    if($count>2){
+                    if ($count > 2) {
                         $patient->middle_name = ucfirst($names[1]);
                         $patient->last_name = ucfirst($names[2]);
-                    }else{
+                    } else {
                         //$patient->middle_name = ucfirst($names[1]);
                         $patient->last_name = ucfirst($names[1]);
                     }
                     $patient->mobile = $p->contact;
                     $patient->patient_no = $p->dacm_no;
                     $patient->save();
-                    $n+=1;
+                    $n += 1;
                 } catch (\Exception $e) {
 
                 }
@@ -417,7 +446,8 @@ class ReceptionController extends AdminBaseController {
         });
     }
 
-    public function patient_encrypter(){
+    public function patient_encrypter()
+    {
         \DB::transaction(function () {
             $n = 0;
             $patients = \Ignite\Reception\Entities\Spine::all();
@@ -445,9 +475,9 @@ class ReceptionController extends AdminBaseController {
 //                //  $patient->image = $this->request->imagesrc;
 //                //}
                 $patient->save();
-                $n+=1;
+                $n += 1;
             }
-            echo $n.'Patients Saved, Done';
+            echo $n . 'Patients Saved, Done';
         });
 
     }
