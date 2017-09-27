@@ -28,6 +28,7 @@ return [
         15 => 'Aunt',
         16 => 'Son',
         17 => 'Daughter',
+        17 => 'Other',
     ],
     'document_types' => [
         1 => 'Job',
@@ -49,6 +50,8 @@ return [
         7 => 'Radiology',
         8 => 'Ultrasound',
         9 => 'Nursing',
+        10 => 'Dental',
+        11 => 'Optical',
     ],
     'destinations' => [
         'laboratory' => 'Laboratory',
@@ -61,6 +64,8 @@ return [
         'ultrasound' => 'Ultra Sound',
         'nursing' => 'Nursing',
         'doctor' => 'Doctor',
+        'dental' => 'Dental',
+        'optical' => 'Optical',
     ],
     'checkin_purposes' => [
         1 => 'First time consultation',
