@@ -41,4 +41,8 @@ return [
         'description' => 'Enable external doctor',
         'view' => 'checkbox'
     ],
+    'checkin_to_rooms' => [
+        'description' => 'Enable checkin to rooms',
+        'view' => 'checkbox'
+    ]
 ];

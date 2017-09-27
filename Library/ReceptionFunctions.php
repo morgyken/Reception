@@ -63,16 +63,6 @@ class ReceptionFunctions implements ReceptionRepository
      */
     public function checkin_patient()
     {
-        /*
-          this patient must already be here
-          $today = Visit::where('created_at', '>=', new Date('today'))
-          ->where('patient', $this->request->patient)->get()->first();
-          if ($today) {
-          $visit = Visit::find($today->id);
-          } else {
-          $visit = new Visit;
-          }
-         */
         $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
@@ -132,7 +122,8 @@ class ReceptionFunctions implements ReceptionRepository
         //return false;
     }
 
-    public function order_procedures($procedures, $visit) {
+    public function order_procedures($procedures, $visit)
+    {
         try {
             foreach ($procedures as $key => $value) {
                 $inv = new Investigations;
@@ -157,7 +148,8 @@ class ReceptionFunctions implements ReceptionRepository
         }
     }
 
-    public function updateExternalOrder($id) {
+    public function updateExternalOrder($id)
+    {
         $order = \Ignite\Evaluation\Entities\ExternalOrders::find($id);
         $order->status = 'processed';
         return $order->update();
@@ -216,7 +208,7 @@ class ReceptionFunctions implements ReceptionRepository
             if ($this->request->has('age')) {
                 $patient->age = $this->request->age;
                 $patient->age_in = $this->request->age_in;
-                if($this->request->dob ==''){
+                if ($this->request->dob == '') {
                     $patient->dob = $this->reverse_birthday($this->request->age, $this->request->age_in);
                 }
             }
@@ -224,8 +216,8 @@ class ReceptionFunctions implements ReceptionRepository
 
             //next of kins
             if ($this->request->has('first_name_nok')) {
-                foreach ($this->request->first_name_nok as $key=>$value){
-                   try{
+                foreach ($this->request->first_name_nok as $key => $value) {
+                    try {
                         $nok = NextOfKin::findOrNew($this->id);
                         $nok->patient = $patient->id;
                         $nok->first_name = ucfirst($this->request->first_name_nok[$key]);
@@ -234,9 +226,9 @@ class ReceptionFunctions implements ReceptionRepository
                         $nok->mobile = $this->request->mobile_nok[$key];
                         $nok->relationship = $this->request->nok_relationship[$key];
                         $nok->save();
-                   }catch (\Exception $e){
+                    } catch (\Exception $e) {
                         //Something weird may have happened
-                   }
+                    }
                 }
             }
             //if ($patient->insured == 1) {
@@ -266,7 +258,8 @@ class ReceptionFunctions implements ReceptionRepository
         return true;
     }
 
-    function reverse_birthday($age, $in){
+    function reverse_birthday($age, $in)
+    {
         $dob = date('Y-m-d', strtotime($age . ' years ago'));
         return $dob;
     }
@@ -355,7 +348,8 @@ class ReceptionFunctions implements ReceptionRepository
         return false;
     }
 
-    public function scan_and_upload(Request $request) {
+    public function scan_and_upload(Request $request)
+    {
         $path = $request->path;
         $files = \File::allFiles($path);
         $patients = Patients::all();
@@ -371,7 +365,8 @@ class ReceptionFunctions implements ReceptionRepository
         flash()->success("Scan complete, all patient related files have been uploaded");
     }
 
-    public function bulk_uploader($patient, $file) {
+    public function bulk_uploader($patient, $file)
+    {
         $f = pathinfo($file);
         $document = new PatientDocuments;
         $document->patient = $patient;
@@ -384,7 +379,8 @@ class ReceptionFunctions implements ReceptionRepository
         $document->save();
     }
 
-    public function mime($file) {
+    public function mime($file)
+    {
         $mime = finfo_open(FILEINFO_MIME_TYPE);
         return finfo_file($mime, $file->getRealPath());
     }

@@ -28,5 +28,5 @@ interface ReceptionRepository
      */
     public function add_appointment();
 
-    public function checkin_patient($request, $visit_id);
+    public function checkin_patient();
 }
