@@ -59,7 +59,7 @@ class ReceptionFunctions implements ReceptionRepository
 
     /**
      * Performs a fast forward checkin. Just dive in to checkin without prior appointments
-     * @return bool
+     * @return Visit
      */
     public function checkin_patient()
     {
@@ -117,7 +117,7 @@ class ReceptionFunctions implements ReceptionRepository
             $this->order_procedures($this->request->precharge, $visit);
         }
         flash("Patient has been checked in", 'success');
-        return true;
+        return $visit;
         //flash("An error occurred", 'danger');
         //return false;
     }

@@ -12,6 +12,8 @@
 
 namespace Ignite\Reception\Repositories;
 
+use Ignite\Inpatient\Entities\Visit;
+
 /**
  * Interface ReceptionRepository
  * @package Ignite\Reception\Repositories
@@ -28,5 +30,8 @@ interface ReceptionRepository
      */
     public function add_appointment();
 
+    /**
+     * @return Visit
+     */
     public function checkin_patient();
 }
