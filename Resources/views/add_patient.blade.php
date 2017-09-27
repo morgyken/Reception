@@ -43,7 +43,7 @@
                 <div class="form-group {{ $errors->has('dob') ? ' has-error' : '' }}">
                     {!! Form::label('dob', 'Date of Birth',['class'=>'control-label col-md-4']) !!}
                     <div class="col-md-8">
-                        {!! Form::text('dob', old('dob'), ['class' => 'form-control date', 'placeholder' => 'Date of Birth', 'required' => 'required']) !!}
+                        {!! Form::text('dob', old('dob'), ['class' => 'form-control date', 'placeholder' => 'Date of Birth']) !!}
                         {!! $errors->first('dob', '<span class="help-block">:message</span>') !!}
                         <br/> <label for="ex2">OR:</label>
                         <div class="form-group row">
