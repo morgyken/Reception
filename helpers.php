@@ -163,6 +163,7 @@ if (!function_exists('get_checkin_destinations')) {
         $first = [];
         $roles = m_setting('reception.checkin_destinations');
         $rooms_enabled = (bool)m_setting('reception.checkin_to_rooms');
+        $show_doctors = !$rooms_enabled;
         if ($rooms_enabled) {
             $_rooms = Rooms::all();
             foreach ($_rooms as $room) {
@@ -175,7 +176,7 @@ if (!function_exists('get_checkin_destinations')) {
             $first[$one] = mconfig('reception.options.destinations.' . $one);
         }
         $next = [];
-        if (!$rooms_enabled) {
+        if ($show_doctors) {
             $next = users_in(json_decode($roles))->pluck('profile.full_name', 'id')->toArray();
         }
         return array_replace($first, $next);
