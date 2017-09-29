@@ -30,7 +30,7 @@ return [
         'hint' => 'Select fees to be made compulsory'
     ],
     'checkin_to_nurse' => [
-        'description' => 'Check-in patients to nurse by default',
+        'description' => 'Allow checkin to nurse by default',
         'view' => 'checkbox'
     ],
     'purpose_of_visit' => [

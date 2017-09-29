@@ -23,7 +23,7 @@ use Ignite\Inventory\Entities\InventoryBatchProductSales;
  * @property mixed $first_name
  * @property mixed|null $middle_name
  * @property mixed $last_name
- * @property string|null $dob
+ * @property \Carbon\Carbon|null $dob
  * @property string|null $age
  * @property string|null $age_in
  * @property string|null $sex
@@ -37,8 +37,8 @@ use Ignite\Inventory\Entities\InventoryBatchProductSales;
  * @property string|null $town
  * @property int $status
  * @property string|null $deleted_at
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property mixed|null $image
  * @property-read \Ignite\Finance\Entities\PatientAccount $account
  * @property-read \Ignite\Inpatient\Entities\Admission $admission

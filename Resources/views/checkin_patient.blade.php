@@ -249,7 +249,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                     @endif
 
                     <div class="pull-right">
-                        <button type="button" class="btn btn-default" id="checkin_treat"><i
+                        <button type="button" class="btn btn-primary" id="checkin_treat"><i
                                     class="fa fa-link"></i> Checkin and Treat
                         </button>
                         <button type="submit" class="btn btn-success"><i class="fa fa-map-marker"></i> Checkin</button>

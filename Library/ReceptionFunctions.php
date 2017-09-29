@@ -63,18 +63,16 @@ class ReceptionFunctions implements ReceptionRepository
      */
     public function checkin_patient()
     {
+        \DB::beginTransaction();
         $visit = new Visit;
         $visit->patient = $this->request->patient;
         $visit->clinic = session('clinic', 1);
-
         if ($this->request->has('external_order')) {
             $visit->external_order = $this->request->external_order;
         }
-
         if ($this->request->destination == 13) {
             $visit->inpatient = 'on';
         }
-
 
         if ($this->request->has('purpose')) {
             $visit->purpose = $this->request->purpose;
@@ -90,7 +88,6 @@ class ReceptionFunctions implements ReceptionRepository
         if ($this->request->has('external_doctor')) {
             $visit->external_doctor = $this->request->external_doc;
         }
-
         $visit->save();
 
         if ($this->request->has('external_order')) {
@@ -117,6 +114,7 @@ class ReceptionFunctions implements ReceptionRepository
             $this->order_procedures($this->request->precharge, $visit);
         }
         flash("Patient has been checked in", 'success');
+        \DB::commit();
         return $visit;
         //flash("An error occurred", 'danger');
         //return false;
@@ -165,13 +163,22 @@ class ReceptionFunctions implements ReceptionRepository
     {
         $department = $place;
         $destination = NULL;
+        $room = null;
         if (intval($place) > 0) {
             $destination = (int)$department;
             $department = 'doctor';
         }
+        if (starts_with($place, 'R-')) {
+            $room = substr($place, 2);
+            $department = 'doctor';
+        }
+        /** @var VisitDestinations $destinations */
         $destinations = VisitDestinations::firstOrNew(['visit' => $visit, 'department' => ucwords($department)]);
         $destinations->destination = $destination;
         $destinations->user = $this->request->user()->id;
+        if ($room) {
+            $destinations->room_id = $room;
+        }
         return $destinations->save();
     }
 

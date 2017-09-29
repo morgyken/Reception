@@ -14,6 +14,7 @@ use Ignite\Reception\Entities\AppointmentCategory;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Entities\PatientInsurance;
 use Ignite\Reception\Entities\Patients;
+use Ignite\Settings\Entities\Rooms;
 use Illuminate\Http\Request;
 
 if (!function_exists('get_appointments')) {
@@ -23,11 +24,12 @@ if (!function_exists('get_appointments')) {
      * @param Request $request
      * @return array|\Illuminate\Database\Eloquent\Collection|static[]
      */
-    function get_appointments(Request $request) {
+    function get_appointments(Request $request)
+    {
         $builder = Appointments::where(function ($query) {
-                    $query->orWhere('status', 1);
-                    $query->orWhere('status', 2);
-                });
+            $query->orWhere('status', 1);
+            $query->orWhere('status', 2);
+        });
         if ($request->has('clinic')) {
             if (!empty($request->clinic)) {
                 $builder->where('clinic', $request->clinic);
@@ -57,27 +59,30 @@ if (!function_exists('get_schedule_cat')) {
     /**
      * @return \Illuminate\Support\Collection
      */
-    function get_schedule_cat() {
+    function get_schedule_cat()
+    {
         return AppointmentCategory::all()->pluck('name', 'id');
     }
 
 }
-
-function get_destinations($order) {
-    $types = array();
-    foreach ($order->details as $item) {
-        $types[] = $item->type;
+if (!function_exists('get_destinations')) {
+    function get_destinations($order)
+    {
+        $types = array();
+        foreach ($order->details as $item) {
+            $types[] = $item->type;
+        }
+        //return json_encode(array_flatten(array_unique($types)));
+        return array_unique($types);
     }
-    //return json_encode(array_flatten(array_unique($types)));
-    return array_unique($types);
 }
-
 if (!function_exists('get_patients')) {
 
     /**
      * @return \Illuminate\Support\Collection
      */
-    function get_patients() {
+    function get_patients()
+    {
         return Patients::all()->pluck('full_name', 'id');
     }
 
@@ -88,7 +93,8 @@ if (!function_exists('get_external_institutions')) {
     /**
      * @return \Illuminate\Support\Collection
      */
-    function get_external_institutions() {
+    function get_external_institutions()
+    {
         return PartnerInstitution::all()->pluck('name', 'id');
     }
 
@@ -96,7 +102,8 @@ if (!function_exists('get_external_institutions')) {
 
 if (!function_exists('auto_complete_patient_names')) {
 
-    function auto_complete_patient_names() {
+    function auto_complete_patient_names()
+    {
         return Patients::all()->pluck('full_name');
     }
 
@@ -104,17 +111,18 @@ if (!function_exists('auto_complete_patient_names')) {
 
 if (!function_exists('get_patient_age')) {
 
-    function get_patient_age($dob) {
-        if((new Date($dob))->age>0){
-            if((new Date($dob))->diff(Carbon\Carbon::now())->format('%m')>0){
+    function get_patient_age($dob)
+    {
+        if ((new Date($dob))->age > 0) {
+            if ((new Date($dob))->diff(Carbon\Carbon::now())->format('%m') > 0) {
                 $age = (new Date($dob))->diff(Carbon\Carbon::now())->format('%y year(s), %m month(s)');
-            }else{
+            } else {
                 $age = (new Date($dob))->diff(Carbon\Carbon::now())->format('%y year(s)');
             }
-        }else{
-            if((new Date($dob))->diff(Carbon\Carbon::now())->format('%m')>0){
+        } else {
+            if ((new Date($dob))->diff(Carbon\Carbon::now())->format('%m') > 0) {
                 $age = (new Date($dob))->diff(Carbon\Carbon::now())->format('%m month(s) , %d day(s)');
-            }else{
+            } else {
                 $age = (new Date($dob))->diff(Carbon\Carbon::now())->format('%d day(s)');
             }
         }
@@ -128,7 +136,8 @@ if (!function_exists('calendar_options')) {
     /**
      * @return array Calender view options
      */
-    function calendar_options() {
+    function calendar_options()
+    {
         return [
             'firstDay' => 0,
             'aspectRatio' => 2.5,
@@ -149,15 +158,26 @@ if (!function_exists('get_checkin_destinations')) {
     /**
      * @return array The check-in destinations
      */
-    function get_checkin_destinations() {
+    function get_checkin_destinations()
+    {
         $first = [];
         $roles = m_setting('reception.checkin_destinations');
+        $rooms_enabled = (bool)m_setting('reception.checkin_to_rooms');
+        if ($rooms_enabled) {
+            $_rooms = Rooms::all();
+            foreach ($_rooms as $room) {
+                $first['R-' . $room->id] = $room->name;
+            }
+        }
         $places = m_setting('reception.checkin_places');
-        $intrests = json_decode($places);
-        foreach ($intrests as $one) {
+        $interests = json_decode($places);
+        foreach ($interests as $one) {
             $first[$one] = mconfig('reception.options.destinations.' . $one);
         }
-        $next = users_in(json_decode($roles))->pluck('profile.full_name', 'id')->toArray();
+        $next = [];
+        if (!$rooms_enabled) {
+            $next = users_in(json_decode($roles))->pluck('profile.full_name', 'id')->toArray();
+        }
         return array_replace($first, $next);
     }
 
@@ -169,9 +189,10 @@ if (!function_exists('get_patient_insurance_schemes')) {
      * @param int $patient_id
      * @return mixed
      */
-    function get_patient_insurance_schemes($patient_id) {
+    function get_patient_insurance_schemes($patient_id)
+    {
         return PatientInsurance::with('schemes')
-                        ->wherePatient($patient_id)->get()->pluck('schemes.name', 'id');
+            ->wherePatient($patient_id)->get()->pluck('schemes.name', 'id');
     }
 
 }
@@ -183,7 +204,8 @@ if (!function_exists('get_patient_schemes')) {
      * @param int $patient_id
      * @return mixed
      */
-    function get_patient_schemes($patient_id) {
+    function get_patient_schemes($patient_id)
+    {
         $schemes = PatientInsurance::wherePatient($patient_id)->get();
         return $schemes;
     }
@@ -196,7 +218,8 @@ if (!function_exists('get_color_code')) {
      * @param $category_id
      * @return mixed|string
      */
-    function get_color_code($category_id) {
+    function get_color_code($category_id)
+    {
         $color = config('system.colors.' . $category_id);
         if (empty($color)) {
             $color = 'green';
@@ -211,7 +234,8 @@ if (!function_exists('get_precharged_fees')) {
     /**
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    function get_precharged_fees() {
+    function get_precharged_fees()
+    {
         return Ignite\Evaluation\Entities\Procedures::where("precharge", "=", 1)->get();
     }
 
@@ -221,7 +245,8 @@ if (!function_exists('get_this_user_roles')) {
     /**
      * @return array
      */
-    function get_this_user_roles() {
+    function get_this_user_roles()
+    {
         $user = auth()->user();
         $roles = array();
         foreach ($user->roles as $role) {
