@@ -18,7 +18,7 @@ $roles = get_this_user_roles();
     </div>
     <div class="col-md-12">
         <input type="text" size="20" id="search_patient" placeholder="Search Patient Name or or ID Number" class="col-xs-4">
-        <a target="blank" class="btn btn-xs btn-primary pull-right" href="{{route('reception.show_patients','all')}}">View entire patient list</a><br>
+        <a class="btn btn-xs btn-primary pull-right" href="{{route('reception.show_patients','all')}}">View entire patient list</a><br>
     </div>
     <hr>
 
