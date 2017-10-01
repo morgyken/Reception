@@ -40,6 +40,7 @@ use Ignite\Inventory\Entities\InventoryBatchProductSales;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property mixed|null $image
+ * @property int|null $external_institution
  * @property-read \Ignite\Finance\Entities\PatientAccount $account
  * @property-read \Ignite\Inpatient\Entities\Admission $admission
  * @property-read \Ignite\Inpatient\Entities\RequestAdmission $admissionRequest
@@ -68,6 +69,7 @@ use Ignite\Inventory\Entities\InventoryBatchProductSales;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereDob($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereExternalInstitution($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereFirstName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereIdNo($value)
