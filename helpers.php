@@ -167,7 +167,7 @@ if (!function_exists('get_checkin_destinations')) {
         if ($rooms_enabled) {
             $_rooms = Rooms::all();
             foreach ($_rooms as $room) {
-                $first['R-' . $room->id] = $room->name;
+                $first['R-' . $room->id] = $room->desc;
             }
         }
         $places = m_setting('reception.checkin_places');
