@@ -191,21 +191,25 @@ $patient_schemes = get_patient_schemes($patient->id);
                         {!! Form::label('fees', 'Select Fee',['class'=>'control-label col-md-4']) !!}
                         <div class="col-md-8" id="cfees">
                             <small>press Ctrl and click to select multiple options</small>
-                            <select multiple class="diagnosis_auto form-control" name="precharge[]">
+                            <select multiple class="diagnosis_auto form-control" name="precharge[]" id="prees">
                                 @if(m_setting('reception.pre_charged_compulsory'))
                                     <?php
                                     $_pre_charged = json_decode(m_setting('reception.pre_charged_compulsory'));
                                     ?>
                                     @foreach($precharge as $p)
                                         @if(!in_array($p->id, $_pre_charged))
-                                            <option value="{{$p->id}}">
+                                            <option value="{{$p->id}}"
+                                                    cash_details="{{$p->name}} - {{$p->cash_charge}}"
+                                                    ins_details="{{$p->name}} - {{$p->insurance_charge}}">
                                                 {{$p->name}} - {{$p->cash_charge}}
                                             </option>
                                         @endif
                                     @endforeach
                                 @else
                                     @foreach($precharge as $p)
-                                        <option value="{{$p->id}}">
+                                        <option value="{{$p->id}}"
+                                                cash_details="{{$p->name}} - {{$p->cash_charge}}"
+                                                ins_details="{{$p->name}} - {{$p->insurance_charge}}">
                                             {{$p->name}} - {{$p->cash_charge}}
                                         </option>
                                     @endforeach
@@ -261,7 +265,7 @@ $patient_schemes = get_patient_schemes($patient->id);
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#mode input").click(function () {
+            $("#mode").find("input").click(function () {
                 show_schemes();
             });
             $("#show_fees").click(function () {
@@ -283,10 +287,19 @@ $patient_schemes = get_patient_schemes($patient->id);
 
             function show_schemes() {
                 var status = $("#insurance_option").is(':checked');
-                if (status)
+                if (status) {
                     $("#schemes").removeClass('hidden');
-                else
+                    $("#scheme").attr('required', '');
+                    el = 'ins_details';
+                }
+                else {
                     $("#schemes").addClass('hidden');
+                    $("#scheme").removeAttr('required');
+                    el = 'cash_details';
+                }
+                $('#prees').find('option').each(function (c, element) {
+                    $(element).html($(element).attr(el));
+                });
             }
 
             show_schemes();

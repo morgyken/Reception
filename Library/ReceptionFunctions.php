@@ -120,7 +120,7 @@ class ReceptionFunctions implements ReceptionRepository
         //return false;
     }
 
-    public function order_procedures($procedures, $visit)
+    public function order_procedures($procedures, Visit $visit)
     {
         try {
             foreach ($procedures as $key => $value) {
@@ -134,7 +134,7 @@ class ReceptionFunctions implements ReceptionRepository
                     $inv->type = strtolower($procedure->categories->name);
                 }
                 $inv->procedure = $value;
-                $inv->price = $procedure->cash_charge;
+                $inv->price = $visit->payment_mode == 'cash' ? $procedure->cash_charge : $procedure->insurance_charge;
                 if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
                     $inv->user = $this->request->destination;
                 }
