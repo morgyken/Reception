@@ -13,6 +13,7 @@
 namespace Ignite\Reception\Repositories;
 
 use Ignite\Inpatient\Entities\Visit;
+use Illuminate\Http\Request;
 
 /**
  * Interface ReceptionRepository
@@ -34,4 +35,6 @@ interface ReceptionRepository
      * @return Visit
      */
     public function checkin_patient();
+
+    public function add_patient();
 }

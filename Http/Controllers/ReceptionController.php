@@ -97,7 +97,7 @@ class ReceptionController extends AdminBaseController
         //     return back()->withErrors($validator)->withInput();
         // }
         // dd($request);
-        if ($this->receptionRepository->add_patient($request, $request->id)) {
+        if ($this->receptionRepository->add_patient()) {
             // $this->savePatientScheme($request, $request->id);
             flash("Patient Information saved", 'success');
             if ($request->has('save_and_checkin')) {

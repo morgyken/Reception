@@ -12,6 +12,7 @@
 
 namespace Ignite\Reception\Library;
 
+use Carbon\Carbon;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Evaluation\Entities\VisitDestinations;
 use Ignite\Reception\Entities\PatientInsurance;
@@ -135,6 +136,7 @@ class ReceptionFunctions implements ReceptionRepository
                 }
                 $inv->procedure = $value;
                 $inv->quantity = 1;
+                $inv->discount = 0;
                 $inv->price = $inv->amount = $visit->payment_mode == 'cash' ? $procedure->cash_charge : $procedure->insurance_charge;
                 if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
                     $inv->user = $this->request->destination;
@@ -217,7 +219,10 @@ class ReceptionFunctions implements ReceptionRepository
                 $patient->age = $this->request->age;
                 $patient->age_in = $this->request->age_in;
                 if ($this->request->dob == '') {
-                    $patient->dob = $this->reverse_birthday($this->request->age, $this->request->age_in);
+                    $age = $this->request->age;
+                    $age_in = $this->request->age_in;
+//                    $patient->dob = $this->reverse_birthday($age, $age_in);
+                    $patient->dob = Carbon::parse("- $age $age_in")->toDateString();
                 }
             }
             $patient->save();
@@ -249,7 +254,7 @@ class ReceptionFunctions implements ReceptionRepository
                     $schemes->scheme = $this->request->scheme1;
                     $schemes->policy_number = $this->request->policy_number1;
                     $schemes->principal = ucwords($this->request->principal1);
-                    $schemes->dob = new \Date($this->request->principal_dob1);
+                    $schemes->dob = Carbon::create($this->request->principal_dob1);
                     $schemes->relationship = $this->request->principal_relationship1;
                     $schemes->save();
                     // }
@@ -266,11 +271,6 @@ class ReceptionFunctions implements ReceptionRepository
         return true;
     }
 
-    function reverse_birthday($age, $in)
-    {
-        $dob = date('Y-m-d', strtotime($age . ' years ago'));
-        return $dob;
-    }
 
     /**
      * @return bool

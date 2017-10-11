@@ -86,7 +86,7 @@ return [
     ],
     'age_in' => [
         'years' => 'Years',
-//        'months' => 'Months',
-//        'days' => 'Days',
+        'months' => 'Months',
+        'days' => 'Days',
     ],
 ];
