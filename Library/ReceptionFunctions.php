@@ -194,7 +194,7 @@ class ReceptionFunctions implements ReceptionRepository
     public function add_patient()
     {
         DB::transaction(function () {
-            //patient first
+            /** @var Patients $patient */
             $patient = Patients::findOrNew($this->id);
             $patient->first_name = ucfirst($this->request->first_name);
             $patient->middle_name = ucfirst($this->request->middle_name);
@@ -205,6 +205,7 @@ class ReceptionFunctions implements ReceptionRepository
             $patient->telephone = $this->request->telephone;
             $patient->mobile = $this->request->mobile;
             $patient->alt_number = $this->request->alt_number;
+            $patient->patient_no = Patients::max('patient_no') + 1;
             $patient->email = strtolower($this->request->email);
             $patient->address = $this->request->address;
             $patient->post_code = $this->request->post_code;

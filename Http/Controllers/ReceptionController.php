@@ -4,6 +4,7 @@ namespace Ignite\Reception\Http\Controllers;
 
 use Ignite\Core\Http\Controllers\AdminBaseController;
 use Ignite\Evaluation\Entities\Visit;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Reception\Entities\AppointmentCategory;
 use Ignite\Reception\Entities\Appointments;
 use Ignite\Reception\Http\Requests\CheckinPatientRequest;
@@ -48,6 +49,7 @@ class ReceptionController extends AdminBaseController
         if (!empty($id)) {
             return view('reception::edit_patient', ['data' => $this->data]);
         }
+        $this->data['use_id'] = Patients::max('patient_no') + 1;
         return view('reception::add_patient', ['data' => $this->data]);
     }
 
@@ -70,7 +72,7 @@ class ReceptionController extends AdminBaseController
         $visits = Visit::wherePatient($id)->get();
         foreach ($visits as $v) {
             $v->delete();
-            $sale = \Ignite\Inventory\Entities\InventoryBatchProductSales::wherePatient($id)
+            $sale = InventoryBatchProductSales::wherePatient($id)
                 ->orWhere('visit', '==', $v->id)
                 ->get();
             foreach ($sale as $s) {

@@ -13,7 +13,6 @@
 namespace Ignite\Reception\Repositories;
 
 use Ignite\Inpatient\Entities\Visit;
-use Illuminate\Http\Request;
 
 /**
  * Interface ReceptionRepository

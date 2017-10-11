@@ -52,6 +52,7 @@ use Ignite\Inventory\Entities\InventoryBatchProductSales;
  * @property-read mixed $full_name
  * @property-read mixed $insured
  * @property-read mixed $is_insured
+ * @property-read mixed $number
  * @property-read mixed $registered
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\PatientInvoice[] $invoices
  * @property-read \Ignite\Reception\Entities\NextOfKin $nok
@@ -155,6 +156,14 @@ class Patients extends Model
     public function appointments()
     {
         return $this->hasMany(Appointments::class, 'patient', 'patient_id');
+    }
+
+    public function getNumberAttribute()
+    {
+        if (empty($this->patient_no)) {
+            return $this->id;
+        }
+        return m_setting('reception.patient_number') . $this->patient_no;
     }
 
     public function documents()

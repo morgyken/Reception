@@ -44,5 +44,10 @@ return [
     'checkin_to_rooms' => [
         'description' => 'Enable checkin to rooms',
         'view' => 'checkbox'
+    ],
+    'patient_number' => [
+        'description' => 'Patient Number Prefix',
+        'view' => 'text',
+        'hint' => 'Prefix for patient number'
     ]
 ];

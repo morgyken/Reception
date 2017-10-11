@@ -4,6 +4,7 @@
  * Project: iClinic
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
+extract($data);
 ?>
 
 @extends('layouts.app')
@@ -92,6 +93,12 @@
                                 {!! $errors->first('town', '<span class="help-block">:message</span>') !!}
                             </div>
                         </div>
+                        <div class="form-group {{ $errors->has('patient_no') ? ' has-error' : '' }}">
+                            {!! Form::label('patient_no', 'Patient Number',['class'=>'control-label col-md-4']) !!}
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{m_setting('reception.patient_number')}}{{$use_id}}</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group {{ $errors->has('telephone') ? ' has-error' : '' }}">
@@ -144,13 +151,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group {{ $errors->has('patient_no') ? ' has-error' : '' }}">
-                            {!! Form::label('patient_no', 'Patient Number',['class'=>'control-label col-md-4']) !!}
-                            <div class="col-md-8">
-                                {!! Form::hidden('patient_no', old('patient_no'), ['class' => 'form-control', 'placeholder' => 'Patient Number']) !!}
-                                {!! $errors->first('patient_no', '<span class="help-block">:message</span>') !!}
-                            </div>
-                        </div>
+
                         @if(\Auth::user()->profile->partner_institution<0)
                             <div class="form-group {{ $errors->has('external_institution') ? ' has-error' : '' }}">
                                 {!! Form::label('external_institution', 'Partner Institution',['class'=>'control-label col-md-4']) !!}

@@ -32,6 +32,7 @@ $roles = get_this_user_roles();
                     @foreach($patients as $patient)
                     <tr id="patient{{$patient->id}}">
                         <td>{{$patient->id}}</td>
+                        <td>{{$patient->number}}</td>
                         <td>{{$patient->full_name}}</td>
                         <td>{{$patient->id_no}}</td>
                         <td>{{(new Date($patient->dob))->format('d/m/Y') }}</td>
@@ -62,6 +63,7 @@ $roles = get_this_user_roles();
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>P. No</th>
                     <th>Name</th>
                     <th>ID Number</th>
                     <th>DOB</th>
