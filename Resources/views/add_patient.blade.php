@@ -43,6 +43,14 @@ extract($data);
                             </div>
                         </div>
                         <div class="form-group {{ $errors->has('age') ? ' has-error' : '' }}">
+                            {!! Form::label('dob', 'Date of Birth',['class'=>'control-label col-md-4']) !!}
+                            <div class="col-md-8">
+                                {!! Form::text('dob', old('dob'), ['class' => 'form-control date', 'placeholder' => 'Date of Birth']) !!}
+                                {!! $errors->first('dob', '<span class="help-block">:message</span>') !!}
+                               <br/> ----- OR ----
+                            </div>
+                        </div>
+                        <div class="form-group {{ $errors->has('age') ? ' has-error' : '' }}">
                             {!! Form::label('dob', 'Age',['class'=>'control-label col-md-4']) !!}
                             <div class="col-md-8">
                                 <div class="col-xs-6">
@@ -82,11 +90,11 @@ extract($data);
                         <div class="form-group {{ $errors->has('id_number') ? ' has-error' : '' }}">
                             {!! Form::label('id_number', 'ID Number',['class'=>'control-label col-md-4']) !!}
                             <div class="col-md-8">
-                                {!! Form::text('id_number', old('id_number'), ['class' => 'form-control', 'placeholder' => 'ID number']) !!}
+                                {!! Form::text('id_number', old('id_number'), ['class' => 'form-control', 'placeholder' => 'ID number','required']) !!}
                                 {!! $errors->first('id_number', '<span class="help-block">:message</span>') !!}
                             </div>
                         </div>
-                        <div class="form-group {{ $errors->has('town') ? ' has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('town') ? ' has-error' : '' }} req">
                             {!! Form::label('town', 'City/Town',['class'=>'control-label col-md-4']) !!}
                             <div class="col-md-8">
                                 {!! Form::text('town', old('town'), ['class' => 'form-control', 'placeholder' => 'City or Town']) !!}
