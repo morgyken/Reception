@@ -49,5 +49,10 @@ return [
         'description' => 'Patient Number Prefix',
         'view' => 'text',
         'hint' => 'Prefix for patient number'
+    ],
+    'patient_start_at' => [
+        'description' => 'Patient Number Starting At',
+        'view' => 'text',
+        'hint' => 'Where to begin numbering'
     ]
 ];

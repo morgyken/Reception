@@ -49,7 +49,7 @@ class ReceptionController extends AdminBaseController
         if (!empty($id)) {
             return view('reception::edit_patient', ['data' => $this->data]);
         }
-        $this->data['use_id'] = Patients::max('patient_no') + 1;
+        $this->data['use_id'] = (Patients::max('patient_no') ?? m_setting('reception.patient_start_at')) + 1;
         return view('reception::add_patient', ['data' => $this->data]);
     }
 
