@@ -10,6 +10,7 @@ $(document).ready(function () {
     $(".insured input[type=radio]").click(function () {
         toggle_schemes();
     });
+
     function toggle_schemes() {
         if ($('#s_schemes').is(':checked')) {
             if ($("#schemes").hasClass("hidden")) {
@@ -21,15 +22,19 @@ $(document).ready(function () {
             }
         }
     }
+
     toggle_schemes();
     $("#s_schemes,#h_schemes").click(function () {
         toggle_schemes();
     });
+
     function apply_schemes(that) {
         //initialize
-        $("#" + id + " .scheme").empty();
+
         var options = "";
-        var id = $(that).parent().parent().parent().parent().attr('id');
+        var id = $(that).attr('name').substr(7);
+        $("select[name=scheme" + id + "]").empty();
+        console.log(id);
         var val = $(that).val();
         if (!val) {
             return;
@@ -42,9 +47,11 @@ $(document).ready(function () {
                 $.each(data, function (key, value) {
                     options += '<option value="' + key + '">' + value + '</option>';
                 });
-                $("#" + id + " .scheme").html(options);
-            }});
+                $("select[name=scheme" + id + "]").html(options);
+            }
+        });
     }
+
     $(".company").change(function () {
         apply_schemes(this);
     });
@@ -62,22 +69,20 @@ $(document).ready(function () {
             var ids = 'wrapper' + x;
             var title = 'Insurance ' + x;
             $(wrapper).append("<h5>" + title + "</h5><div id='" + ids + "'>" + html_template + "</div>");
-            $(".date").datepicker({
-                dateFormat: 'yy-mm-dd', changeYear: true, changeMonth: true, defaultDate: '-20y', yearRange: "1900:+0"}
-            );
             $(".company").change(function () {
                 apply_schemes(this);
             });
         }
     });
     $(".date").datepicker({
-        dateFormat: 'yy-mm-dd', changeYear: true, changeMonth: true, defaultDate: '-20y', yearRange: "1900:+0"}
+            dateFormat: 'yy-mm-dd', changeYear: true, changeMonth: true, defaultDate: '-20y', yearRange: "1900:+0"
+        }
     );
     $('form').submit(function (e) {
         var form = $(this);
         var input = $("<input>")
-                .attr("type", "hidden")
-                .attr("name", "imagesrc").val(IMAGE_SRC);
+            .attr("type", "hidden")
+            .attr("name", "imagesrc").val(IMAGE_SRC);
         form.append($(input));
     });
 

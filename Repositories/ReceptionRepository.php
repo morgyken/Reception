@@ -34,4 +34,6 @@ interface ReceptionRepository
      * @return Visit
      */
     public function checkin_patient();
+
+    public function add_patient();
 }

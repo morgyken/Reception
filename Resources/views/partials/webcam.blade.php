@@ -43,7 +43,7 @@
         </div>
     </div>
 </div>
-<script src="{{url('/js/webcam.min.js')}}"></script>
+<script src="{{m_asset('reception:js/webcam.min.js')}}"></script>
 <script type="text/javascript">
 $(document).ready(function () {
     $("#webcam").click(function () {
