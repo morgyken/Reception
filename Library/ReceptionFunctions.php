@@ -255,7 +255,7 @@ class ReceptionFunctions implements ReceptionRepository
                     $schemes->scheme = $this->request->scheme1;
                     $schemes->policy_number = $this->request->policy_number1;
                     $schemes->principal = ucwords($this->request->principal1);
-                    $schemes->dob = Carbon::create($this->request->principal_dob1);
+                    $schemes->dob = Carbon::createFromDate($this->request->principal_dob1);
                     $schemes->relationship = $this->request->principal_relationship1;
                     $schemes->save();
                     // }
