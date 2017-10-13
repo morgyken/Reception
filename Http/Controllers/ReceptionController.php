@@ -281,7 +281,7 @@ class ReceptionController extends AdminBaseController
 
             return view('reception::checkin_patient', ['data' => $this->data]);
         }
-        //$this->data['patients'] = Patients::limit(100);
+        $this->data['patients'] = Patients::paginate(10);
         return view('reception::checkin', ['data' => $this->data]);
     }
 

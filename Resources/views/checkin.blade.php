@@ -13,48 +13,59 @@ extract($data);
 @section('content')
     <div class="box box-info">
         <div class="box-header">
-            <h3 class="box-title">Check Patient</h3>
+            <h3 class="box-title">Search</h3>
         </div>
-
         <div class="box-body">
             <input type="text" size="20" id="search_patient"
                    placeholder="Find patient by names or ID Number (for best results minimise spaces)" class="col-xs-4">
             <a class="btn btn-xs btn-primary pull-right" href="{{route('reception.show_patients','all')}}">View entire
                 patient list</a><br>
             <hr>
-            <table class="table table-striped table-condensed">
+            <table class="table table-striped table-condensed" id="patients_table">
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>ID No</th>
-                    <th>Name</th>
-                    <th>Status</th>
+                    <th>Patient Name</th>
+                    <th>Mobile</th>
+                    <th>ID Number</th>
                     <th>Action</th>
                 </tr>
                 </thead>
                 <tbody class="results">
+                @foreach($patients as $patient)
+                    <tr>
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{$patient->full_name}}</td>
+                        <td>{{$patient->mobile}}</td>
+                        <td>{{$patient->id}}</td>
+                        <td>
+                            <a class="btn  btn-xs" href="{{route('reception.view_patient',$patient->id)}}">
+                                <i class="fa fa-eye-slash"></i> View</a>
+                            <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
+                                <i class="fa fa-sign-in"></i> Check in</a>
+                        </td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
+            {{ $patients->links() }}
         </div>
     </div>
     </div>
     <script type="text/javascript">
-        var GET_PATIENTS = "{{route('api.reception.get_patients')}}";
-        $('#search_patient').keyup(function () {
-            get_patients(this.value);
-        });
         $(document).ready(function () {
-            //$('table').DataTable();
-        });
-
-        function get_patients(term) {
-            $.ajax({
-                url: GET_PATIENTS,
-                data: {'term': term},
-                success: function (data) {
-                    $('.results').html(data);
-                }
+            $('#patients_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel', 'pdf', 'print'
+                ],
+                "paginate": false,
+                "lengthChange": true,
+                "filter": false,
+                "sort": true,
+                "info": true,
+                "autoWidth": true,
             });
-        }
+        });
     </script>
 @endsection
