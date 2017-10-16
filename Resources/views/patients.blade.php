@@ -16,16 +16,9 @@ $roles = get_this_user_roles();
         <div class="box-header">
             <h3 class="box-title">Manage Patients</h3>
         </div>
-        <div class="col-md-12">
-            <input type="text" size="20" id="search_patient" placeholder="Search Patient Name or or ID Number"
-                   class="col-xs-4">
-            <a class="btn btn-xs btn-primary pull-right" href="{{route('reception.show_patients','all')}}">View entire
-                patient list</a><br>
-        </div>
+        @include('reception::partials.search')
         <hr>
-
         <div class="box-body">
-
             <table id="patients_table" class="table table-condensed table-responsive table-striped" id="patients">
                 <tbody class="results">
                 <?php
@@ -36,8 +29,7 @@ $roles = get_this_user_roles();
                         <td>{{$patient->id}}</td>
                         <td>{{$patient->number??'-'}}</td>
                         <td>{{$patient->full_name}}</td>
-                        <td>{{$patient->id_no}}</td>
-                        <td>{{(new Date($patient->dob))->format('d/m/Y') }}</td>
+                        <td>{{$patient->dob }}</td>
                         <td>{{$patient->mobile}}</td>
                         <td>
                             <a class="btn  btn-xs" href="{{route('reception.view_patient',$patient->id)}}">
@@ -48,11 +40,11 @@ $roles = get_this_user_roles();
                             <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
                                 <i class="fa fa-sign-in"></i> Check in</a>
                             <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
-                                <i class="fa fa-sign-in"></i> Review</a>
-                        <?php if (in_array(5, $roles)) { ?>
-                        <!-- <a style="color: red" href="{{route('reception.purge_patient',$patient->id)}}" class="btn btn-xs">
-                                     <i class="fa fa-trash"></i>delete</a> -->
-                            <?php } ?>
+                                <i class="fa fa-sign-in"></i> Review
+                            </a>
+                            <a href="{{route('reception.upload_doc',$patient->id)}}" class="btn btn-xs btn-primary">
+                                <i class="fa fa-folder-open-o"></i> View Files
+                            </a>
                         </td>
                     </tr>
                 @endforeach
@@ -67,13 +59,23 @@ $roles = get_this_user_roles();
                     <th>#</th>
                     <th>P. No</th>
                     <th>Name</th>
-                    <th>ID Number</th>
                     <th>DOB</th>
                     <th>Mobile</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
+                <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>P. No</th>
+                    <th>Name</th>
+                    <th>DOB</th>
+                    <th>Mobile</th>
+                    <th>Actions</th>
+                </tr>
+                </tfoot>
             </table>
+            {{ $patients->links() }}
         </div>
         <div class="box-footer">
 
@@ -81,27 +83,19 @@ $roles = get_this_user_roles();
     </div>
 
     <script type="text/javascript">
-        var GET_PATIENTS_FOR_MANAGE = "{{route('api.reception.manage_patients')}}";
-        $('#search_patient').keyup(function () {
-            get_patients(this.value);
-        });
         $(document).ready(function () {
             $('#patients_table').DataTable({
                 dom: 'Bfrtip',
                 buttons: [
                     'excel', 'pdf', 'print'
-                ]
+                ],
+                "paginate": false,
+                "lengthChange": true,
+                "filter": false,
+                "sort": true,
+                "info": true,
+                "autoWidth": true,
             });
         });
-
-        function get_patients(term) {
-            $.ajax({
-                url: GET_PATIENTS_FOR_MANAGE,
-                data: {'term': term},
-                success: function (data) {
-                    $('.results').html(data);
-                }
-            });
-        }
     </script>
 @endsection

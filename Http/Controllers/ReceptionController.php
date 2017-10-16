@@ -128,13 +128,7 @@ class ReceptionController extends AdminBaseController
      */
     public function show_patients(Request $request)
     {
-        if (isset($request->mode)) {
-            if ($request->mode == 'all') {
-                $this->data['patients'] = Patients::all();
-            }
-        } else {
-            /// $this->data['patients'] = Patients::all();
-        }
+        $this->data['patients'] = Patients::paginate(10);
         return view('reception::patients', ['data' => $this->data]);
     }
 
@@ -213,7 +207,7 @@ class ReceptionController extends AdminBaseController
 
     public function documents()
     {
-        $this->data['patients'] = Patients::all();
+        $this->data['patients'] = Patients::paginate(10);
         return view('reception::patient_documents', ['data' => $this->data]);
     }
 
@@ -312,8 +306,18 @@ class ReceptionController extends AdminBaseController
 
     public function SearchPatient(Request $request)
     {
-        $patients = Patients::where('first_name', 'like', '%' . base64_encode($request->key) . '%')->get();
-        dd($patients);
+        $patients = Patients::all();//where('first_name', 'like', '%' . base64_encode($request->key) . '%')->get();
+        $found=array();
+        $search = $request->search;
+        foreach ($patients as $p){
+            if(str_contains($p->id_no, $request->search)||
+               str_contains(strtolower($p->full_name), strtolower($request->search))||
+               str_contains(strtolower($p->mobile), strtolower($request->search))
+            ){
+                $found[] = $p;
+            }
+        }
+        return view('reception::search_results', compact('found','search'));
     }
 
     public function document_viewer($id)
