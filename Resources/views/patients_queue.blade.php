@@ -27,11 +27,11 @@ extract($data);
                         <td>{{$visit->place}}</td>
                         <td>{{mconfig('reception.options.checkin_purposes.'.$visit->purpose,'N/A')}}</td>
                         <td>
-                        <!-- <button value="{{$visit->id}}" class="btn btn-xs btn-primary destination">
-                             <i class="fa fa-exchange"></i> Change Destination</button>-->
                             <button value='{{$visit->id}}' class="btn btn-danger btn-xs delete">
                                 <i class="fa fa-ban"></i> Cancel Check In
                             </button>
+                            <a href="{{route('reception.checkin',$visit->patients->id)}}" class="btn btn-xs btn-primary">
+                                <i class="fa fa-sign-in"></i> Change Destination</a>
                         </td>
                     </tr>
                 @endforeach

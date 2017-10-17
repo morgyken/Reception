@@ -1,23 +1,26 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Created by PhpStorm.
+ * User: bravoh
+ * Date: 10/16/17
+ * Time: 11:28 AM
  */
-extract($data);
 ?>
 @extends('layouts.app')
-@section('content_title','Checkin Patients')
-@section('content_description','Add new patient sessions')
+@section('content_title')
+    Search Results for "{{$search}}"
+@stop
+@section('content_description','Search Patients')
 
 @section('content')
     <div class="box box-info">
         <div class="box-header">
-            <h3 class="box-title">Search</h3>
+            <h3 class="box-title">Perform another search</h3>
         </div>
         <div class="box-body">
             @include('reception::partials.search')
             <hr>
+            @if(count($found)>0)
             <table class="table table-striped table-condensed" id="patients_table">
                 <thead>
                 <tr>
@@ -29,7 +32,7 @@ extract($data);
                 </tr>
                 </thead>
                 <tbody class="results">
-                @foreach($patients as $patient)
+                @foreach($found as $patient)
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td>{{$patient->full_name}}</td>
@@ -37,15 +40,25 @@ extract($data);
                         <td>{{$patient->id}}</td>
                         <td>
                             <a class="btn  btn-xs" href="{{route('reception.view_patient',$patient->id)}}">
-                                <i class="fa fa-eye-slash"></i> View</a>
+                                <i class="fa fa-eye-slash"></i> View
+                            </a>
                             <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
-                                <i class="fa fa-sign-in"></i> Check in</a>
+                                <i class="fa fa-sign-in"></i> Check in
+                            </a>
+                            <a class="btn  btn-xs" href="{{route('reception.add_patient',$patient->id)}}">
+                                <i class="fa fa-pencil-square-o"></i> Edit
+                            </a>
+                            <a href="{{route('reception.upload_doc',$patient->id)}}" class="btn btn-xs btn-primary">
+                                <i class="fa fa-folder-open-o"></i> Manage Files
+                            </a>
                         </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
-            {{ $patients->links() }}
+            @else
+                <h4>No results found for {{$search}}</h4>
+            @endif
         </div>
     </div>
     </div>
@@ -56,9 +69,9 @@ extract($data);
                 buttons: [
                     'excel', 'pdf', 'print'
                 ],
-                "paginate": false,
+                "paginate": true,
                 "lengthChange": true,
-                "filter": false,
+                "filter": true,
                 "sort": true,
                 "info": true,
                 "autoWidth": true,
