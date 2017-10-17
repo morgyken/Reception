@@ -21,41 +21,43 @@
             @include('reception::partials.search')
             <hr>
             @if(count($found)>0)
-            <table class="table table-striped table-condensed" id="patients_table">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Patient Name</th>
-                    <th>Mobile</th>
-                    <th>ID Number</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody class="results">
-                @foreach($found as $patient)
+                <table class="table table-striped table-condensed" id="patients_table" width="100%">
+                    <thead>
                     <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td>{{$patient->full_name}}</td>
-                        <td>{{$patient->mobile}}</td>
-                        <td>{{$patient->id}}</td>
-                        <td>
-                            <a class="btn  btn-xs" href="{{route('reception.view_patient',$patient->id)}}">
-                                <i class="fa fa-eye-slash"></i> View
-                            </a>
-                            <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
-                                <i class="fa fa-sign-in"></i> Check in
-                            </a>
-                            <a class="btn  btn-xs" href="{{route('reception.add_patient',$patient->id)}}">
-                                <i class="fa fa-pencil-square-o"></i> Edit
-                            </a>
-                            <a href="{{route('reception.upload_doc',$patient->id)}}" class="btn btn-xs btn-primary">
-                                <i class="fa fa-folder-open-o"></i> Manage Files
-                            </a>
-                        </td>
+                        <th>#</th>
+                        <th>Patient No</th>
+                        <th>Patient Name</th>
+                        <th>Mobile</th>
+                        <th>ID Number</th>
+                        <th>Action</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="results">
+                    @foreach($found as $patient)
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$patient->number}}</td>
+                            <td>{{$patient->full_name}}</td>
+                            <td>{{$patient->mobile}}</td>
+                            <td>{{$patient->id}}</td>
+                            <td>
+                                <a class="btn  btn-xs" href="{{route('reception.view_patient',$patient->id)}}">
+                                    <i class="fa fa-eye-slash"></i> View
+                                </a>
+                                <a href="{{route('reception.checkin',$patient->id)}}" class="btn btn-xs">
+                                    <i class="fa fa-sign-in"></i> Check in
+                                </a>
+                                <a class="btn  btn-xs" href="{{route('reception.add_patient',$patient->id)}}">
+                                    <i class="fa fa-pencil-square-o"></i> Edit
+                                </a>
+                                <a href="{{route('reception.upload_doc',$patient->id)}}" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-folder-open-o"></i> Manage Files
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
             @else
                 <h4>No results found for {{$search}}</h4>
             @endif
