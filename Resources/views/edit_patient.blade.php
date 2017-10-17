@@ -178,6 +178,6 @@ extract($data);
             $(".external_institution").select2();
         });
     </script>
-    <script src="{{m_asset('reception:js/addpatient.min.js')}}"></script>
+    <script src="{{m_asset('reception:js/addpatient.js')}}"></script>
 </div>
 @endsection

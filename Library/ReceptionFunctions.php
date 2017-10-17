@@ -188,7 +188,6 @@ class ReceptionFunctions implements ReceptionRepository
     /**
      * Saves a new patient model to database. Updates patient if ID parameter supplied
      * @param Request $this ->request
-     * @param null $this ->id
      * @return bool
      */
     public function add_patient()
@@ -258,7 +257,6 @@ class ReceptionFunctions implements ReceptionRepository
                     $schemes->dob = Carbon::createFromDate($this->request->principal_dob1);
                     $schemes->relationship = $this->request->principal_relationship1;
                     $schemes->save();
-                    // }
                 }
             }
             $addon = "Click <a href='" . route('reception.checkin', $patient->patient_id) . "'>here</a> to checkin";
