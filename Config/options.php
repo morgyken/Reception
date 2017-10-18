@@ -65,7 +65,7 @@ return [
         'nursing' => 'Nursing',
         'doctor' => 'Doctor',
         'dental' => 'Dental',
-        'optical' => 'Optical',
+        'mch' => 'MCH',
     ],
     'checkin_purposes' => [
         1 => 'First time consultation',
