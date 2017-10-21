@@ -93,14 +93,7 @@ class ReceptionController extends AdminBaseController
      */
     public function save_patient(Request $request, $id = null)
     {
-        // $validator = Validator::make($request->all(), $request->rules);
-
-        // if ($validator->fails()) {
-        //     return back()->withErrors($validator)->withInput();
-        // }
-        // dd($request);
         if ($this->receptionRepository->add_patient()) {
-            // $this->savePatientScheme($request, $request->id);
             flash("Patient Information saved", 'success');
             if ($request->has('save_and_checkin')) {
                 return redirect()->route('reception.checkin', \Session::get('patient_just_created'));
