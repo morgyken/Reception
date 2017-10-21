@@ -32,13 +32,13 @@
         <div id="wrapper1">
             <div class="col-md-12">
                 <div class="col-md-6">
-                    <div class="form-group {{ $errors->has('company') ? ' has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('company') ? ' has-error' : '' }} req">
                         {!! Form::label('company', 'Insurance Company',['class'=>'control-label col-md-4']) !!}
                         <div class="col-md-8">
                             {!! Form::select('company1',get_insurance_companies(), null, ['class' => 'form-control company', 'placeholder' => 'Choose...']) !!}
                         </div>
                     </div>
-                    <div class="form-group {{ $errors->has('scheme') ? ' has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('scheme') ? ' has-error' : '' }} req">
                         {!! Form::label('scheme[]', 'Insurance Schemes',['class'=>'control-label col-md-4']) !!}
                         <div class="col-md-8">
                             {!! Form::select('scheme1',[], null, ['class' => 'form-control scheme', 'placeholder' => 'Choose...']) !!}
@@ -64,7 +64,7 @@
                             {!! Form::text('principal_dob1', null, ['class' => 'form-control', 'placeholder' => 'Year of Birth']) !!}
                         </div>
                     </div>
-                    <div class="form-group {{ $errors->has('principal_relationship') ? ' has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('principal_relationship') ? ' has-error' : '' }} req">
                         {!! Form::label('principal_relationship', 'Relationship',['class'=>'control-label col-md-4']) !!}
                         <div class="col-md-8">
                             {!! Form::select('principal_relationship1',mconfig('reception.options.relationship'), null, ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}

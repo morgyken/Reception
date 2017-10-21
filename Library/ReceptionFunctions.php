@@ -248,15 +248,19 @@ class ReceptionFunctions implements ReceptionRepository
             if (isset($this->request->insured)) {
                 //dd($this->request->insured);
                 if ($this->request->insured == 1) {
-                    //foreach ((array) $this->request->scheme1 as $key => $scheme) {
-                    $schemes = new PatientInsurance;
-                    $schemes->patient = $patient->id;
-                    $schemes->scheme = $this->request->scheme1;
-                    $schemes->policy_number = $this->request->policy_number1;
-                    $schemes->principal = ucwords($this->request->principal1);
-                    $schemes->dob = Carbon::createFromDate($this->request->principal_dob1);
-                    $schemes->relationship = $this->request->principal_relationship1;
-                    $schemes->save();
+                    try{
+                        //foreach ((array) $this->request->scheme1 as $key => $scheme) {
+                        $schemes = new PatientInsurance;
+                        $schemes->patient = $patient->id;
+                        $schemes->scheme = $this->request->scheme1;
+                        $schemes->policy_number = $this->request->policy_number1;
+                        $schemes->principal = ucwords($this->request->principal1);
+                        $schemes->dob = $this->request->principal_dob1;//Carbon::createFromDate($this->request->principal_dob1);
+                        $schemes->relationship = $this->request->principal_relationship1;
+                        $schemes->save();
+                    }catch (\Exception $exception){
+
+                    }
                 }
             }
             $addon = "Click <a href='" . route('reception.checkin', $patient->patient_id) . "'>here</a> to checkin";
