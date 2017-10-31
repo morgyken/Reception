@@ -30,7 +30,7 @@ extract($data);
                             <button value='{{$visit->id}}' class="btn btn-danger btn-xs delete">
                                 <i class="fa fa-ban"></i> Cancel Check In
                             </button>
-                            <a href="{{route('reception.checkin',$visit->patients->id)}}" class="btn btn-xs btn-primary">
+                            <a href="{{route('reception.checkin',$visit->patients->id)}}" class="btn btn-xs btn-primary destination">
                                 <i class="fa fa-sign-in"></i> Change Destination</a>
                         </td>
                     </tr>
@@ -119,10 +119,12 @@ extract($data);
                 });
                 $("#myModal").modal('hide');
             });
+
             $('.destination').click(function () {
                 to_delete = $(this).val();
                 $('#destination').modal('show');
             });
+
             $('#changeDest').click(function () {
                 if (!to_delete) {
                     return;
