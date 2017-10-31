@@ -13,6 +13,7 @@
 namespace Ignite\Reception\Library;
 
 use Carbon\Carbon;
+use Ignite\Evaluation\Entities\Copay;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Evaluation\Entities\VisitDestinations;
 use Ignite\Reception\Entities\PatientInsurance;
@@ -91,6 +92,10 @@ class ReceptionFunctions implements ReceptionRepository
         }
         $visit->save();
 
+        if ($this->request->has('scheme')) {
+            $this->save_copay($visit);
+        }
+
         if ($this->request->has('external_order')) {
             $visit->external_order = $this->request->external_order;
             $this->order_procedures($this->request->ordered_procedure, $visit);
@@ -114,11 +119,27 @@ class ReceptionFunctions implements ReceptionRepository
         if ($this->request->has('precharge')) {
             $this->order_procedures($this->request->precharge, $visit);
         }
+
         flash("Patient has been checked in", 'success');
         \DB::commit();
         return $visit;
         //flash("An error occurred", 'danger');
         //return false;
+    }
+
+    public function save_copay($visit){
+        try{
+            if($visit->patient_scheme->schemes->type==3){
+                $copay = new Copay();
+                $copay->visit_id = $visit->id;
+                $copay->scheme_id= $visit->patient_scheme->schemes->id;
+                $copay->amount = $visit->patient_scheme->schemes->amount;
+                $copay->save();
+                return true;
+            }
+        }catch (\Exception $e){
+            return false;
+        }
     }
 
     public function order_procedures($procedures, Visit $visit)

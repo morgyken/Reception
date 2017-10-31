@@ -240,9 +240,11 @@ class ReceptionController extends AdminBaseController
         if ($request['inpatient'] == true) {
             $request['inpatient'] = 1;
         }
+        
         $request['visit_id'] = $visit_id;
         $request['clinic'] = 1;
         $request['user'] = $request['patient'];
+
         if ($visit = $this->receptionRepository->checkin_patient()) {
             if ($request->has('gas')) {
                 return redirect()->route('evaluation.preview', [$visit->id, 'nursing']);
