@@ -385,6 +385,7 @@ class ReceptionFunctions implements ReceptionRepository
         if ($visit->patient_scheme->schemes->type === 3) {
             $copay = new Copay();
             $copay->visit_id = $visit->id;
+            $copay->patient_id = $visit->patient;
             $copay->scheme_id = @$visit->patient_scheme->schemes->id;
             $copay->company_id = @$visit->patient_scheme->schemes->company;
             $copay->amount = @$visit->patient_scheme->schemes->amount;
