@@ -13,6 +13,7 @@
 namespace Ignite\Reception\Library;
 
 use Carbon\Carbon;
+use Ignite\Evaluation\Entities\ExternalOrders;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Evaluation\Entities\VisitDestinations;
 use Ignite\Finance\Entities\Copay;
@@ -119,6 +120,7 @@ class ReceptionFunctions implements ReceptionRepository
             $this->order_procedures($this->request->precharge, $visit);
         }
         flash('Patient has been checked in', 'success');
+        reload_payments();
         \DB::commit();
         return $visit;
         //flash("An error occurred", 'danger');
@@ -155,7 +157,7 @@ class ReceptionFunctions implements ReceptionRepository
 
     public function updateExternalOrder($id)
     {
-        $order = \Ignite\Evaluation\Entities\ExternalOrders::find($id);
+        $order = ExternalOrders::find($id);
         $order->status = 'processed';
         return $order->update();
     }
