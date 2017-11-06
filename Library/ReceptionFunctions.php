@@ -15,6 +15,7 @@ namespace Ignite\Reception\Library;
 use Carbon\Carbon;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Evaluation\Entities\VisitDestinations;
+use Ignite\Finance\Entities\Copay;
 use Ignite\Reception\Entities\PatientInsurance;
 use Ignite\Reception\Events\AppointmentCreated;
 use Ignite\Reception\Events\AppointmentRescheduled;
@@ -81,16 +82,19 @@ class ReceptionFunctions implements ReceptionRepository
 
         $visit->payment_mode = $this->request->payment_mode;
         $visit->user = $this->request->user()->id;
-
+        $attempt_copay = false;
         if ($this->request->has('scheme')) {
             $visit->scheme = $this->request->scheme;
+            $attempt_copay = true;
         }
         //External Doctor Requests (Applies to Externally Ordered Labs)
         if ($this->request->has('external_doctor')) {
             $visit->external_doctor = $this->request->external_doc;
         }
         $visit->save();
-
+        if ($attempt_copay) {
+            $this->save_copay($visit);
+        }
         if ($this->request->has('external_order')) {
             $visit->external_order = $this->request->external_order;
             $this->order_procedures($this->request->ordered_procedure, $visit);
@@ -114,7 +118,7 @@ class ReceptionFunctions implements ReceptionRepository
         if ($this->request->has('precharge')) {
             $this->order_procedures($this->request->precharge, $visit);
         }
-        flash("Patient has been checked in", 'success');
+        flash('Patient has been checked in', 'success');
         \DB::commit();
         return $visit;
         //flash("An error occurred", 'danger');
@@ -167,7 +171,7 @@ class ReceptionFunctions implements ReceptionRepository
         $department = $place;
         $destination = NULL;
         $room = null;
-        if (intval($place) > 0) {
+        if ((int)$place > 0) {
             $destination = (int)$department;
             $department = 'doctor';
         }
@@ -288,7 +292,7 @@ class ReceptionFunctions implements ReceptionRepository
             flash("Appointment has been rescheduled", 'success');
             return true;
         }
-        flash("An error occurred", 'danger');
+        flash('An error occurred', 'danger');
         return false;
     }
 
@@ -369,7 +373,24 @@ class ReceptionFunctions implements ReceptionRepository
                 }
             }
         }
-        flash()->success("Scan complete, all patient related files have been uploaded");
+        flash()->success('Scan complete, all patient related files have been uploaded');
+    }
+
+    /**
+     * @param Visit $visit
+     * @return bool
+     */
+    public function save_copay(Visit $visit)
+    {
+        if ($visit->patient_scheme->schemes->type === 3) {
+            $copay = new Copay();
+            $copay->visit_id = $visit->id;
+            $copay->scheme_id = @$visit->patient_scheme->schemes->id;
+            $copay->company_id = @$visit->patient_scheme->schemes->company;
+            $copay->amount = @$visit->patient_scheme->schemes->amount;
+            return $copay->save();
+        }
+        return false;
     }
 
     public function bulk_uploader($patient, $file)
