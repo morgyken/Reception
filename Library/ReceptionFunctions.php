@@ -13,9 +13,10 @@
 namespace Ignite\Reception\Library;
 
 use Carbon\Carbon;
-//use Ignite\Evaluation\Entities\Copay;
+use Ignite\Evaluation\Entities\ExternalOrders;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Evaluation\Entities\VisitDestinations;
+use Ignite\Finance\Entities\Copay;
 use Ignite\Reception\Entities\PatientInsurance;
 use Ignite\Reception\Events\AppointmentCreated;
 use Ignite\Reception\Events\AppointmentRescheduled;
@@ -82,20 +83,19 @@ class ReceptionFunctions implements ReceptionRepository
 
         $visit->payment_mode = $this->request->payment_mode;
         $visit->user = $this->request->user()->id;
-
+        $attempt_copay = false;
         if ($this->request->has('scheme')) {
             $visit->scheme = $this->request->scheme;
+            $attempt_copay = true;
         }
         //External Doctor Requests (Applies to Externally Ordered Labs)
         if ($this->request->has('external_doctor')) {
             $visit->external_doctor = $this->request->external_doc;
         }
         $visit->save();
-
-        if ($this->request->has('scheme')) {
-            //$this->save_copay($visit);
+        if ($attempt_copay) {
+            $this->save_copay($visit);
         }
-
         if ($this->request->has('external_order')) {
             $visit->external_order = $this->request->external_order;
             $this->order_procedures($this->request->ordered_procedure, $visit);
@@ -119,8 +119,8 @@ class ReceptionFunctions implements ReceptionRepository
         if ($this->request->has('precharge')) {
             $this->order_procedures($this->request->precharge, $visit);
         }
-
-        flash("Patient has been checked in", 'success');
+        flash('Patient has been checked in', 'success');
+        reload_payments();
         \DB::commit();
         return $visit;
         //flash("An error occurred", 'danger');
@@ -158,7 +158,7 @@ class ReceptionFunctions implements ReceptionRepository
                 $inv->procedure = $value;
                 $inv->quantity = 1;
                 $inv->discount = 0;
-                $inv->price = $inv->amount = $visit->payment_mode == 'cash' ? $procedure->cash_charge : $procedure->insurance_charge;
+                $inv->price = $inv->amount = $visit->payment_mode === 'cash' ? $procedure->cash_charge : $procedure->insurance_charge;
                 if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
                     $inv->user = $this->request->destination;
                 }
@@ -172,7 +172,7 @@ class ReceptionFunctions implements ReceptionRepository
 
     public function updateExternalOrder($id)
     {
-        $order = \Ignite\Evaluation\Entities\ExternalOrders::find($id);
+        $order = ExternalOrders::find($id);
         $order->status = 'processed';
         return $order->update();
     }
@@ -188,7 +188,7 @@ class ReceptionFunctions implements ReceptionRepository
         $department = $place;
         $destination = NULL;
         $room = null;
-        if (intval($place) > 0) {
+        if ((int)$place > 0) {
             $destination = (int)$department;
             $department = 'doctor';
         }
@@ -213,85 +213,85 @@ class ReceptionFunctions implements ReceptionRepository
      */
     public function add_patient()
     {
-        DB::transaction(function () {
-            /** @var Patients $patient */
-            $patient = Patients::findOrNew($this->id);
-            $patient->first_name = ucfirst($this->request->first_name);
-            $patient->middle_name = ucfirst($this->request->middle_name);
-            $patient->last_name = ucfirst($this->request->last_name);
-            $patient->id_no = $this->request->id_number;
-            $patient->dob = new \Date($this->request->dob);
-            $patient->sex = $this->request->sex;
-            $patient->telephone = $this->request->telephone;
-            $patient->mobile = $this->request->mobile;
-            $patient->alt_number = $this->request->alt_number;
-            //$patient->patient_no = (Patients::max('patient_no') ?? m_setting('reception.patient_start_at')) + 1;
-            $patient->email = strtolower($this->request->email);
-            $patient->address = $this->request->address;
-            $patient->post_code = $this->request->post_code;
-            $patient->town = ucfirst($this->request->town);
-            if ($this->request->has('imagesrc')) {
-                $patient->image = $this->request->imagesrc;
-            }
-            if ($this->request->has('external_institution')) {
-                $patient->external_institution = $this->request->external_institution;
-            }
-            if ($this->request->has('age')) {
-                $patient->age = $this->request->age;
-                $patient->age_in = $this->request->age_in;
-                if ($this->request->dob == '') {
-                    $age = $this->request->age;
-                    $age_in = $this->request->age_in;
+        \DB::beginTransaction();
+        /** @var Patients $patient */
+        $patient = Patients::findOrNew($this->id);
+        $patient->first_name = ucfirst($this->request->first_name);
+        $patient->middle_name = ucfirst($this->request->middle_name);
+        $patient->last_name = ucfirst($this->request->last_name);
+        $patient->id_no = $this->request->id_number;
+        $patient->dob = new \Date($this->request->dob);
+        $patient->sex = $this->request->sex;
+        $patient->telephone = $this->request->telephone;
+        $patient->mobile = $this->request->mobile;
+        $patient->alt_number = $this->request->alt_number;
+        //$patient->patient_no = (Patients::max('patient_no') ?? m_setting('reception.patient_start_at')) + 1;
+        $patient->email = strtolower($this->request->email);
+        $patient->address = $this->request->address;
+        $patient->post_code = $this->request->post_code;
+        $patient->town = ucfirst($this->request->town);
+        if ($this->request->has('imagesrc')) {
+            $patient->image = $this->request->imagesrc;
+        }
+        if ($this->request->has('external_institution')) {
+            $patient->external_institution = $this->request->external_institution;
+        }
+        if ($this->request->has('age')) {
+            $patient->age = $this->request->age;
+            $patient->age_in = $this->request->age_in;
+            if ($this->request->dob == '') {
+                $age = $this->request->age;
+                $age_in = $this->request->age_in;
 //                    $patient->dob = $this->reverse_birthday($age, $age_in);
-                    $patient->dob = Carbon::parse("- $age $age_in")->toDateString();
+                $patient->dob = Carbon::parse("- $age $age_in")->toDateString();
+            }
+        }
+        $patient->save();
+
+        //next of kins
+        if ($this->request->has('first_name_nok')) {
+            foreach ($this->request->first_name_nok as $key => $value) {
+                try {
+                    $nok = NextOfKin::findOrNew($this->id);
+                    $nok->patient = $patient->id;
+                    $nok->first_name = ucfirst($this->request->first_name_nok[$key]);
+                    $nok->middle_name = ucfirst($this->request->middle_name_nok[$key]);
+                    $nok->last_name = ucfirst($this->request->last_name_nok[$key]);
+                    $nok->mobile = $this->request->mobile_nok[$key];
+                    $nok->relationship = $this->request->nok_relationship[$key];
+                    $nok->save();
+                } catch (\Exception $e) {
+                    //Something weird may have happened
                 }
             }
-            $patient->save();
+        }
+        //if ($patient->insured == 1) {
+        if (isset($this->request->insured)) {
+            //dd($this->request->insured);
+            if ($this->request->insured == 1) {
+                try {
+                    //foreach ((array) $this->request->scheme1 as $key => $scheme) {
+                    $schemes = new PatientInsurance;
+                    $schemes->patient = $patient->id;
+                    $schemes->scheme = $this->request->scheme1;
+                    $schemes->policy_number = $this->request->policy_number1;
+                    $schemes->principal = ucwords($this->request->principal1);
+                    $schemes->dob = $this->request->principal_dob1;//Carbon::createFromDate($this->request->principal_dob1);
+                    $schemes->relationship = $this->request->principal_relationship1;
+                    $schemes->save();
+                } catch (\Exception $exception) {
 
-            //next of kins
-            if ($this->request->has('first_name_nok')) {
-                foreach ($this->request->first_name_nok as $key => $value) {
-                    try {
-                        $nok = NextOfKin::findOrNew($this->id);
-                        $nok->patient = $patient->id;
-                        $nok->first_name = ucfirst($this->request->first_name_nok[$key]);
-                        $nok->middle_name = ucfirst($this->request->middle_name_nok[$key]);
-                        $nok->last_name = ucfirst($this->request->last_name_nok[$key]);
-                        $nok->mobile = $this->request->mobile_nok[$key];
-                        $nok->relationship = $this->request->nok_relationship[$key];
-                        $nok->save();
-                    } catch (\Exception $e) {
-                        //Something weird may have happened
-                    }
                 }
             }
-            //if ($patient->insured == 1) {
-            if (isset($this->request->insured)) {
-                //dd($this->request->insured);
-                if ($this->request->insured == 1) {
-                    try{
-                        //foreach ((array) $this->request->scheme1 as $key => $scheme) {
-                        $schemes = new PatientInsurance;
-                        $schemes->patient = $patient->id;
-                        $schemes->scheme = $this->request->scheme1;
-                        $schemes->policy_number = $this->request->policy_number1;
-                        $schemes->principal = ucwords($this->request->principal1);
-                        $schemes->dob = $this->request->principal_dob1;//Carbon::createFromDate($this->request->principal_dob1);
-                        $schemes->relationship = $this->request->principal_relationship1;
-                        $schemes->save();
-                    }catch (\Exception $exception){
+        }
+        $addon = "Click <a href='" . route('reception.checkin', $patient->patient_id) . "'>here</a> to checkin";
+        flash()->success($patient->full_name . " details saved. $addon");
 
-                    }
-                }
-            }
-            $addon = "Click <a href='" . route('reception.checkin', $patient->patient_id) . "'>here</a> to checkin";
-            flash()->success($patient->full_name . " details saved. $addon");
-
-            if ($this->request->has('save_and_checkin')) {
-                session(['patient_just_created' => $patient->id]);
-                // return redirect()->route('reception.checkin', $patient->id);
-            }
-        });
+        if ($this->request->has('save_and_checkin')) {
+            session(['patient_just_created' => $patient->id]);
+            // return redirect()->route('reception.checkin', $patient->id);
+        }
+        \DB::commit();
         return true;
     }
 
@@ -310,10 +310,10 @@ class ReceptionFunctions implements ReceptionRepository
         $appointment->category = $this->request->category;
         if ($appointment->save()) {
             event(new AppointmentRescheduled($appointment));
-            flash("Appointment has been rescheduled", 'success');
+            flash('Appointment has been rescheduled', 'success');
             return true;
         }
-        flash("An error occurred", 'danger');
+        flash('An error occurred', 'danger');
         return false;
     }
 
@@ -337,10 +337,10 @@ class ReceptionFunctions implements ReceptionRepository
         $appointment->category = $this->request->category;
         if ($appointment->save()) {
             event(new AppointmentCreated($appointment));
-            flash("Appointment has been saved", 'success');
+            flash('Appointment has been saved', 'success');
             return true;
         }
-        flash("An error occurred", 'danger');
+        flash('An error occurred', 'danger');
         return false;
     }
 
@@ -394,7 +394,25 @@ class ReceptionFunctions implements ReceptionRepository
                 }
             }
         }
-        flash()->success("Scan complete, all patient related files have been uploaded");
+        flash()->success('Scan complete, all patient related files have been uploaded');
+    }
+
+    /**
+     * @param Visit $visit
+     * @return bool
+     */
+    public function save_copay(Visit $visit)
+    {
+        if ($visit->patient_scheme->schemes->type === 3) {
+            $copay = new Copay();
+            $copay->visit_id = $visit->id;
+            $copay->patient_id = $visit->patient;
+            $copay->scheme_id = @$visit->patient_scheme->schemes->id;
+            $copay->company_id = @$visit->patient_scheme->schemes->company;
+            $copay->amount = @$visit->patient_scheme->schemes->amount;
+            return $copay->save();
+        }
+        return false;
     }
 
     public function bulk_uploader($patient, $file)
