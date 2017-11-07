@@ -143,7 +143,7 @@ class ReceptionFunctions implements ReceptionRepository
                 $inv->procedure = $value;
                 $inv->quantity = 1;
                 $inv->discount = 0;
-                $inv->price = $inv->amount = $visit->payment_mode == 'cash' ? $procedure->cash_charge : $procedure->insurance_charge;
+                $inv->price = $inv->amount = $visit->payment_mode === 'cash' ? $procedure->cash_charge : $procedure->insurance_charge;
                 if (filter_var($this->request->destination, FILTER_VALIDATE_INT)) {
                     $inv->user = $this->request->destination;
                 }
