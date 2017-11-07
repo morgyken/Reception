@@ -11,12 +11,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $patient
  * @property int $scheme
- * @property string $policy_number
- * @property string $principal
- * @property string $dob
- * @property int $relationship
+ * @property string|null $policy_number
+ * @property string|null $principal
+ * @property string|null $dob
+ * @property int|null $relationship
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read mixed $desc
+ * @property-read mixed $is_copay
  * @property-read \Ignite\Reception\Entities\Patients $patients
  * @property-read \Ignite\Settings\Entities\Schemes $schemes
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\PatientInsurance whereCreatedAt($value)
@@ -30,16 +32,33 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\PatientInsurance whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class PatientInsurance extends Model {
+class PatientInsurance extends Model
+{
 
     public $table = 'reception_patient_schemes';
 
-    public function patients() {
+    public function patients()
+    {
         return $this->belongsTo(Patients::class, 'patient', 'id');
     }
 
-    public function schemes() {
+    public function schemes()
+    {
         return $this->belongsTo(Schemes::class, 'scheme');
     }
 
+    public function getIsCopayAttribute()
+    {
+        return $this->schemes->type === 3;
+    }
+
+    public function getDescAttribute()
+    {
+        $x = $this->schemes->companies->name . ' | ' .
+            $this->schemes->name;
+        if ($this->is_copay) {
+            $x .= '  ( Copay -' . $this->schemes->amount . ')';
+        }
+        return $x;
+    }
 }
