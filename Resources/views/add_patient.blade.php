@@ -101,12 +101,12 @@ extract($data);
                                 {!! $errors->first('town', '<span class="help-block">:message</span>') !!}
                             </div>
                         </div>
-                        {{--<div class="form-group {{ $errors->has('patient_no') ? ' has-error' : '' }}">--}}
-                            {{--{!! Form::label('patient_no', 'Patient Number',['class'=>'control-label col-md-4']) !!}--}}
-                            {{--<div class="col-md-8">--}}
-                                {{--<p class="form-control-static">{{m_setting('reception.patient_number')}}{{$use_id}}</p>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
+                        <div class="form-group {{ $errors->has('patient_no') ? ' has-error' : '' }}">
+                            {!! Form::label('patient_no', 'Patient Number',['class'=>'control-label col-md-4']) !!}
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{m_setting('reception.patient_number')}}{{$use_id}}</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group {{ $errors->has('telephone') ? ' has-error' : '' }}">
