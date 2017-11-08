@@ -240,14 +240,14 @@ class ReceptionController extends AdminBaseController
         if ($request['inpatient'] == true) {
             $request['inpatient'] = 1;
         }
-        
+
         $request['visit_id'] = $visit_id;
         $request['clinic'] = 1;
         $request['user'] = $request['patient'];
 
         if ($visit = $this->receptionRepository->checkin_patient()) {
             if ($request->has('gas')) {
-                return redirect()->route('evaluation.preview', [$visit->id, 'nursing']);
+                return redirect()->route('evaluation.preview', [$visit, 'nursing']);
             }
             return redirect()->route('reception.patients_queue');
         }
@@ -294,25 +294,24 @@ class ReceptionController extends AdminBaseController
         $this->data['visits'] = Visit::whereHas('destinations', function ($query) {
             $query->whereCheckout(0);
         })->orderBy('created_at', 'asc')
-            ->get();
-
+            ->latest()->paginate(100);
         return view('reception::patients_queue', ['data' => $this->data]);
     }
 
     public function SearchPatient(Request $request)
     {
         $patients = Patients::all();//where('first_name', 'like', '%' . base64_encode($request->key) . '%')->get();
-        $found=array();
+        $found = array();
         $search = $request->search;
-        foreach ($patients as $p){
-            if(str_contains($p->id_no, $request->search)||
-               str_contains(strtolower($p->full_name), strtolower($request->search))||
-               str_contains(strtolower($p->mobile), strtolower($request->search))
-            ){
+        foreach ($patients as $p) {
+            if (str_contains($p->id_no, $request->search) ||
+                str_contains(strtolower($p->full_name), strtolower($request->search)) ||
+                str_contains(strtolower($p->mobile), strtolower($request->search))
+            ) {
                 $found[] = $p;
             }
         }
-        return view('reception::search_results', compact('found','search'));
+        return view('reception::search_results', compact('found', 'search'));
     }
 
     public function document_viewer($id)

@@ -62,7 +62,7 @@ class ReceptionFunctions implements ReceptionRepository
 
     /**
      * Performs a fast forward checkin. Just dive in to checkin without prior appointments
-     * @return Visit
+     * @return int
      */
     public function checkin_patient()
     {
@@ -120,27 +120,10 @@ class ReceptionFunctions implements ReceptionRepository
             $this->order_procedures($this->request->precharge, $visit);
         }
         flash('Patient has been checked in', 'success');
-        reload_payments();
         \DB::commit();
-        return $visit;
-        //flash("An error occurred", 'danger');
-        //return false;
+        reload_payments();
+        return $visit->id;
     }
-
-//    public function save_copay($visit){
-//        try{
-//            if($visit->patient_scheme->schemes->type==3){
-//                $copay = new Copay();
-//                $copay->visit_id = $visit->id;
-//                $copay->scheme_id= $visit->patient_scheme->schemes->id;
-//                $copay->amount = $visit->patient_scheme->schemes->amount;
-//                $copay->save();
-//                return true;
-//            }
-//        }catch (\Exception $e){
-//            return false;
-//        }
-//    }
 
     public function order_procedures($procedures, Visit $visit)
     {
