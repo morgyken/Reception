@@ -39,7 +39,7 @@
                             <td>{{$patient->number}}</td>
                             <td>{{$patient->full_name}}</td>
                             <td>{{$patient->mobile}}</td>
-                            <td>{{$patient->id}}</td>
+                            <td>{{$patient->id_no}}</td>
                             <td>
                                 <a class="btn  btn-xs" href="{{route('reception.view_patient',$patient->id)}}">
                                     <i class="fa fa-eye-slash"></i> View
