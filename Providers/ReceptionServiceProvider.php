@@ -2,11 +2,13 @@
 
 namespace Ignite\Reception\Providers;
 
+use Ignite\Reception\Console\FixPatientNumber;
 use Ignite\Reception\Library\ReceptionFunctions;
 use Ignite\Reception\Repositories\ReceptionRepository;
 use Illuminate\Support\ServiceProvider;
 
-class ReceptionServiceProvider extends ServiceProvider {
+class ReceptionServiceProvider extends ServiceProvider
+{
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -20,7 +22,8 @@ class ReceptionServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
@@ -31,8 +34,10 @@ class ReceptionServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         $this->registerBindings();
+        $this->commands([FixPatientNumber::class]);
     }
 
     /**
@@ -40,12 +45,13 @@ class ReceptionServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    protected function registerConfig() {
+    protected function registerConfig()
+    {
         $this->publishes([
             __DIR__ . '/../Config/config.php' => config_path('reception.php'),
         ]);
         $this->mergeConfigFrom(
-                __DIR__ . '/../Config/config.php', 'reception'
+            __DIR__ . '/../Config/config.php', 'reception'
         );
     }
 
@@ -54,7 +60,8 @@ class ReceptionServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function registerViews() {
+    public function registerViews()
+    {
         $viewPath = base_path('resources/views/modules/reception');
 
         $sourcePath = __DIR__ . '/../Resources/views';
@@ -64,8 +71,8 @@ class ReceptionServiceProvider extends ServiceProvider {
         ]);
 
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
-                            return $path . '/modules/reception';
-                        }, \Config::get('view.paths')), [$sourcePath]), 'reception');
+            return $path . '/modules/reception';
+        }, \Config::get('view.paths')), [$sourcePath]), 'reception');
     }
 
     /**
@@ -73,7 +80,8 @@ class ReceptionServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function registerTranslations() {
+    public function registerTranslations()
+    {
         $langPath = base_path('resources/lang/modules/reception');
 
         if (is_dir($langPath)) {
@@ -88,12 +96,14 @@ class ReceptionServiceProvider extends ServiceProvider {
      *
      * @return array
      */
-    public function provides() {
+    public function provides()
+    {
         return array();
     }
 
-    private function registerBindings()    {
-        $this->app->bind(ReceptionRepository::class,ReceptionFunctions::class);
+    private function registerBindings()
+    {
+        $this->app->bind(ReceptionRepository::class, ReceptionFunctions::class);
     }
 
 }
