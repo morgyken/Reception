@@ -52,6 +52,7 @@ extract($data);
     <script type="text/javascript">
         $(document).ready(function () {
             $('#patients_table').DataTable({
+                pageLength: 25,
                 dom: 'Bfrtip',
                 buttons: [
                     'excel', 'pdf', 'print'
@@ -61,7 +62,7 @@ extract($data);
                 "filter": false,
                 "sort": true,
                 "info": true,
-                "autoWidth": true,
+                "autoWidth": true
             });
         });
     </script>

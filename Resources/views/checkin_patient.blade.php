@@ -115,8 +115,7 @@ $patient_schemes = get_patient_schemes($patient->id);
                             <select class="form-control" id="scheme" name="scheme">
                                 <option selected="selected" value="">Choose...</option>
                                 @foreach($patient_schemes as $scheme)
-                                    <option value="{{$scheme->id}}">{{$scheme->schemes->companies->name}}
-                                        - {{$scheme->schemes->name}}</option>
+                                    <option value="{{$scheme->id}}">{!! $scheme->desc!!}</option>
                                 @endforeach
                             </select>
                             {!! $errors->first('scheme', '<span class="help-block">:message</span>') !!}

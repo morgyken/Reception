@@ -54,10 +54,15 @@ class PatientInsurance extends Model
 
     public function getDescAttribute()
     {
-        $x = $this->schemes->companies->name . ' | ' .
-            $this->schemes->name;
-        if ($this->is_copay) {
-            $x .= '  ( Copay -' . $this->schemes->amount . ')';
+        $s = $this->schemes;
+        $x = $s->companies->name . ' - ' .
+            $s->name;
+        if ($s->type === 3) {
+            $x .= '  (Copay - ' . $this->schemes->amount . ')';
+        } elseif ($s->type === 2) {
+            $x .= '  (Capitation - ' . $this->schemes->amount . ')';
+        } else {
+            $x .= '  (Full)';
         }
         return $x;
     }
