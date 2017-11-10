@@ -57,9 +57,9 @@ class PatientInsurance extends Model
         $s = $this->schemes;
         $x = $s->companies->name . ' - ' .
             $s->name;
-        if ($s->type === 3) {
+        if ($s->type == 3) {
             $x .= '  (Copay - ' . $this->schemes->amount . ')';
-        } elseif ($s->type === 2) {
+        } elseif ($s->type == 2) {
             $x .= '  (Capitation - ' . $this->schemes->amount . ')';
         } else {
             $x .= '  (Full)';
