@@ -108,6 +108,8 @@ class Patients extends Model
 
     protected $hidden = ['image'];
 
+    protected $with = ['schemes'];
+
     public function getSexAttribute($value)
     {
         return ucfirst($value);
@@ -215,6 +217,4 @@ class Patients extends Model
     {
         return $this->hasOne(Admission::class, 'patient_id');
     }
-
-
 }
