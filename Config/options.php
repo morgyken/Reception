@@ -66,6 +66,7 @@ return [
         'doctor' => 'Doctor',
         'dental' => 'Dental',
         'mch' => 'MCH',
+        'hpd' => 'Hypertension & Diabetes',
     ],
     'checkin_purposes' => [
         1 => 'First time consultation',
