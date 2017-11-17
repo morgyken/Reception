@@ -67,6 +67,12 @@ return [
         'dental' => 'Dental',
         'mch' => 'MCH',
         'hpd' => 'Hypertension & Diabetes',
+        'orthopeadic' => 'Orthopeadic',
+        'popc' => 'Pedeatrics',
+        'mopc' => 'Medical',
+        'sopc' => 'Sergical',
+        'gopc' => 'Gyenecology',
+        'physio' => 'Physiotherapy',
     ],
     'checkin_purposes' => [
         1 => 'First time consultation',

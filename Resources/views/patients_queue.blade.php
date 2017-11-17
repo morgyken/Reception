@@ -22,7 +22,7 @@ extract($data);
                     <tr id="row_id{{$visit->id}}">
                         <td>{{$loop->iteration}}</td>
                         <td>{{$visit->patients->full_name}}</td>
-                        <td>{{(new Date($visit->created_at))->format('dS M g:i a')}}</td>
+                        <td>{{$visit->created_at->format('dS M g:i a')}}</td>
                         <td>{{$visit->visit_destination}}</td>
                         <td>{{$visit->place}}</td>
                         <td>{{mconfig('reception.options.checkin_purposes.'.$visit->purpose,'N/A')}}</td>
