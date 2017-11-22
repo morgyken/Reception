@@ -37,6 +37,8 @@ class PatientInsurance extends Model
 
     public $table = 'reception_patient_schemes';
 
+    protected $with = ['schemes']; 
+
     public function patients()
     {
         return $this->belongsTo(Patients::class, 'patient', 'id');
