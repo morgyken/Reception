@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Ignite\Users\Entities\UserProfile;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Finance\Entities\PatientAccount;
-use Ignite\Inpatient\Entities\RequestAdmission;
+use Ignite\Inpatient\Entities\AdmissionRequest;
 use Ignite\Inpatient\Entities\Bed;
 use Ignite\Inpatient\Entities\Admission;
 use Ignite\Finance\Entities\PatientInvoice;
@@ -195,7 +195,7 @@ class Patients extends Model
 
     public function admissionRequest()
     {
-        return $this->hasOne(RequestAdmission::class, 'admissionRequest');
+        return $this->hasMany(AdmissionRequest::class, 'patient_id');
     }
 
     public function bed()
