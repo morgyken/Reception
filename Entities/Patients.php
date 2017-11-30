@@ -15,80 +15,7 @@ use Ignite\Inpatient\Entities\Admission;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 
-/**
- * Ignite\Reception\Entities\Patients
- *
- * @property int $id
- * @property string|null $patient_no
- * @property mixed $first_name
- * @property mixed|null $middle_name
- * @property mixed $last_name
- * @property \Carbon\Carbon|null $dob
- * @property string|null $age
- * @property string|null $age_in
- * @property string|null $sex
- * @property mixed $mobile
- * @property mixed $id_no
- * @property mixed|null $email
- * @property mixed|null $telephone
- * @property mixed|null $alt_number
- * @property mixed|null $address
- * @property string|null $post_code
- * @property string|null $town
- * @property int $status
- * @property string|null $deleted_at
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property mixed|null $image
- * @property int|null $external_institution
- * @property-read \Ignite\Finance\Entities\PatientAccount $account
- * @property-read \Ignite\Inpatient\Entities\Admission $admission
- * @property-read \Ignite\Inpatient\Entities\RequestAdmission $admissionRequest
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\Appointments[] $appointments
- * @property-read \Ignite\Inpatient\Entities\Bed $bed
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\PatientDocuments[] $documents
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Inventory\Entities\InventoryBatchProductSales[] $drug_purchases
- * @property-read mixed $checked_in_status
- * @property-read mixed $full_name
- * @property-read mixed $insured
- * @property-read mixed $is_insured
- * @property-read mixed $number
- * @property-read mixed $registered
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\PatientInvoice[] $invoices
- * @property-read \Ignite\Reception\Entities\NextOfKin $nok
- * @property-read \Ignite\Users\Entities\UserProfile $profile
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Reception\Entities\PatientInsurance[] $schemes
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Evaluation\Entities\Visit[] $visits
- * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients onlyTrashed()
- * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereAge($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereAgeIn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereAltNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereDob($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereExternalInstitution($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereIdNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereMiddleName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereMobile($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients wherePatientNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients wherePostCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereSex($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereTelephone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereTown($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Reception\Entities\Patients whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Reception\Entities\Patients withoutTrashed()
- * @mixin \Eloquent
- */
+
 class Patients extends Model
 {
 
@@ -100,10 +27,7 @@ class Patients extends Model
 
     use SoftDeletes;
 
-    /**
-     * The attributes that we should encrypt
-     * @var array
-     */
+    
     protected $shouldEncrypt = ['first_name', 'middle_name', 'last_name', 'mobile', 'email', 'id_no', 'telephone', 'alt_number'];
 
     protected $hidden = ['image'];
