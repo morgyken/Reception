@@ -66,6 +66,13 @@ class ReceptionFunctions implements ReceptionRepository
      */
     public function checkin_patient()
     {
+        if(Visit::wherePatient($this->request->patient)->count() > 0)
+        {
+            flash('Sorry! This patient is already checked in!', 'error');
+
+            return redirect()->back();
+        }
+
         \DB::beginTransaction();
         $visit = new Visit;
         $visit->patient = $this->request->patient;
