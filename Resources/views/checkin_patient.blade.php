@@ -315,7 +315,10 @@ $patient_schemes = get_patient_schemes($patient->id);
             $('#checkin_treat').click(function () {
                 var url = $('#checkin_form').attr('action');
                 var new_url = addParameterToURL(url, 'gas=1');
+                $('#checkin_form').attr('action', '');
                 $('#checkin_form').attr('action', new_url);
+
+                console.log($('#checkin_form').attr('action'));
                 $('#checkin_form').submit();
             });
 

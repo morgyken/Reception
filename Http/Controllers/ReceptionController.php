@@ -241,6 +241,13 @@ class ReceptionController extends AdminBaseController
             $request['inpatient'] = 1;
         }
 
+        if(Visit::wherePatient($request->patient)->count() > 0)
+        {
+            flash('Sorry! This patient is already checked in!', 'error');
+
+            return redirect()->back();
+        }
+
         $request['visit_id'] = $visit_id;
         $request['clinic'] = 1;
         $request['user'] = $request['patient'];
