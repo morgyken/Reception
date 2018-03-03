@@ -49,7 +49,9 @@ class ReceptionController extends AdminBaseController
         if (!empty($id)) {
             return view('reception::edit_patient', ['data' => $this->data]);
         }
-        $this->data['use_id'] = (Patients::max('patient_no') ?? m_setting('reception.patient_start_at')) + 1;
+
+        $this->data['use_id'] = (Patients::all()->pluck('patient_no')->max() ?? m_setting('reception.patient_start_at')) + 1;
+
         return view('reception::add_patient', ['data' => $this->data]);
     }
 
@@ -243,7 +245,7 @@ class ReceptionController extends AdminBaseController
 
         $visit = Visit::wherePatient($request->patient)->first();
 
-        if($visit)
+        if($visit->count() > 0)
         {
             return redirect()->route('evaluation.preview', ['visit' => $visit->id,  'department' => 'nursing']);
         }
