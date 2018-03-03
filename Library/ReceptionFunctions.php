@@ -66,7 +66,6 @@ class ReceptionFunctions implements ReceptionRepository
      */
     public function checkin_patient()
     {
-        dd(Visit::wherePatient($this->request->patient)->get());
         if(Visit::wherePatient($this->request->patient)->get())
         {
             flash('Sorry! This patient is already checked in!', 'error');
