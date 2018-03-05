@@ -66,12 +66,12 @@ class ReceptionFunctions implements ReceptionRepository
      */
     public function checkin_patient()
     {
-        if(Visit::wherePatient($this->request->patient)->get())
-        {
-            flash('Sorry! This patient is already checked in!', 'error');
-
-            return redirect()->back();
-        }
+//        if(Visit::wherePatient($this->request->patient)->get())
+//        {
+//            flash('Sorry! This patient is already checked in!', 'error');
+//
+//            return redirect()->back();
+//        }
 
         \DB::beginTransaction();
         $visit = new Visit;
@@ -217,7 +217,7 @@ class ReceptionFunctions implements ReceptionRepository
         $patient->alt_number = $this->request->alt_number;
         if(!$this->id)
         {
-            $patient->patient_no = (Patients::all()->pluck('patient_no')->max() ?? m_setting('reception.patient_start_at')) + 1;
+            $patient->patient_no = (int) (Patients::all()->pluck('patient_no')->max() ?? m_setting('reception.patient_start_at')) + 1;
 //                (Patients::max('patient_no') ?? m_setting('reception.patient_start_at')) + 1;
         }
         $patient->email = strtolower($this->request->email);

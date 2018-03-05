@@ -50,7 +50,7 @@ class ReceptionController extends AdminBaseController
             return view('reception::edit_patient', ['data' => $this->data]);
         }
 
-        $this->data['use_id'] = (Patients::all()->pluck('patient_no')->max() ?? m_setting('reception.patient_start_at')) + 1;
+        $this->data['use_id'] = (int) (Patients::all()->pluck('patient_no')->max() ?? m_setting('reception.patient_start_at')) + 1;
 
         return view('reception::add_patient', ['data' => $this->data]);
     }
@@ -243,12 +243,12 @@ class ReceptionController extends AdminBaseController
             $request['inpatient'] = 1;
         }
 
-        $visit = Visit::wherePatient($request->patient)->first();
-
-        if($visit)
-        {
-            return redirect()->route('evaluation.preview', ['visit' => $visit->id,  'department' => 'nursing']);
-        }
+//        $visit = Visit::wherePatient($request->patient)->first();
+//
+//        if($visit)
+//        {
+//            return redirect()->route('evaluation.preview', ['visit' => $visit->id,  'department' => 'nursing']);
+//        }
 
         $request['visit_id'] = $visit_id;
         $request['clinic'] = 1;
