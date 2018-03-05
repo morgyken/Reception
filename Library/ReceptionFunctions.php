@@ -217,7 +217,8 @@ class ReceptionFunctions implements ReceptionRepository
         $patient->alt_number = $this->request->alt_number;
         if(!$this->id)
         {
-            $patient->patient_no = (Patients::max('patient_no') ?? m_setting('reception.patient_start_at')) + 1;
+            $patient->patient_no = (Patients::all()->pluck('patient_no')->max() ?? m_setting('reception.patient_start_at')) + 1;
+//                (Patients::max('patient_no') ?? m_setting('reception.patient_start_at')) + 1;
         }
         $patient->email = strtolower($this->request->email);
         $patient->address = $this->request->address;
