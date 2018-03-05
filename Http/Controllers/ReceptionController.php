@@ -245,7 +245,7 @@ class ReceptionController extends AdminBaseController
 
         $visit = Visit::wherePatient($request->patient)->first();
 
-        if($visit->count() > 0)
+        if($visit)
         {
             return redirect()->route('evaluation.preview', ['visit' => $visit->id,  'department' => 'nursing']);
         }
