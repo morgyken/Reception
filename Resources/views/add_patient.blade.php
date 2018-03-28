@@ -15,7 +15,9 @@ extract($data);
     <div class="form-horizontal">
         <div class="box box-info">
             <div class="box-header">
-                <h3 class="box-title">Patient Information</h3>
+                <h3 class="box-title">Patient Information           
+                 
+                </h3>
             </div>
             {!! Form::open(['files'=>true,'route'=>'reception.save_patient']) !!}
             <div class="box-body">
@@ -24,7 +26,7 @@ extract($data);
                         <div class="form-group req {{ $errors->has('first_name') ? ' has-error' : '' }}">
                             {!! Form::label('first_name', 'First Name',['class'=>'control-label col-md-4']) !!}
                             <div class="col-md-8">
-                                {!! Form::text('first_name', old('first_name'), ['class' => 'form-control', 'placeholder' => 'First Name','required' => 'required']) !!}
+                                {!! Form::text('first_name', old('first_name'), ['class' => 'form-control', 'placeholder' => 'First Name']) !!}
                                 {!! $errors->first('first_name', '<span class="help-block">:message</span>') !!}
                             </div>
                         </div>
@@ -38,7 +40,7 @@ extract($data);
                         <div class="form-group req {{ $errors->has('last_name') ? ' has-error' : '' }}">
                             {!! Form::label('last_name', 'Last Name',['class'=>'control-label col-md-4']) !!}
                             <div class="col-md-8">
-                                {!! Form::text('last_name', old('last_name'), ['class' => 'form-control', 'placeholder' => 'Last Name', 'required' => 'required']) !!}
+                                {!! Form::text('last_name', old('last_name'), ['class' => 'form-control', 'placeholder' => 'Last Name' ]) !!}
                                 {!! $errors->first('last_name', '<span class="help-block">:message</span>') !!}
                             </div>
                         </div>
@@ -82,15 +84,15 @@ extract($data);
                         <div class="form-group {{ $errors->has('mobile') ? ' has-error' : '' }} req">
                             {!! Form::label('mobile', 'Mobile Number',['class'=>'control-label col-md-4']) !!}
                             <div class="col-md-8">
-                                {!! Form::text('mobile', old('mobile'), ['class' => 'form-control', 'placeholder' => '07xxxxxxxx', 'required' => 'required']) !!}
+                                {!! Form::text('mobile', old('mobile'), ['class' => 'form-control', 'placeholder' => '07xxxxxxxx' ]) !!}
                                 {!! $errors->first('mobile', '<span class="help-block">:message</span>') !!}
                             </div>
                         </div>
 
                         <div class="form-group {{ $errors->has('id_number') ? ' has-error' : '' }}">
-                            {!! Form::label('id_number', 'ID Number',['class'=>'control-label col-md-4']) !!}
+                            {!! Form::label('id_number', 'ID Number/Passport',['class'=>'control-label col-md-4']) !!}
                             <div class="col-md-8">
-                                {!! Form::text('id_number', old('id_number'), ['class' => 'form-control', 'placeholder' => 'ID number','required']) !!}
+                                {!! Form::text('id_number', old('id_number'), ['class' => 'form-control', 'placeholder' => 'ID number' ]) !!}
                                 {!! $errors->first('id_number', '<span class="help-block">:message</span>') !!}
                             </div>
                         </div>

@@ -14,8 +14,6 @@ use Ignite\Reception\Library\ReceptionPipeline;
 use Ignite\Reception\Repositories\ReceptionRepository;
 use Ignite\Settings\Entities\Clinics;
 use Illuminate\Http\Request;
-use Validator;
-use Illuminate\Support\Facades\Input;
 use Ignite\Reception\Entities\Patients;
 use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Ignite\Reception\Entities\PatientDocuments;
@@ -90,140 +88,21 @@ class ReceptionController extends AdminBaseController
     }
 
     /**
-     * Checks if the patient exists and is available
-     * @param Returns request/Requests
-     * @return bool
-     */
-
-    public function checkif_registered(Request $request)
-    {   
-     
-
-    // dd($request->mobile);
-
-      $patient = Patients::select('created_at', 'last_name', 'first_name','mobile','dob', 'sex', 'age_in' )
-
-        //check date of birth
-
-         ->where('dob','=' ,$request->dob)
-
-        //lastly check if they share age
-
-           ->where('age', '=', $request->age) 
-
-        //check town
-
-          ->where('post_code', '=', $request->post_code) 
-
-
-        //check postal code 
-
-
-          ->where('town', '=', $request->town) 
-          
-
-          ->get()
-
- 
-          ->toArray();   
-
-        if($patient == null)
-        {
-          return true;
-        }
-        
-            
-    }
-
-    public function doValidation(Request $request)
-    {
-      $rules = 
-        [
-        'email'       =>  'nullable|email',
-        'first_name'  =>  'required|max:100|alpha_num',
-        //'middle_name' => 'required',
-        'last_name'   =>  'required|max:100|alpha_num',  
-        'mobile'      => 'required|alpha_num', 
-        'dob'         => 'required',
-        'sex'         => 'required',
-
-        'age'       => 'digits_between:1,3|numeric',
-        'id_number'   => 'required|alpha_num|max:60',
-
-       
-        ];
-
-        //define messages 
-        $messages =
-        [
-            'age.digits_between'  => 'Opps! You forgot the ID number of the patient!',             
-            'age_in.numeric'         => 'Opps! You entered invalid characters for ID Number!',
-          
-            'id_number.required'    => 'Opps! You forgot the ID number of the patient!',             
-            'id_number.alpha_num'   => 'Opps! You entered invalid characters for ID Number!',
-            'id_number.max:60'      => 'Error: The number entered is too large',
-
-            'first_name.required'   =>  'Error: First Name must be entered',
-            'last_name.required'    =>  'Error: Last Name must be entered',
-
-            'first_name.max:100'    =>  'Error: The first name is too long',
-            'last_name.max:100'     => 'Error: The last name is too long',
-
-            'first_name.alpha_num'  =>  'Error: First Name contains invalid String, Try again',
-            'last_name.alpha_num'   =>  'Error: Last Name contains invalid String, Try again.',
-
-            'dob.required'          => 'Error: Enter Date of Birth',
-            'sex.required'          => 'Opps! You fogot the Gender of the patient!',
-            'mobile.required'       => 'Error: You must enter the mobile number of the patient',
-            'mobile.alpha_num'      => 'Error: You must entered invalid characters',           
-            
-            'email.email'         => 'Error: The Email entered is invalid',       
-
-           ];
-
-      //check if the patient exist
-           if($this-> checkif_registered ($request)){
-
-
-
-      //Validation returns an error     
-          
-       return $validator = Validator::make($request->all(), $rules, $messages);
-            if ($validator->fails()) {                
-                flash("ERROR: Check the following fields need correction.", 'error');
-                return redirect()->back()->withErrors($validator);
-              }
-            }
-
-            else {
-              flash("The patient already exist, Check details carefully", 'error');
-              return redirect()->back();
-            }
-
-    }
-    
-    /**
      * Save patient information
      * @param CreatePatientRequest $request
      * @param int|null $id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function save_patient(Request $request, $id = null)
-    {  
-      //validate 
-          $this->doValidation($request);
-
-          if ($this->receptionRepository->add_patient()) {
-              flash("Patient Information saved", 'success');
-              if ($request->has('save_and_checkin')) {
-                  return redirect()->route('reception.checkin', \Session::get('patient_just_created'));
-              }
-          }
-          return redirect()->route('reception.add_patient');
+    {
+        if ($this->receptionRepository->add_patient()) {
+            flash("Patient Information saved", 'success');
+            if ($request->has('save_and_checkin')) {
+                return redirect()->route('reception.checkin', \Session::get('patient_just_created'));
+            }
         }
-
-
-    //save patient Scheme...
+        return redirect()->route('reception.add_patient');
+    }
 
     public function savePatientScheme(Request $request, $patient)
     {
