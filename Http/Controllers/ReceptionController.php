@@ -101,7 +101,7 @@ class ReceptionController extends AdminBaseController
 
     // dd($request->mobile);
 
-      $patient = Patients::select('created_at', 'last_name', 'first_name','mobile','dob', 'sex', 'age_in' )
+      $patient = Patients::select('id', 'created_at', 'last_name', 'first_name','mobile','dob', 'sex', 'age_in' )
 
         //check date of birth
 
@@ -122,16 +122,12 @@ class ReceptionController extends AdminBaseController
           ->where('town', '=', $request->town) 
           
 
-          ->get()
-
- 
-          ->toArray();   
-
-        if($patient == null)
-        {
-          return true;
-        }
+          ->get();
+       
+        if($patient->count() >= 0)
+          { return false;}
         
+        return true;
             
     }
 
@@ -179,27 +175,15 @@ class ReceptionController extends AdminBaseController
             
             'email.email'         => 'Error: The Email entered is invalid',       
 
-           ];
-
-      //check if the patient exist
-           if($this-> checkif_registered ($request)){
-
-
-
-      //Validation returns an error     
+           ];    
           
        return $validator = Validator::make($request->all(), $rules, $messages);
             if ($validator->fails()) {                
                 flash("ERROR: Check the following fields need correction.", 'error');
                 return redirect()->back()->withErrors($validator);
-              }
-            }
-
-            else {
-              flash("The patient already exist, Check details carefully", 'error');
-              return redirect()->back();
-            }
-
+              }               
+          
+           
     }
     
     /**
@@ -210,8 +194,14 @@ class ReceptionController extends AdminBaseController
      */
     public function save_patient(Request $request, $id = null)
     {  
+
+
       //validate 
           $this->doValidation($request);
+
+      //check if available
+        if($this->checkif_registered($request)){
+          //if not available, register
 
           if ($this->receptionRepository->add_patient()) {
               flash("Patient Information saved", 'success');
@@ -221,6 +211,13 @@ class ReceptionController extends AdminBaseController
           }
           return redirect()->route('reception.add_patient');
         }
+
+          else {
+              flash("The patient already exist, Check details carefully", 'error');
+              return redirect()->back();
+            }       
+
+    }         
 
 
     //save patient Scheme...
