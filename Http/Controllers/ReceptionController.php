@@ -120,6 +120,10 @@ class ReceptionController extends AdminBaseController
 
 
           ->where('town', '=', $request->town) 
+
+          //check id 
+
+          ->where('id_number', '=', $request->id_number) 
           
 
           ->get();
