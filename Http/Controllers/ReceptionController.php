@@ -29,6 +29,7 @@ class ReceptionController extends AdminBaseController
      * @var ReceptionRepository
      */
     protected $receptionRepository;
+    protected $validator;
 
     /**
      * ReceptionController constructor.
@@ -105,31 +106,20 @@ class ReceptionController extends AdminBaseController
 
         //check date of birth
 
-         ->where('dob','=' ,$request->dob)
+        ->where('dob' ,$request->dob)
 
-        //lastly check if they share age
+          //check id number
 
-           ->where('age', '=', $request->age) 
-
-        //check town
-
-          ->where('post_code', '=', $request->post_code) 
-
-
-        //check postal code 
-
-
-          ->where('town', '=', $request->town) 
-
-          //check id 
-
-          ->where('id_number', '=', $request->id_number) 
-          
+          ->where('id_no',  $request->id_number)           
 
           ->get();
        
-        if($patient->count() >= 0)
-          { return false;}
+        if($patient->count() >0) { 
+            
+            return false;
+
+        }
+              
         
         return true;
             
@@ -143,12 +133,10 @@ class ReceptionController extends AdminBaseController
         'first_name'  =>  'required|max:100|alpha_num',
         //'middle_name' => 'required',
         'last_name'   =>  'required|max:100|alpha_num',  
-        'mobile'      => 'required|alpha_num', 
-        'dob'         => 'required',
+        'mobile'      => 'required|alpha_num',
         'sex'         => 'required',
-
-        'age'       => 'digits_between:1,3|numeric',
         'id_number'   => 'required|alpha_num|max:60',
+        'dob'       => 'bail|required|date',    
 
        
         ];
@@ -156,9 +144,7 @@ class ReceptionController extends AdminBaseController
         //define messages 
         $messages =
         [
-            'age.digits_between'  => 'Opps! You forgot the ID number of the patient!',             
-            'age_in.numeric'         => 'Opps! You entered invalid characters for ID Number!',
-          
+                     
             'id_number.required'    => 'Opps! You forgot the ID number of the patient!',             
             'id_number.alpha_num'   => 'Opps! You entered invalid characters for ID Number!',
             'id_number.max:60'      => 'Error: The number entered is too large',
@@ -173,20 +159,22 @@ class ReceptionController extends AdminBaseController
             'last_name.alpha_num'   =>  'Error: Last Name contains invalid String, Try again.',
 
             'dob.required'          => 'Error: Enter Date of Birth',
+            'dob.date'              => 'Error: The date format is not valid',
             'sex.required'          => 'Opps! You fogot the Gender of the patient!',
             'mobile.required'       => 'Error: You must enter the mobile number of the patient',
             'mobile.alpha_num'      => 'Error: You must entered invalid characters',           
             
-            'email.email'         => 'Error: The Email entered is invalid',       
+            'email.email'           => 'Error: The Email entered is invalid',       
 
            ];    
-          
-       return $validator = Validator::make($request->all(), $rules, $messages);
-            if ($validator->fails()) {                
-                flash("ERROR: Check the following fields need correction.", 'error');
-                return redirect()->back()->withErrors($validator);
-              }               
-          
+      
+
+       $this->validator = Validator::make($request->all(), $rules, $messages);
+            if ($this->validator->fails()) {  
+                return false ;                
+              }  
+
+          return true;    
            
     }
     
@@ -198,30 +186,41 @@ class ReceptionController extends AdminBaseController
      */
     public function save_patient(Request $request, $id = null)
     {  
+    
+       //do validation
 
+        if($this-> doValidation($request) ==true)
+            {
 
-      //validate 
-          $this->doValidation($request);
+                //check if exists 
 
-      //check if available
-        if($this->checkif_registered($request)){
-          //if not available, register
+                if($this-> checkif_registered($request) == true)
+                {
+                    if ($this->receptionRepository->add_patient()) {
+                              
+                              flash("Patient Information saved", 'success');
+                              if ($request->has('save_and_checkin')) {
+                                  return redirect()->route('reception.checkin', \Session::get('patient_just_created'));
+                              }
+                          }
+                          return redirect()->route('reception.add_patient');
+                }
 
-          if ($this->receptionRepository->add_patient()) {
-              flash("Patient Information saved", 'success');
-              if ($request->has('save_and_checkin')) {
-                  return redirect()->route('reception.checkin', \Session::get('patient_just_created'));
-              }
-          }
-          return redirect()->route('reception.add_patient');
-        }
+                else 
+                {
 
-          else {
-              flash("The patient already exist, Check details carefully", 'error');
-              return redirect()->back();
-            }       
+                    flash("The patient already exist, Check details carefully", 'error');
+                    return redirect()->back();
 
-    }         
+                }
+            }
+            else {
+                flash("ERROR: Check the following fields need correction.", 'error');
+
+                return redirect()->back()->withErrors($this->validator);
+            }
+
+}     
 
 
     //save patient Scheme...
