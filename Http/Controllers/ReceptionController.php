@@ -124,59 +124,6 @@ class ReceptionController extends AdminBaseController
         return true;
             
     }
-
-    public function doValidation(Request $request)
-    {
-      $rules = 
-        [
-        'email'       =>  'nullable|email',
-        'first_name'  =>  'required|max:100|alpha_num',
-        //'middle_name' => 'required',
-        'last_name'   =>  'required|max:100|alpha_num',  
-        'mobile'      => 'required|alpha_num',
-        'sex'         => 'required',
-        'id_number'   => 'required|alpha_num|max:60',
-        'dob'       => 'bail|required|date',    
-
-       
-        ];
-
-        //define messages 
-        $messages =
-        [
-                     
-            'id_number.required'    => 'Opps! You forgot the ID number of the patient!',             
-            'id_number.alpha_num'   => 'Opps! You entered invalid characters for ID Number!',
-            'id_number.max:60'      => 'Error: The number entered is too large',
-
-            'first_name.required'   =>  'Error: First Name must be entered',
-            'last_name.required'    =>  'Error: Last Name must be entered',
-
-            'first_name.max:100'    =>  'Error: The first name is too long',
-            'last_name.max:100'     => 'Error: The last name is too long',
-
-            'first_name.alpha_num'  =>  'Error: First Name contains invalid String, Try again',
-            'last_name.alpha_num'   =>  'Error: Last Name contains invalid String, Try again.',
-
-            'dob.required'          => 'Error: Enter Date of Birth',
-            'dob.date'              => 'Error: The date format is not valid',
-            'sex.required'          => 'Opps! You fogot the Gender of the patient!',
-            'mobile.required'       => 'Error: You must enter the mobile number of the patient',
-            'mobile.alpha_num'      => 'Error: You must entered invalid characters',           
-            
-            'email.email'           => 'Error: The Email entered is invalid',       
-
-           ];    
-      
-
-       $this->validator = Validator::make($request->all(), $rules, $messages);
-            if ($this->validator->fails()) {  
-                return false ;                
-              }  
-
-          return true;    
-           
-    }
     
     /**
      * Save patient information
